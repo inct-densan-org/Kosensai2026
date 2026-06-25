@@ -8,7 +8,9 @@
     "dev:api": "pnpm --filter @kosensai/api dev",
     "build": "turbo run build",
     "lint": "turbo run lint",
-    "check": "turbo run check"
+    "check": "turbo run check",
+    "db:generate": "pnpm --filter @kosensai/api db:generate",
+    "db:migrate": "pnpm --filter @kosensai/api db:migrate"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
