@@ -13,3 +13,6 @@ apps/db/data/*
 .agents
 .codex
 .turbo
+.direnv
+.pnpm-home
+result

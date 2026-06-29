@@ -2,7 +2,30 @@
 
 import type { FormEvent } from 'react'
 import { useEffect, useState } from 'react'
-import { api, type HealthResponse, type Message } from '@/lib/api'
+import { client } from '@/lib/api'
+
+type HealthResponse = {
+  ok: boolean
+  timestamp: string
+}
+
+type Message = {
+  id: number
+  body: string
+  createdAt: string
+}
+
+type MessageListResponse = {
+  messages: Message[]
+}
+
+const readJson = async <T,>(response: Response): Promise<T> => {
+  if (!response.ok) {
+    throw new Error(`API request failed: ${response.status} ${response.statusText}`)
+  }
+
+  return response.json() as Promise<T>
+}
 
 export default function HomePage() {
   const [health, setHealth] = useState<HealthResponse | null>(null)
@@ -17,9 +40,13 @@ export default function HomePage() {
     setLoading(true)
 
     try {
+      const [healthResult, messagesResult] = await Promise.all([
+        client.health.$get(),
+        client.messages.$get()
+      ])
       const [healthResponse, messageResponse] = await Promise.all([
-        api.health(),
-        api.messages.list()
+        readJson<HealthResponse>(healthResult),
+        readJson<MessageListResponse>(messagesResult)
       ])
 
       setHealth(healthResponse)
@@ -41,7 +68,11 @@ export default function HomePage() {
     setError(null)
 
     try {
-      await api.messages.create(body)
+      const response = await client.messages.$post({
+        json: { body }
+      })
+
+      await readJson<{ message: Message }>(response)
       setBody('')
       await load()
     } catch (err) {
