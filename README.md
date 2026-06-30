@@ -4,6 +4,11 @@
 
 ## 初回セットアップ
 
+前提:
+
+- Node.js 22 系
+- `corepack` が使えること
+
 1. 環境変数を用意します。
 
 ```bash
@@ -21,6 +26,22 @@ pnpm install
 3. 開発サーバーを起動します。
 
 ```bash
+pnpm dev
+```
+
+## Nix / direnv
+
+`Nix` と `direnv` を使う場合は、リポジトリ直下で一度だけ許可してください。
+
+```bash
+direnv allow
+```
+
+`flake.nix` では Node.js 22 を使い、`corepack` 経由で `pnpm@9.15.4` を有効化します。
+`better-sqlite3` のビルドに必要なツールも同時に読み込みます。
+
+```bash
+pnpm install
 pnpm dev
 ```
 
