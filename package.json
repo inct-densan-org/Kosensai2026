@@ -1,0 +1,21 @@
+{
+  "name": "kosensai2026",
+  "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "dev": "concurrently -k -n web,api \"pnpm --filter @kosensai/web dev\" \"pnpm --filter @kosensai/api dev\"",
+    "dev:web": "pnpm --filter @kosensai/web dev",
+    "dev:api": "pnpm --filter @kosensai/api dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "check": "turbo run check",
+    "db:generate": "pnpm --filter @kosensai/api db:generate",
+    "db:migrate": "pnpm --filter @kosensai/api db:migrate"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "@types/node": "^22.10.2",
+    "turbo": "^2.5.0",
+    "typescript": "^5.8.3"
+  }
+}

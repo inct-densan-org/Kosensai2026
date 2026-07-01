@@ -1,0 +1,26 @@
+{
+  "name": "@kosensai/web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start --port 3000",
+    "lint": "echo 'lint not configured'",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@kosensai/api": "workspace:*",
+    "@kosensai/shared": "workspace:*",
+    "hono": "^4.6.8",
+    "next": "^15.1.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@kosensai/config": "workspace:*",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2"
+  }
+}

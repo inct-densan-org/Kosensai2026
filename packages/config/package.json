@@ -1,0 +1,9 @@
+{
+  "name": "@kosensai/config",
+  "private": true,
+  "exports": {
+    "./tsconfig/base.json": "./tsconfig/base.json",
+    "./tsconfig/next.json": "./tsconfig/next.json"
+  }
+}
+
