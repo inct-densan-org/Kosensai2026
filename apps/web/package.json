@@ -13,14 +13,19 @@
     "@kosensai/api": "workspace:*",
     "@kosensai/shared": "workspace:*",
     "hono": "^4.6.8",
+    "motion": "^12.42.2",
     "next": "^15.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@kosensai/config": "workspace:*",
+    "@tailwindcss/postcss": "^4.3.2",
     "@types/node": "^22.10.2",
     "@types/react": "^19.0.2",
-    "@types/react-dom": "^19.0.2"
+    "@types/react-dom": "^19.0.2",
+    "autoprefixer": "^10.5.2",
+    "postcss": "^8.5.16",
+    "tailwindcss": "^4.3.2"
   }
 }
