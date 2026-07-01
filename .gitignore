@@ -16,3 +16,4 @@ apps/db/data/*
 .direnv
 .pnpm-home
 result
+.idea
