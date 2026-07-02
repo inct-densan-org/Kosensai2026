@@ -84,7 +84,7 @@ export function InteractiveParallax() {
                     transformTemplate={billboardTemplate} // テンプレートを適用
                     className="absolute inset-0 flex items-center justify-center pointer-events-none"
                 >
-                    aa
+                    {/* TODO: add content */}
                 </motion.div>
 
                 {/* レイヤー3: 一番手前 */}
