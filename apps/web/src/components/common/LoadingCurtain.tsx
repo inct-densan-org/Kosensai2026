@@ -32,7 +32,7 @@ export default function LoadingCurtain() {
 
         const sequence = async () => {
             if (typeof window !== 'undefined' && document.readyState !== "complete") {
-                await new Promise((resolve) => window.addEventListener("load", resolve));
+                await new Promise<void>((resolve) => window.addEventListener("load", () => resolve(), { once: true }));
             }
             await new Promise((resolve) => setTimeout(resolve, 500));
             if (!isMounted) return;
