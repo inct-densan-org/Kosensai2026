@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   color-scheme: light;
   --bg: #f5efe6;
@@ -171,4 +173,21 @@ button:disabled {
   .panel {
     padding: 18px;
   }
+}
+
+
+/* ファイルの末尾などに追記 */
+@keyframes moveVoxelForward {
+  from {
+    /* var(--tx) でJSからX座標を受け取ります */
+    transform: translateX(var(--tx)) translateZ(-3000px);
+  }
+  to {
+    transform: translateX(var(--tx)) translateZ(1000px);
+  }
+}
+
+.animate-voxel {
+  animation: moveVoxelForward var(--duration) linear infinite;
+  animation-delay: var(--delay);
 }
