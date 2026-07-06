@@ -1,9 +1,8 @@
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
-
-export const messages = sqliteTable('messages', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  body: text('body').notNull(),
-  createdAt: text('created_at').notNull()
-})
-
-export type MessageRow = typeof messages.$inferSelect
+export * from './schema/auth'
+export * from './schema/user'
+export * from './schema/media'
+export * from './schema/articles'
+export * from './schema/shops'
+export * from './schema/map'
+export * from './schema/events'
+export * from './schema/reactions'

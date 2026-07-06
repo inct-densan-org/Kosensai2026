@@ -16,12 +16,15 @@
   "dependencies": {
     "@hono/node-server": "^1.13.5",
     "@kosensai/shared": "workspace:*",
+    "@better-auth/drizzle-adapter": "^1.6.23",
     "better-sqlite3": "^11.10.0",
+    "better-auth": "^1.6.23",
     "drizzle-orm": "^0.44.7",
     "hono": "^4.6.8",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@better-auth/cli": "^1.4.21",
     "@kosensai/config": "workspace:*",
     "@types/better-sqlite3": "^7.6.12",
     "@types/node": "^22.10.2",
