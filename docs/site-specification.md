@@ -82,9 +82,9 @@
 - ログイン方式はユーザー名 + パスワードとする
 - 初期ユーザーは手動投入する
 - 以降のユーザー管理は管理者権限を持つユーザーがフロントエンド経由で行う
-- 権限は `editor` `committee` `admin` の 3 段階とする
-- `editor` はブログ投稿のみ可能とする
-- `committee` は `editor` の権限に加え、お知らせ投稿とイベント情報変更を可能とする
+- 権限は `shop_staff` `committee` `admin` の 3 段階とする
+- `shop_staff` はブログ投稿のみ可能とする
+- `committee` は `shop_staff` の権限に加え、お知らせ投稿とイベント情報変更を可能とする
 - `admin` は `committee` の権限に加え、ユーザーなどのデータの管理を可能とする
 
 ### 2.4 データ永続化要件
@@ -569,7 +569,7 @@
 
 - ベース URL は環境変数で切り替え可能とする
 - 公開 API と CMS API は責務を分離する
-- 公開 API は `/public/*`、CMS API は `/cms/*`、認証 API は `/auth/*` を基本とする
+- 公開 API は `/public/*`、CMS API は `/cms/*`、認証 API は `/api/auth/*` を基本とする
 - CMS 用 API は Better Auth のセッションで保護する
 - 画像・動画アップロード API は multipart を使用する
 - 一覧 API にはページネーションを実装する
@@ -592,8 +592,8 @@
 
 ### 13.3 CMS API の範囲
 
-- `POST /auth/sign-in`
-- `POST /auth/sign-out`
+- `POST /api/auth/sign-in/username`
+- `POST /api/auth/sign-out`
 - `GET /cms/session`
 - `GET|POST /cms/news`
 - `PATCH|DELETE /cms/news/:id`

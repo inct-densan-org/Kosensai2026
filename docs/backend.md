@@ -18,7 +18,7 @@
 - 公開 API と CMS API はパスと認可で分離する
 - トップページの固定セクションデータは DB・API の管理対象外とし、この設計書の対象から外す
 - 画像・動画はローカルストレージ保存、DB にはメタデータと参照パスのみ保存する
-- 日時はすべて ISO 8601 文字列で保存・返却する
+- DB 上の日時は原則 Unix epoch milliseconds の `integer` として保存し、API 返却時は ISO 8601 文字列へ正規化する
 - 主キーは原則 `integer` の自動採番
 - 外部参照やデータ再投入に備え、必要なテーブルは別途 stable な運用IDを `unique` で持つ
 - 論理削除が必要なデータは `deletedAt` を持つ
@@ -32,7 +32,7 @@
   - ヘルスチェック
 - `GET /public/*`
   - 公開サイト向け API
-- `POST /auth/*`
+- `GET|POST /api/auth/*`
   - Better Auth の認証 API
 - `GET|POST|PATCH|DELETE /cms/*`
   - CMS 向け API
@@ -75,10 +75,10 @@
 
 ### 3.3 権限制御
 
-- `editor`
+- `shop_staff`
   - ブログ記事の作成、更新、下書き保存、論理削除
 - `committee`
-  - `editor` 権限に加えて、お知らせ作成、イベント当日変更、イベント基本情報更新
+  - `shop_staff` 権限に加えて、お知らせ作成、イベント当日変更、イベント基本情報更新
   - 実行委員会に発行
 - `admin`
   - `committee` 権限に加えて、ユーザー、タグ、会場、屋台、マップ、リアクション集計の管理
@@ -89,10 +89,10 @@
 
 | テーブル名 | 用途 |
 |---|---|
-| `users` | Better Auth のユーザー本体 |
-| `sessions` | Better Auth のセッション |
-| `accounts` | Better Auth の認証アカウント |
-| `verifications` | Better Auth の認証補助データ |
+| `user` | Better Auth のユーザー本体 |
+| `session` | Better Auth のセッション |
+| `account` | Better Auth の認証アカウント |
+| `verification` | Better Auth の認証補助データ |
 | `news_articles` | お知らせ |
 | `blog_articles` | ブログ記事 |
 | `tags` | 記事タグ |
@@ -126,63 +126,71 @@
 
 Better Auth は SQLite/Drizzle 向けのスキーマ定義とテーブル生成導線を持っているため、認証系テーブルは Better Auth の公式生成物をベースに利用する。
 
-- `users` `sessions` `accounts` `verifications` は Better Auth が要求する構造を優先する
+- `user` `session` `account` `verification` は Better Auth が要求する構造を優先する
 - 本書はその上に必要となる業務カラムを含めた最終形を示す
 - 実装時は Better Auth の生成スキーマを起点にし、追加項目は拡張設定で寄せる
 - 認証テーブルを完全に hand-written で再定義する前提にはしない
 
-### `users`
+### `user`
 
 運営ユーザー。公開側来場者ユーザーは持たない。
 
 | カラム名 | 型 | 必須 | 説明 |
 |---|---|---|---|
-| `id` | integer | yes | 主キー |
-| `username` | text | yes | ログイン ID。一意 |
-| `displayName` | text | yes | CMS 表示名 |
-| `email` | text | no | 任意連絡先。基本使わない設計にする|
-| `passwordHash` | text | yes | Better Auth 管理のハッシュ |
-| `role` | text | yes | `editor` `committee` `admin` |
-| `isActive` | integer | yes | 0 or 1 |
-| `lastLoginAt` | text | no | 最終ログイン日時 |
-| `createdAt` | text | yes | 作成日時 |
-| `updatedAt` | text | yes | 更新日時 |
-| `deletedAt` | text | no | 論理削除日時 |
+| `id` | text | yes | Better Auth 管理の主キー |
+| `loginId` | text | yes | ログイン ID。一意 |
+| `name` | text | yes | Better Auth の表示名 |
+| `role` | text | yes | `shop_staff` `committee` `admin` |
+| `shopId` | text | no | 担当屋台の `shops.code` |
+| `email` | text | yes | Better Auth 必須項目。実装上はプレースホルダを投入 |
+| `emailVerified` | integer | yes | 0 or 1 |
+| `image` | text | no | Better Auth 互換用 |
+| `displayUsername` | text | no | 補助表示名 |
+| `createdAt` | integer | yes | Unix epoch ms |
+| `updatedAt` | integer | yes | Unix epoch ms |
 
 インデックス:
 
-- `unique(username)`
-- `index(role, isActive)`
+- `unique(loginId)`
+- `unique(email)`
+- `index(shopId)`
 
-### `sessions`
+### `session`
 
 Better Auth セッション。
 
 | カラム名 | 型 | 必須 | 説明 |
 |---|---|---|---|
 | `id` | text | yes | セッション ID |
-| `userId` | integer | yes | `users.id` |
+| `userId` | text | yes | `user.id` |
 | `token` | text | yes | セッショントークン。一意 |
-| `expiresAt` | text | yes | 失効日時 |
+| `expiresAt` | integer | yes | Unix epoch ms |
 | `ipAddress` | text | no | 監査用 |
 | `userAgent` | text | no | 監査用 |
-| `createdAt` | text | yes | 作成日時 |
-| `updatedAt` | text | yes | 更新日時 |
+| `createdAt` | integer | yes | Unix epoch ms |
+| `updatedAt` | integer | yes | Unix epoch ms |
 
-### `accounts`
+### `account`
 
 Better Auth の認証プロバイダ情報。初期はローカル認証のみ想定。
 
 | カラム名 | 型 | 必須 | 説明 |
 |---|---|---|---|
 | `id` | text | yes | 主キー |
-| `userId` | integer | yes | `users.id` |
-| `provider` | text | yes | `credential` など |
-| `providerAccountId` | text | yes | プロバイダ側 ID |
-| `createdAt` | text | yes | 作成日時 |
-| `updatedAt` | text | yes | 更新日時 |
+| `accountId` | text | yes | プロバイダ側 ID |
+| `providerId` | text | yes | `credential` など |
+| `userId` | text | yes | `user.id` |
+| `accessToken` | text | no | 任意 |
+| `refreshToken` | text | no | 任意 |
+| `idToken` | text | no | 任意 |
+| `accessTokenExpiresAt` | integer | no | Unix epoch ms |
+| `refreshTokenExpiresAt` | integer | no | Unix epoch ms |
+| `scope` | text | no | 任意 |
+| `password` | text | no | Better Auth 管理値 |
+| `createdAt` | integer | yes | Unix epoch ms |
+| `updatedAt` | integer | yes | Unix epoch ms |
 
-### `verifications`
+### `verification`
 
 パスワード再設定や一時トークン用途を想定。
 
@@ -191,8 +199,9 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 | `id` | text | yes | 主キー |
 | `identifier` | text | yes | 対象識別子 |
 | `value` | text | yes | トークンやコード |
-| `expiresAt` | text | yes | 失効日時 |
-| `createdAt` | text | yes | 作成日時 |
+| `expiresAt` | integer | yes | Unix epoch ms |
+| `createdAt` | integer | no | Unix epoch ms |
+| `updatedAt` | integer | no | Unix epoch ms |
 
 ## 4.3 記事系テーブル
 
@@ -205,9 +214,9 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 | `id` | integer | yes | PK |
 | `name` | text | yes | 表示名 |
 | `color` | text | no | CMS 上の表示補助色 |
-| `createdAt` | text | yes | 作成日時 |
-| `updatedAt` | text | yes | 更新日時 |
-| `deletedAt` | text | no | 論理削除日時 |
+| `createdAt` | integer | yes | Unix epoch ms |
+| `updatedAt` | integer | yes | Unix epoch ms |
+| `deletedAt` | integer | no | Unix epoch ms |
 
 ### `news_articles`
 
@@ -222,13 +231,13 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 | `sanitizedBody` | text | yes | 公開返却用 HTML |
 | `status` | text | yes | `draft` `scheduled` `published` `archived` |
 | `priority` | text | yes | `high` `medium` |
-| `publishedAt` | text | no | 公開日時 |
-| `scheduledAt` | text | no | 予約投稿日時 |
-| `createdBy` | integer | yes | `users.id` |
-| `updatedBy` | integer | yes | `users.id` |
-| `createdAt` | text | yes | 作成日時 |
-| `updatedAt` | text | yes | 更新日時 |
-| `deletedAt` | text | no | 論理削除日時 |
+| `publishedAt` | integer | no | Unix epoch ms |
+| `scheduledAt` | integer | no | Unix epoch ms |
+| `createdBy` | text | yes | `user.id` |
+| `updatedBy` | text | yes | `user.id` |
+| `createdAt` | integer | yes | Unix epoch ms |
+| `updatedAt` | integer | yes | Unix epoch ms |
+| `deletedAt` | integer | no | Unix epoch ms |
 
 インデックス:
 
@@ -249,15 +258,15 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 | `status` | text | yes | `draft` `scheduled` `published` `archived` |
 | `articleType` | text | yes | `shop-feature` `review` `highlight` `behind-the-scenes` |
 | `coverMediaId` | integer | no | アイキャッチ |
-| `authorUserId` | integer | yes | 作成ユーザー |
+| `authorUserId` | text | yes | 作成ユーザーの `user.id` |
 | `authorDisplayName` | text | no | 表示名義 |
-| `publishedAt` | text | no | 公開日時 |
-| `scheduledAt` | text | no | 予約投稿日時 |
-| `createdBy` | integer | yes | `users.id` |
-| `updatedBy` | integer | yes | `users.id` |
-| `createdAt` | text | yes | 作成日時 |
-| `updatedAt` | text | yes | 更新日時 |
-| `deletedAt` | text | no | 論理削除日時 |
+| `publishedAt` | integer | no | Unix epoch ms |
+| `scheduledAt` | integer | no | Unix epoch ms |
+| `createdBy` | text | yes | `user.id` |
+| `updatedBy` | text | yes | `user.id` |
+| `createdAt` | integer | yes | Unix epoch ms |
+| `updatedAt` | integer | yes | Unix epoch ms |
+| `deletedAt` | integer | no | Unix epoch ms |
 
 インデックス:
 
@@ -270,7 +279,7 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 |---|---|---|---|
 | `newsArticleId` | integer | yes | `news_articles.id` |
 | `tagId` | integer | yes | `tags.id` |
-| `createdAt` | text | yes | 付与日時 |
+| `createdAt` | integer | yes | Unix epoch ms |
 
 制約:
 
@@ -282,7 +291,7 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 |---|---|---|---|
 | `blogArticleId` | integer | yes | `blog_articles.id` |
 | `tagId` | integer | yes | `tags.id` |
-| `createdAt` | text | yes | 付与日時 |
+| `createdAt` | integer | yes | Unix epoch ms |
 
 制約:
 
@@ -307,9 +316,9 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 | `height` | integer | no | 画像・動画高 |
 | `durationSeconds` | integer | no | 動画長さ |
 | `altText` | text | no | 画像代替文 |
-| `uploadedBy` | integer | yes | `users.id` |
-| `createdAt` | text | yes | 作成日時 |
-| `deletedAt` | text | no | 論理削除日時 |
+| `uploadedBy` | text | yes | `user.id` |
+| `createdAt` | integer | yes | Unix epoch ms |
+| `deletedAt` | integer | no | Unix epoch ms |
 
 ### `news_article_media`
 
@@ -320,7 +329,7 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 | `mediaAssetId` | integer | yes | `media_assets.id` |
 | `sortOrder` | integer | yes | 表示順 |
 | `usageType` | text | yes | `inline` `thumbnail` |
-| `createdAt` | text | yes | 作成日時 |
+| `createdAt` | integer | yes | Unix epoch ms |
 
 ### `blog_article_media`
 
@@ -331,7 +340,7 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 | `mediaAssetId` | integer | yes | `media_assets.id` |
 | `sortOrder` | integer | yes | 表示順 |
 | `usageType` | text | yes | `cover` `inline` `gallery` `video` |
-| `createdAt` | text | yes | 作成日時 |
+| `createdAt` | integer | yes | Unix epoch ms |
 
 ## 4.5 イベント系テーブル
 
@@ -346,8 +355,8 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 | `name` | text | yes | 会場名 |
 | `description` | text | no | 補足説明 |
 | `mapLayerId` | integer | no | `map_layers.id` |
-| `createdAt` | text | yes | 作成日時 |
-| `updatedAt` | text | yes | 更新日時 |
+| `createdAt` | integer | yes | Unix epoch ms |
+| `updatedAt` | integer | yes | Unix epoch ms |
 
 制約:
 
@@ -365,15 +374,15 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 | `description` | text | no | 詳細説明 |
 | `venueId` | integer | yes | `event_venues.id` |
 | `eventDate` | text | yes | `YYYY-MM-DD` |
-| `startAt` | text | yes | ISO 8601 |
-| `endAt` | text | yes | ISO 8601 |
+| `startAt` | integer | yes | Unix epoch ms |
+| `endAt` | integer | yes | Unix epoch ms |
 | `status` | text | yes | `scheduled` `changed` `cancelled` |
 | `notes` | text | no | 補足情報 |
 | `rainyVenueText` | text | no | 雨天代替会場表示 |
 | `restrictionText` | text | no | 参加制限表示 |
-| `createdAt` | text | yes | 作成日時 |
-| `updatedAt` | text | yes | 更新日時 |
-| `deletedAt` | text | no | 論理削除日時 |
+| `createdAt` | integer | yes | Unix epoch ms |
+| `updatedAt` | integer | yes | Unix epoch ms |
+| `deletedAt` | integer | no | Unix epoch ms |
 
 インデックス:
 
@@ -390,12 +399,12 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 | `eventId` | integer | yes | `events.id`。主キー兼外部キー |
 | `changeType` | text | yes | `cancelled` `time_changed` `venue_changed` `note_updated` |
 | `overrideStatus` | text | yes | `changed` `cancelled` |
-| `overrideStartAt` | text | no | 変更後開始時刻 |
-| `overrideEndAt` | text | no | 変更後終了時刻 |
+| `overrideStartAt` | integer | no | Unix epoch ms |
+| `overrideEndAt` | integer | no | Unix epoch ms |
 | `overrideVenueId` | integer | no | 変更後会場 |
 | `message` | text | no | 補足文 |
-| `updatedBy` | integer | yes | `users.id` |
-| `updatedAt` | text | yes | 更新日時 |
+| `updatedBy` | text | yes | `user.id` |
+| `updatedAt` | integer | yes | Unix epoch ms |
 
 ## 4.6 屋台・マップ系テーブル
 
@@ -413,9 +422,9 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 | `snsUrl` | text | no | SNS リンク |
 | `status` | text | yes | `draft` `published` `hidden` |
 | `sortOrder` | integer | yes | 表示順 |
-| `createdAt` | text | yes | 作成日時 |
-| `updatedAt` | text | yes | 更新日時 |
-| `deletedAt` | text | no | 論理削除日時 |
+| `createdAt` | integer | yes | Unix epoch ms |
+| `updatedAt` | integer | yes | Unix epoch ms |
+| `deletedAt` | integer | no | Unix epoch ms |
 
 制約:
 
@@ -431,10 +440,9 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 | `name` | text | yes | メニュー名 |
 | `description` | text | no | 補足説明 |
 | `price` | integer | yes | 円 |
-| `taxMode` | text | yes | `included` `excluded` |
 | `sortOrder` | integer | yes | 表示順 |
-| `createdAt` | text | yes | 作成日時 |
-| `updatedAt` | text | yes | 更新日時 |
+| `createdAt` | integer | yes | Unix epoch ms |
+| `updatedAt` | integer | yes | Unix epoch ms |
 
 制約:
 
@@ -453,8 +461,8 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 | `width` | integer | no | 元画像幅 |
 | `height` | integer | no | 元画像高 |
 | `sortOrder` | integer | yes | 表示順 |
-| `createdAt` | text | yes | 作成日時 |
-| `updatedAt` | text | yes | 更新日時 |
+| `createdAt` | integer | yes | Unix epoch ms |
+| `updatedAt` | integer | yes | Unix epoch ms |
 
 制約:
 
@@ -469,25 +477,22 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 | `id` | integer | yes | 主キー |
 | `code` | text | yes | 運用上の安定識別子。一意 |
 | `mapLayerId` | integer | yes | `map_layers.id` |
-| `pinType` | text | yes | `shop` `guide` `label` |
-| `shopId` | integer | no | `shops.id` |
+| `pinType` | text | yes | `shop` `timetable` `label` |
+| `shopId` | text | no | `shops.code` |
 | `title` | text | yes | 表示名 |
 | `label` | text | no | ピン番号や短い識別子 |
 | `description` | text | no | モーダル補足 |
 | `x` | real | yes | 画像基準 X 座標 |
 | `y` | real | yes | 画像基準 Y 座標 |
 | `color` | text | no | ピン色 |
-| `iconType` | text | no | `reception` `rest` `trash` `bus` など |
 | `isInteractive` | integer | yes | 0 or 1 |
-| `sortOrder` | integer | yes | 表示順 |
-| `createdAt` | text | yes | 作成日時 |
-| `updatedAt` | text | yes | 更新日時 |
+| `createdAt` | integer | yes | Unix epoch ms |
+| `updatedAt` | integer | yes | Unix epoch ms |
 
 インデックス:
 
 - `unique(code)`
 - `index(shopId)`
-- `index(pinType, iconType)`
 
 ### `map_pin_timetable_groups`
 
@@ -498,8 +503,8 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 | `title` | text | yes | 時刻表タイトル |
 | `description` | text | no | 補足説明 |
 | `sortOrder` | integer | yes | 表示順 |
-| `createdAt` | text | yes | 作成日時 |
-| `updatedAt` | text | yes | 更新日時 |
+| `createdAt` | integer | yes | Unix epoch ms |
+| `updatedAt` | integer | yes | Unix epoch ms |
 
 ### `map_pin_timetable_entries`
 
@@ -511,8 +516,8 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 | `label` | text | yes | 画面表示用時刻文字列 |
 | `note` | text | no | 備考 |
 | `sortOrder` | integer | yes | 表示順 |
-| `createdAt` | text | yes | 作成日時 |
-| `updatedAt` | text | yes | 更新日時 |
+| `createdAt` | integer | yes | Unix epoch ms |
+| `updatedAt` | integer | yes | Unix epoch ms |
 
 ## 4.7 リアクション系テーブル
 
@@ -527,7 +532,7 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 | `targetId` | integer | yes | 対象レコード ID |
 | `fingerprint` | text | yes | Cookie または端末識別子 |
 | `reactionType` | text | yes | 2026 年度は `heart` 固定 |
-| `createdAt` | text | yes | 作成日時 |
+| `createdAt` | integer | yes | Unix epoch ms |
 
 制約:
 
@@ -543,7 +548,7 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 | `targetId` | integer | yes | 対象レコード ID |
 | `reactionType` | text | yes | `heart` |
 | `count` | integer | yes | 集計数 |
-| `updatedAt` | text | yes | 集計更新日時 |
+| `updatedAt` | integer | yes | Unix epoch ms |
 
 制約:
 
@@ -661,8 +666,8 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
       "tags": [],
       "articleType": "shop-feature",
       "author": {
-        "id": 4,
-        "displayName": "実行委員会"
+        "id": "user_committee01",
+        "name": "実行委員会"
       },
       "reactionCount": 18,
       "publishedAt": "2026-10-29T12:00:00.000Z"
@@ -713,8 +718,8 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
     "tags": [],
     "articleType": "shop-feature",
     "author": {
-      "id": 4,
-      "displayName": "実行委員会"
+      "id": "user_committee01",
+      "name": "実行委員会"
     },
     "reactionCount": 18,
     "publishedAt": "2026-10-29T12:00:00.000Z"
@@ -770,8 +775,7 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
       {
         "id": 1,
         "name": "焼きそば",
-        "price": 500,
-        "taxMode": "included"
+        "price": 500
       }
     ],
     "reactionCount": 42
@@ -904,8 +908,8 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 
 ### 6.1 実装対象エンドポイント一覧
 
-- `/auth/sign-in` [`POST`]
-- `/auth/sign-out` [`POST`]
+- `/api/auth/sign-in/username` [`POST`]
+- `/api/auth/sign-out` [`POST`]
 - `/cms/session` [`GET`]
 - `/cms/news` [`GET`/`POST`]
 - `/cms/news/:id` [`PATCH`/`DELETE`]
@@ -934,7 +938,7 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 
 ### 6.2 認証 API
 
-### POST `/auth/sign-in`
+### POST `/api/auth/sign-in/username`
 
 リクエスト:
 
@@ -951,15 +955,16 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 {
   "data": {
     "user": {
-      "id": 1,
-      "displayName": "実行委員",
+      "id": "user_committee01",
+      "name": "実行委員",
+      "loginId": "committee01",
       "role": "committee"
     }
   }
 }
 ```
 
-### POST `/auth/sign-out`
+### POST `/api/auth/sign-out`
 
 レスポンス:
 
@@ -979,9 +984,9 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 {
   "data": {
     "user": {
-      "id": 1,
-      "username": "committee01",
-      "displayName": "実行委員",
+      "id": "user_committee01",
+      "loginId": "committee01",
+      "name": "実行委員",
       "role": "committee"
     }
   }
@@ -1084,7 +1089,7 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 
 権限:
 
-- `editor` 以上
+- `shop_staff` 以上
 
 リクエスト:
 
@@ -1108,14 +1113,14 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 
 権限:
 
-- `editor` 以上
+- `shop_staff` 以上
 - 自分の作成記事以外を編集できるかは `committee` 以上のみ許可
 
 ### DELETE `/cms/blog/:id`
 
 権限:
 
-- `editor` 以上
+- `shop_staff` 以上
 
 挙動:
 
@@ -1143,7 +1148,7 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 
 権限:
 
-- `editor` 以上
+- `shop_staff` 以上
 
 リクエスト:
 
@@ -1168,7 +1173,7 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 
 権限:
 
-- `editor` 以上
+- `shop_staff` 以上
 
 挙動:
 
@@ -1289,7 +1294,6 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
       "name": "焼きそば",
       "description": "",
       "price": 500,
-      "taxMode": "included",
       "sortOrder": 1
     }
   ]
@@ -1321,16 +1325,14 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
   "code": "nakaniwa-12",
   "mapLayerId": 2,
   "pinType": "shop",
-  "shopId": 7,
+  "shopId": "yakisoba",
   "title": "焼きそば屋台",
   "label": "12",
   "description": "中庭エリア",
   "x": 320.5,
   "y": 180.2,
   "color": "#ff7a00",
-  "iconType": null,
-  "isInteractive": true,
-  "sortOrder": 12
+  "isInteractive": true
 }
 ```
 
@@ -1371,12 +1373,12 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 
 ```json
 {
-  "username": "editor01",
-  "displayName": "広報担当",
+  "loginId": "staff01",
+  "name": "広報担当",
   "email": "editor@example.com",
   "password": "plain-password",
-  "role": "editor",
-  "isActive": true
+  "role": "shop_staff",
+  "shopId": "yakisoba"
 }
 ```
 
@@ -1414,7 +1416,7 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 ## 7. バリデーション方針
 
 - Hono + Zod で全エンドポイントの入力を検証する
-- `id` は整数
+- コンテンツ系 `id` は整数、認証系 `user.id` は文字列として検証する
 - `code` は英数字、ハイフンのみ
 - `status`、`role`、`priority`、`articleType` は enum 検証
 - 公開 API に返す `body` は DB 保存前または返却前にサニタイズ
@@ -1430,7 +1432,7 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 
 ## 9. 実装優先順
 
-1. `users` `sessions` など Better Auth 連携
+1. `user` `session` など Better Auth 連携
 2. `news_articles` `blog_articles` `tags` `news_article_tags` `blog_article_tags` `media_assets`
 3. `event_venues` `events` `event_status_overrides`
 4. `shops` `shop_menu_items` `map_layers` `map_pins` `map_pin_timetable_groups` `map_pin_timetable_entries`
@@ -1438,6 +1440,6 @@ Better Auth の認証プロバイダ情報。初期はローカル認証のみ�
 
 ## 10. 現行実装との差分
 
-- 現在の `apps/api/src/db/schema.ts` には `messages` テーブルのみ存在する
-- 現在の `apps/api/src/index.ts` には `GET /health` と `GET|POST /messages` のみ存在する
-- 本書の内容を実装する場合は、Drizzle schema、migration、Hono route、認証導線、メディア保存処理を段階的に追加する必要がある
+- 現在の `apps/api/src/db/schema` には認証、記事、イベント、屋台、マップ、リアクションの第一版スキーマが存在する
+- 現在の `apps/api/src/index.ts` で実際に接続されているのは `GET /health` と `GET|POST /api/auth/*` が中心で、公開 API と CMS API はこれから順次実装する前提である
+- 本書の内容を実装する場合は、Drizzle migration、Hono route、認可、メディア保存処理を段階的に追加する必要がある
