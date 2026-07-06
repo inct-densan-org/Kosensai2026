@@ -1,20 +1,15 @@
 'use client';
 
-import React, { useRef } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
-import {Noto_Serif_JP} from "next/font/google";
-import MosaicBackground from "@/components/common/MosaicBackground";
-import VoxelTerrainBackground from "@/components/common/MovingVoxelTerrain";
-const notoSerifJP = Noto_Serif_JP({
-    subsets: ['latin']
-})
+import React, {useRef} from 'react';
+import {motion, useMotionValue, useSpring, useTransform} from 'motion/react';
+
 export function InteractiveParallax() {
     const containerRef = useRef<HTMLDivElement>(null);
 
     const x = useMotionValue(0);
     const y = useMotionValue(0);
 
-    const springConfig = { stiffness: 150, damping: 20, mass: 0.5 };
+    const springConfig = {stiffness: 150, damping: 20, mass: 0.5};
     const springX = useSpring(x, springConfig);
     const springY = useSpring(y, springConfig);
 
@@ -24,9 +19,9 @@ export function InteractiveParallax() {
     const inverseRotateX = useTransform(rotateX, (v) => -v);
     const inverseRotateY = useTransform(rotateY, (v) => -v);
 
-    
+
     // 親が「X → Y」の順で回転するため、子要素は完全に相殺するために「Y → X」の順でCSSを適用する
-    const billboardTemplate = ({ translateZ, rotateX, rotateY }: any) => {
+    const billboardTemplate = ({translateZ, rotateX, rotateY}: any) => {
         return `translateZ(${translateZ}) rotateY(${rotateY}) rotateX(${rotateX})`;
     };
 
@@ -54,7 +49,7 @@ export function InteractiveParallax() {
             onPointerMove={handlePointerMove}
             onPointerLeave={handlePointerLeave}
             className="relative w-full h-screen flex items-center justify-center bg-white overflow-hidden"
-            style={{ perspective: 1200 }}
+            style={{perspective: 1200}}
         >
             <motion.div
                 style={{
@@ -64,7 +59,7 @@ export function InteractiveParallax() {
                 }}
                 className="relative w-full max-w-3xl aspect-video flex items-center justify-center"
             >
-                    
+
                 {/* レイヤー1: 一番奥 */}
                 <motion.div
                     style={{
@@ -77,8 +72,6 @@ export function InteractiveParallax() {
                 >
                     {/*<MosaicBackground />*/}
                 </motion.div>
-                
-                
 
 
                 {/* レイヤー2: 中間 */}
@@ -91,7 +84,7 @@ export function InteractiveParallax() {
                     transformTemplate={billboardTemplate} // テンプレートを適用
                     className="absolute inset-0 flex items-center justify-center pointer-events-none"
                 >
-                    aa
+                    {/* TODO: add content */}
                 </motion.div>
 
                 {/* レイヤー3: 一番手前 */}

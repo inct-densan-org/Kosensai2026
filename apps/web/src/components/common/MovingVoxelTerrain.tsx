@@ -18,10 +18,9 @@ export default function MovingVoxelTerrain() {
                 // 約60%の確率でブロックを配置（適度な隙間を作る）
                 if (Math.random() > 0.4) {
                     const isWhite = Math.random() > 0.4;
-                    // URLエンコードのため、# は %23 に変換
-                    const fill = isWhite ? "%23ffffff" : "%23cffafe"; // 白 or 淡い水色
-                    // const stroke = "%23bae6fd"; // ブロックのフチ（少し濃い水色）
-                    const stroke = ""; // ブロックのフチ
+                    // Data URI 用に最終的に encodeURIComponent するので、ここでは通常のカラーコードを使う
+                    const fill = isWhite ? "#ffffff" : "#cffafe"; // 白 or 淡い水色
+                    const stroke = "none"; // ブロックのフチ（不要なら "none"）
                     const opacity = (Math.random() * 0.4 + 0.6).toFixed(2); // 0.6 〜 1.0 の透明度
 
                     // 時々、複数マスにまたがる大きなブロックを作る
@@ -35,7 +34,7 @@ export default function MovingVoxelTerrain() {
 
         // 2. 生成したSVGをData URIに変換し、CSSの背景画像としてセット
         const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${tileSize}" height="${tileSize}">${rects}</svg>`;
-        setBgUrl(`url('data:image/svg+xml;utf8,${svg}')`);
+        setBgUrl(`url("data:image/svg+xml,${encodeURIComponent(svg)}")`);
     }, []);
 
     return (
