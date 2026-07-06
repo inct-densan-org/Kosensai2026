@@ -1,25 +1,33 @@
 import { serve } from '@hono/node-server'
-import { migrate } from 'drizzle-orm/better-sqlite3/migrator'
 import { apiEnv } from './env'
-import { db } from './db/client'
-import { resolveMigrationsPath } from './db/path'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { messagesRoute } from './routes/messages'
+import { auth } from './lib/auth'
 import { systemRoute } from './routes/system'
 
-migrate(db, {
-  migrationsFolder: resolveMigrationsPath()
-})
-
-export const app = new Hono()
+export const app = new Hono<{
+  Variables: {
+    user: typeof auth.$Infer.Session.user | null
+    session: typeof auth.$Infer.Session.session | null
+  }
+}>()
   .use('*',cors({
         origin: apiEnv.corsOrigin,
         credentials: true
       })
     )
+  .use('*', async (c, next) => {
+    const currentSession = await auth.api.getSession({
+      headers: c.req.raw.headers
+    })
+
+    c.set('user', currentSession?.user ?? null)
+    c.set('session', currentSession?.session ?? null)
+
+    await next()
+  })
+  .on(['GET', 'POST'], '/api/auth/*', c => auth.handler(c.req.raw))
   .route('/', systemRoute)
-  .route('/', messagesRoute)
 
 serve(
   {

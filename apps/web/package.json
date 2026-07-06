@@ -12,6 +12,7 @@
   "dependencies": {
     "@kosensai/api": "workspace:*",
     "@kosensai/shared": "workspace:*",
+    "better-auth": "^1.6.23",
     "hono": "^4.6.8",
     "motion": "^12.42.2",
     "next": "^15.1.4",
