@@ -1,16 +1,24 @@
 import { createInterface } from 'node:readline/promises'
 import { stdin as input, stdout as output } from 'node:process'
+import readline from 'node:readline'
 import { createPlaceholderEmail } from '@kosensai/shared'
 import { db } from '../db/client'
 import { user } from '../db/schema'
 import { auth } from '../lib/auth'
 
-const promptNonEmpty = async (
-  readline: ReturnType<typeof createInterface>,
-  message: string
-) => {
+const ask = async (message: string) => {
+  const rl = createInterface({ input, output })
+
+  try {
+    return await rl.question(message)
+  } finally {
+    rl.close()
+  }
+}
+
+const askRequired = async (message: string) => {
   while (true) {
-    const value = (await readline.question(message)).trim()
+    const value = (await ask(message)).trim()
 
     if (value.length > 0) {
       return value
@@ -20,10 +28,64 @@ const promptNonEmpty = async (
   }
 }
 
-const promptPassword = async (readline: ReturnType<typeof createInterface>) => {
+const askHidden = async (message: string) => {
+  if (!input.isTTY || !output.isTTY) {
+    return ask(message)
+  }
+
+  readline.emitKeypressEvents(input)
+
+  return await new Promise<string>(resolve => {
+    const previousRawMode = input.isRaw ?? false
+    let value = ''
+
+    output.write(message)
+    input.setRawMode(true)
+    input.resume()
+
+    const finish = () => {
+      input.removeListener('keypress', handleKeypress)
+      input.setRawMode(previousRawMode)
+      output.write('\n')
+      resolve(value)
+    }
+
+    const abort = () => {
+      input.removeListener('keypress', handleKeypress)
+      input.setRawMode(previousRawMode)
+      output.write('\n')
+      process.kill(process.pid, 'SIGINT')
+    }
+
+    const handleKeypress = (char: string, key: readline.Key) => {
+      if (key.ctrl && key.name === 'c') {
+        abort()
+        return
+      }
+
+      if (key.name === 'return' || key.name === 'enter') {
+        finish()
+        return
+      }
+
+      if (key.name === 'backspace') {
+        value = value.slice(0, -1)
+        return
+      }
+
+      if (char) {
+        value += char
+      }
+    }
+
+    input.on('keypress', handleKeypress)
+  })
+}
+
+const askPasswordWithConfirmation = async () => {
   while (true) {
-    const password = await readline.question('初期パスワード: ')
-    const confirmation = await readline.question('初期パスワード(確認): ')
+    const password = await askHidden('初期パスワード: ')
+    const confirmation = await askHidden('初期パスワード(確認): ')
 
     if (password.length === 0) {
       console.log('パスワードは必須です。')
@@ -39,13 +101,9 @@ const promptPassword = async (readline: ReturnType<typeof createInterface>) => {
   }
 }
 
-const promptConfirmation = async (
-  readline: ReturnType<typeof createInterface>,
-  loginId: string,
-  name: string
-) => {
+const askConfirmation = async (loginId: string, name: string) => {
   while (true) {
-    const answer = (await readline.question(
+    const answer = (await ask(
       `管理者 ${name} (${loginId}) を作成しますか？ [y/N]: `
     )).trim().toLowerCase()
 
@@ -70,40 +128,34 @@ const main = async () => {
     return
   }
 
-  const readline = createInterface({ input, output })
+  console.log('初期管理者を作成します。')
 
-  try {
-    console.log('初期管理者を作成します。')
+  const loginId = await askRequired('ログインID: ')
+  const name = await askRequired('表示名: ')
+  const password = await askPasswordWithConfirmation()
+  const shouldCreate = await askConfirmation(loginId, name)
 
-    const loginId = await promptNonEmpty(readline, 'ログインID: ')
-    const name = await promptNonEmpty(readline, '表示名: ')
-    const password = await promptPassword(readline)
-    const shouldCreate = await promptConfirmation(readline, loginId, name)
-
-    if (!shouldCreate) {
-      console.log('作成を中止しました。')
-      return
-    }
-
-    const result = await auth.api.signUpEmail({
-      headers: new Headers(),
-      body: {
-        name,
-        email: createPlaceholderEmail(loginId),
-        password,
-        username: loginId,
-        displayUsername: name,
-        role: 'admin'
-      }
-    } as Parameters<typeof auth.api.signUpEmail>[0])
-
-    console.log('初期管理者を作成しました。')
-    console.log(`userId: ${result.user.id}`)
-    console.log(`loginId: ${loginId}`)
-    console.log('role: admin')
-  } finally {
-    readline.close()
+  if (!shouldCreate) {
+    console.log('作成を中止しました。')
+    return
   }
+
+  const result = await auth.api.signUpEmail({
+    headers: new Headers(),
+    body: {
+      name,
+      email: createPlaceholderEmail(loginId),
+      password,
+      username: loginId,
+      displayUsername: name,
+      role: 'admin'
+    }
+  } as Parameters<typeof auth.api.signUpEmail>[0])
+
+  console.log('初期管理者を作成しました。')
+  console.log(`userId: ${result.user.id}`)
+  console.log(`loginId: ${loginId}`)
+  console.log('role: admin')
 }
 
 void main().catch(error => {

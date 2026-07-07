@@ -8,7 +8,24 @@ import { apiEnv } from '../env'
 
 export const auth = betterAuth({
   baseURL: apiEnv.betterAuthUrl,
+  trustedOrigins: [
+    apiEnv.corsOrigin
+  ],
   secret: apiEnv.betterAuthSecret,
+  user: {
+    additionalFields: {
+      role: {
+        type: 'string',
+        required: false,
+        returned: true
+      },
+      shopId: {
+        type: 'string',
+        required: false,
+        returned: true
+      }
+    }
+  },
   database: drizzleAdapter(db, {
     provider: 'sqlite',
     schema
@@ -20,7 +37,11 @@ export const auth = betterAuth({
     user: {
       create: {
         before: async user => {
-          const loginId = typeof user.username === 'string' ? user.username : null
+          const loginId = typeof user.username === 'string'
+            ? user.username
+            : typeof user.loginId === 'string'
+              ? user.loginId
+              : null
 
           if (!loginId) {
             throw new Error('loginId is required')

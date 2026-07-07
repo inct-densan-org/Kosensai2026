@@ -5,7 +5,7 @@ import { getServerSession } from '@/lib/server-auth'
 export default async function LoginPage() {
   const session = await getServerSession()
 
-  if (session?.user.role === 'admin') {
+  if (session?.user.role === 'admin' || session?.user.role === 'committee') {
     redirect('/protected/test')
   }
 

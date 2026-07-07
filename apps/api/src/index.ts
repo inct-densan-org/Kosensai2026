@@ -3,6 +3,7 @@ import { apiEnv } from './env'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { auth } from './lib/auth'
+import { cmsAdminUsersRoute } from './routes/cms-admin-users'
 import { systemRoute } from './routes/system'
 
 export const app = new Hono<{
@@ -28,6 +29,7 @@ export const app = new Hono<{
   })
   .on(['GET', 'POST'], '/api/auth/*', c => auth.handler(c.req.raw))
   .route('/', systemRoute)
+  .route('/cms/admin/users', cmsAdminUsersRoute)
 
 serve(
   {

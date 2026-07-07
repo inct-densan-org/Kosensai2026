@@ -15,7 +15,7 @@ const readErrorMessage = (error: unknown) => {
 
 const readReasonMessage = (reason: string | null) => {
   if (reason === 'forbidden') {
-    return '管理者アカウントでログインしてください'
+    return '実行委員または管理者アカウントでログインしてください'
   }
 
   if (reason === 'unauthorized') {
@@ -41,7 +41,7 @@ export const LoginForm = () => {
 
     const role = 'role' in session.user ? session.user.role : null
 
-    if (role === 'admin') {
+    if (role === 'admin' || role === 'committee') {
       router.replace('/protected/test')
       router.refresh()
     }
@@ -70,9 +70,9 @@ export const LoginForm = () => {
 
       const role = nextSession.data?.user && 'role' in nextSession.data.user ? nextSession.data.user.role : null
 
-      if (role !== 'admin') {
+      if (role !== 'admin' && role !== 'committee') {
         await authClient.signOut()
-        throw new Error('管理者アカウントでログインしてください')
+        throw new Error('実行委員または管理者アカウントでログインしてください')
       }
 
       router.replace('/protected/test')
@@ -116,7 +116,9 @@ export const LoginForm = () => {
       <section className="grid w-full max-w-md gap-4 rounded-[28px] border border-black/10 bg-white/75 p-7 shadow-[0_20px_60px_rgba(31,28,23,0.08)] backdrop-blur-md">
         <p className="m-0 text-base text-[#1f1c17]">現在 {session.user.name} でログインしています。</p>
         <p className="m-0 text-sm text-[#6c6256]">権限: {String(role ?? 'unknown')}</p>
-        {role !== 'admin' ? <p className="m-0 text-sm text-[#a31313]">管理者権限が必要です。</p> : null}
+        {role !== 'admin' && role !== 'committee'
+          ? <p className="m-0 text-sm text-[#a31313]">実行委員以上の権限が必要です。</p>
+          : null}
         <button
           type="button"
           onClick={handleSignOut}
@@ -136,9 +138,7 @@ export const LoginForm = () => {
         <h1 className="m-0 text-[clamp(2rem,5vw,3rem)] leading-none tracking-[-0.03em] text-[#1f1c17]">
           管理画面ログイン
         </h1>
-        <p className="m-0 max-w-[40rem] text-[1.05rem] leading-7 text-[#6c6256]">
-          `protected` 配下は管理者のみ閲覧できます。
-        </p>
+
       </div>
 
       <form className="grid gap-3" onSubmit={handleSubmit}>

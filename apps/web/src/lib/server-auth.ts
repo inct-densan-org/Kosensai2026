@@ -16,6 +16,7 @@ type BetterAuthSessionResponse = {
     email?: string | null
     role?: string | null
     loginId?: string | null
+    username?: string | null
   }
 }
 
@@ -59,6 +60,20 @@ export const requireAdminSession = async () => {
   }
 
   if (session.user.role !== 'admin') {
+    redirect(buildLoginPath('forbidden'))
+  }
+
+  return session
+}
+
+export const requireCommitteeSession = async () => {
+  const session = await getServerSession()
+
+  if (!session) {
+    redirect(buildLoginPath('unauthorized'))
+  }
+
+  if (session.user.role !== 'admin' && session.user.role !== 'committee') {
     redirect(buildLoginPath('forbidden'))
   }
 
