@@ -73,6 +73,7 @@ export interface Config {
     users: User;
     'news-articles': NewsArticle;
     'blog-articles': BlogArticle;
+    'shop-announcements': ShopAnnouncement;
     'event-status-overrides': EventStatusOverride;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -87,6 +88,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     'news-articles': NewsArticlesSelect<false> | NewsArticlesSelect<true>;
     'blog-articles': BlogArticlesSelect<false> | BlogArticlesSelect<true>;
+    'shop-announcements': ShopAnnouncementsSelect<false> | ShopAnnouncementsSelect<true>;
     'event-status-overrides': EventStatusOverridesSelect<false> | EventStatusOverridesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -163,21 +165,6 @@ export interface Shop {
   id: number;
   code: string;
   name: string;
-  description: string;
-  poster?: (number | null) | Media;
-  snsUrl?: string | null;
-  status: 'draft' | 'published' | 'hidden';
-  sortOrder: number;
-  menuItems?:
-    | {
-        code: string;
-        name: string;
-        description?: string | null;
-        price: number;
-        sortOrder: number;
-        id?: string | null;
-      }[]
-    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -189,7 +176,10 @@ export interface User {
   id: number;
   name: string;
   role: 'shop_staff' | 'committee' | 'admin';
-  shop?: (number | null) | Shop;
+  /**
+   * このユーザーが編集できる屋台です。実行委員は必要な場合だけ設定します。
+   */
+  shops?: (number | Shop)[] | null;
   updatedAt: string;
   createdAt: string;
   email?: string | null;
@@ -282,6 +272,40 @@ export interface BlogArticle {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shop-announcements".
+ */
+export interface ShopAnnouncement {
+  id: number;
+  title: string;
+  excerpt?: string | null;
+  body: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  status: 'draft' | 'scheduled' | 'published' | 'archived';
+  publishedAt?: string | null;
+  scheduledAt?: string | null;
+  tags?: (number | Tag)[] | null;
+  /**
+   * このお知らせを掲載する屋台です。実行委員・屋台担当者は自分の担当屋台だけ選択できます。
+   */
+  shop: number | Shop;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "event-status-overrides".
  */
 export interface EventStatusOverride {
@@ -339,6 +363,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'blog-articles';
         value: number | BlogArticle;
+      } | null)
+    | ({
+        relationTo: 'shop-announcements';
+        value: number | ShopAnnouncement;
       } | null)
     | ({
         relationTo: 'event-status-overrides';
@@ -421,21 +449,6 @@ export interface TagsSelect<T extends boolean = true> {
 export interface ShopsSelect<T extends boolean = true> {
   code?: T;
   name?: T;
-  description?: T;
-  poster?: T;
-  snsUrl?: T;
-  status?: T;
-  sortOrder?: T;
-  menuItems?:
-    | T
-    | {
-        code?: T;
-        name?: T;
-        description?: T;
-        price?: T;
-        sortOrder?: T;
-        id?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -446,7 +459,7 @@ export interface ShopsSelect<T extends boolean = true> {
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
   role?: T;
-  shop?: T;
+  shops?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -496,6 +509,22 @@ export interface BlogArticlesSelect<T extends boolean = true> {
   articleType?: T;
   coverMedia?: T;
   authorDisplayName?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shop-announcements_select".
+ */
+export interface ShopAnnouncementsSelect<T extends boolean = true> {
+  title?: T;
+  excerpt?: T;
+  body?: T;
+  status?: T;
+  publishedAt?: T;
+  scheduledAt?: T;
+  tags?: T;
+  shop?: T;
   updatedAt?: T;
   createdAt?: T;
 }

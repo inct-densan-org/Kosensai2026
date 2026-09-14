@@ -1,5 +1,14 @@
-import type { CollectionConfig } from 'payload'
-import { admins, committeeOrAdmins, publishedOrAuthenticated, shopStaffOrAbove } from '@/access/roles'
+import { APIError, type CollectionBeforeValidateHook, type CollectionConfig } from 'payload'
+import {
+  admins,
+  canCreateShopScopedContent,
+  canManageShopScopedContent,
+  committeeOrAdmins,
+  publishedOrAuthenticated,
+  readAssignedShopIds,
+  readRole,
+  shopStaffOrAbove,
+} from '@/access/roles'
 
 const articleStatusOptions = [
   { label: '下書き', value: 'draft' },
@@ -7,6 +16,81 @@ const articleStatusOptions = [
   { label: '公開', value: 'published' },
   { label: 'アーカイブ', value: 'archived' },
 ]
+
+const readRelationshipId = (value: unknown) => {
+  if (typeof value === 'number' || typeof value === 'string') {
+    return value
+  }
+
+  if (value && typeof value === 'object' && 'id' in value) {
+    const id = value.id
+    return typeof id === 'number' || typeof id === 'string' ? id : null
+  }
+
+  return null
+}
+
+const normalizePublicationDates: CollectionBeforeValidateHook = ({ data, originalDoc }) => {
+  const nextData = data ?? {}
+
+  if (nextData.status === 'published' && !nextData.publishedAt && !originalDoc?.publishedAt) {
+    return {
+      ...nextData,
+      publishedAt: new Date().toISOString(),
+    }
+  }
+
+  return nextData
+}
+
+const restrictShopToAssignedUser: CollectionBeforeValidateHook = ({ data, req }) => {
+  const role = readRole(req.user)
+
+  if (role === 'admin') {
+    return data
+  }
+
+  const assignedShopIds = readAssignedShopIds(req.user)
+
+  if ((role !== 'committee' && role !== 'shop_staff') || assignedShopIds.length === 0) {
+    throw new APIError('担当屋台が設定されていません', 403, null, true)
+  }
+
+  const selectedShopId = readRelationshipId(data?.shop)
+
+  if (!selectedShopId && assignedShopIds.length === 1) {
+    return {
+      ...data,
+      shop: assignedShopIds[0],
+    }
+  }
+
+  if (!selectedShopId || !assignedShopIds.includes(selectedShopId)) {
+    throw new APIError('担当外の屋台にはお知らせを作成・編集できません', 403, null, true)
+  }
+
+  return data
+}
+
+const assignedShopFilter = ({ req }: { req: { user?: unknown } }) => {
+  const role = readRole(req.user)
+
+  if (role === 'admin') {
+    return true
+  }
+
+  const assignedShopIds = readAssignedShopIds(req.user)
+
+  if ((role !== 'committee' && role !== 'shop_staff') || assignedShopIds.length === 0) {
+    return false
+  }
+
+  return {
+    id: {
+      in: assignedShopIds,
+    },
+  }
+}
 
 const publicationFields: CollectionConfig['fields'] = [
   {
@@ -33,10 +117,19 @@ const publicationFields: CollectionConfig['fields'] = [
   {
     name: 'publishedAt',
     type: 'date',
+    admin: {
+      hidden: true,
+      readOnly: true,
+      description: '',
+    },
   },
   {
     name: 'scheduledAt',
     type: 'date',
+    admin: {
+      condition: (_data, siblingData) => siblingData.status === 'scheduled',
+      description: '',
+    },
   },
   {
     name: 'tags',
@@ -57,6 +150,9 @@ export const NewsArticles: CollectionConfig = {
     read: publishedOrAuthenticated,
     update: committeeOrAdmins,
     delete: admins,
+  },
+  hooks: {
+    beforeValidate: [normalizePublicationDates],
   },
   fields: [
     ...publicationFields,
@@ -85,6 +181,9 @@ export const BlogArticles: CollectionConfig = {
     update: shopStaffOrAbove,
     delete: admins,
   },
+  hooks: {
+    beforeValidate: [normalizePublicationDates],
+  },
   fields: [
     ...publicationFields,
     {
@@ -111,6 +210,36 @@ export const BlogArticles: CollectionConfig = {
     {
       name: 'authorDisplayName',
       type: 'text',
+    },
+  ],
+}
+
+export const ShopAnnouncements: CollectionConfig = {
+  slug: 'shop-announcements',
+  admin: {
+    useAsTitle: 'title',
+    defaultColumns: ['title', 'shop', 'status', 'publishedAt'],
+  },
+  access: {
+    create: canCreateShopScopedContent,
+    read: publishedOrAuthenticated,
+    update: canManageShopScopedContent,
+    delete: admins,
+  },
+  hooks: {
+    beforeValidate: [normalizePublicationDates, restrictShopToAssignedUser],
+  },
+  fields: [
+    ...publicationFields,
+    {
+      name: 'shop',
+      type: 'relationship',
+      relationTo: 'shops' as never,
+      required: true,
+      filterOptions: assignedShopFilter,
+      admin: {
+        description: 'このお知らせを掲載する屋台です。実行委員・屋台担当者は自分の担当屋台だけ選択できます。',
+      },
     },
   ],
 }

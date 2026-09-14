@@ -58,7 +58,7 @@ Payload auth を使う CMS ユーザーです。
 - `loginId`: 運用上のログインID。一意
 - `name`: 表示名
 - `role`: `shop_staff` `committee` `admin`
-- `shop`: 屋台担当ユーザーに紐づく `shops` 参照
+- `shops`: ユーザーが編集できる `shops` 参照。屋台担当は必須運用、実行委員は必要な場合だけ複数指定可能
 
 ### `media`
 
@@ -79,6 +79,10 @@ Payload auth を使う CMS ユーザーです。
 ### `blog-articles`
 
 ブログ記事です。作成・更新は CMS 権限ユーザー、削除は管理者に限定します。
+
+### `shop-announcements`
+
+屋台ごとのお知らせです。屋台担当者と実行委員は自分に紐づく屋台のお知らせだけ作成・更新できます。管理者は全屋台を扱えます。
 
 ### `event-status-overrides`
 

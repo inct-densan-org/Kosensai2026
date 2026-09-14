@@ -5,7 +5,7 @@ export const Users: CollectionConfig = {
   slug: 'users',
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'username', 'role', 'shop'],
+    defaultColumns: ['name', 'username', 'role', 'shops'],
   },
   auth: {
     loginWithUsername: true,
@@ -43,11 +43,13 @@ export const Users: CollectionConfig = {
       ],
     },
     {
-      name: 'shop',
+      name: 'shops',
       type: 'relationship',
       relationTo: 'shops' as never,
+      hasMany: true,
       admin: {
-        condition: (_data, siblingData) => siblingData.role === 'shop_staff',
+        condition: (_data, siblingData) => siblingData.role === 'shop_staff' || siblingData.role === 'committee',
+        description: 'このユーザーが編集できる屋台です。実行委員は必要な場合だけ設定します。',
       },
     },
   ]
