@@ -6,12 +6,11 @@
     "dev": "concurrently -k -n web,api \"pnpm --filter @kosensai/web dev\" \"pnpm --filter @kosensai/api dev\"",
     "dev:web": "pnpm --filter @kosensai/web dev",
     "dev:api": "pnpm --filter @kosensai/api dev",
-    "bootstrap:admin": "pnpm --filter @kosensai/api bootstrap:admin",
     "build": "turbo run build",
     "lint": "turbo run lint",
     "check": "turbo run check",
-    "db:generate": "pnpm --filter @kosensai/api db:generate",
-    "db:migrate": "pnpm --filter @kosensai/api db:migrate"
+    "payload:types": "pnpm --filter @kosensai/api payload:types",
+    "payload:migrate": "pnpm --filter @kosensai/api payload:migrate"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",

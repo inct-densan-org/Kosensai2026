@@ -1,6 +1,6 @@
 # 高専祭 Web サイト フロントエンド設計書 2026
 
-最終更新: 2026-06-28
+最終更新: 2026-09-13
 
 ## 1. 本書の位置づけ
 
@@ -14,7 +14,7 @@
 
 - フレームワークは Next.js App Router
 - 公開サイトと CMS は同一 `apps/web` 内で管理する
-- API 呼び出しは Hono RPC の型共有を前提にし、hand-written fetch 層を増やしすぎない
+- データ取得は Payload Local API と薄い fetch adapter を使い分ける
 - 公開ページは SEO、初速、安定表示を優先し、可能な限り Server Component を基本にする
 - フォーム、モーダル、リアクション、ズーム・パンなどの強い操作性が必要な箇所のみ Client Component に切り出す
 - CMS は role ごとに表示制御し、`editor` `committee` `admin` の権限境界を画面側でも明示する
@@ -70,15 +70,15 @@
 apps/web/src/app
 ├── (public)/
 ├── (cms)/
-├── (cms-admin)/
+├── (cms-admin)/       # Payload Admin への互換リダイレクト用
 ├── api/               # Next 側で必要な route handler がある場合のみ
 ├── globals.css
 └── layout.tsx
 ```
 
 - `(public)` は来場者向け公開ページ
-- `(cms)` は `editor` `committee` `admin` 共通で使う CMS ページ
-- `(cms-admin)` は `admin` 専用ページ
+- `(cms)` は必要になった場合に公開サイト側へ独自 CMS 補助画面を置く領域
+- `(cms-admin)` は Payload Admin へ誘導する互換ルート
 - URL には route group 名を出さず、画面ごとの layout だけを分ける
 
 ## 4.2 想定ディレクトリ構成
@@ -106,13 +106,7 @@ apps/web/src
 │   │   └── cms/
 │   │       └── admin/
 │   │           ├── layout.tsx
-│   │           ├── page.tsx
-│   │           ├── users/
-│   │           ├── tags/
-│   │           ├── venues/
-│   │           ├── shops/
-│   │           ├── map/
-│   │           └── reactions/
+│   │           └── users/
 │   ├── globals.css
 │   └── layout.tsx
 ├── components/
@@ -163,17 +157,16 @@ apps/web/src
 
 `app/(cms)/cms/layout.tsx`
 
-- CMS ヘッダー
-- サイドナビまたは下部ナビ
-- セッション情報表示
-- 権限に応じたメニュー制御
+- 必要になった場合のみ、公開サイト側で完結する補助画面を配置する
+- 認証・権限管理の主系統は Payload Admin に寄せる
 
 ## 5.4 Admin レイアウト
 
 `app/(cms-admin)/cms/admin/layout.tsx`
 
-- 管理者メニューを CMS 一般画面と分離する
-- `admin` 以外はここで即座にアクセス拒否または CMS トップへリダイレクトする
+- 旧 `/cms/admin/*` 入口を残すための互換ルートとして扱う
+- 実際の認証・権限判定は Payload collection の `access` で制御する
+- 画面を再実装せず、必要に応じて `http://localhost:8787/admin` 配下へリダイレクトする
 
 ## 6. 公開ページ設計
 
@@ -283,7 +276,7 @@ apps/web/src
 ## 6.6 `/login`
 
 - ユーザー名 + パスワード入力
-- Better Auth の sign-in を呼ぶ
+- Payload auth のログイン処理を呼ぶ
 - ログイン後は role に応じて `/cms` または `/cms/admin` に遷移する
 
 ## 7. CMS ページ設計
@@ -315,18 +308,17 @@ apps/web/src
 
 ## 7.5 `/cms/admin/*`
 
-- `users` `tags` `venues` `shops` `map` `reactions` は管理者専用
-- ルーティングだけでなくメニューも `admin` のみに表示する
-- 一括更新系の画面では保存単位を明確にする
+- 現時点では Payload Admin を正とし、`apps/web` 側の `/cms/admin/*` は互換リダイレクトに留める
+- 管理者専用の制御は Payload collection の `access` で行う
 
 ## 8. データ取得方針
 
 ## 8.1 API client
 
-現行の `apps/web/src/lib/api.ts` を起点に、Hono RPC 型共有を使う。
+現行の `apps/web/src/lib/api.ts` を起点に、バックエンド境界を薄い helper として扱う。
 
-- `hc<AppType>(apiBaseUrl)` を利用する
-- API 型は `@kosensai/api` 側から import する
+- `apps/web` からは `NEXT_PUBLIC_API_URL` を起点に Payload REST API を呼び出す
+- 同一プロセスへ組み込む場合だけ `@kosensai/api` の `getPayloadClient()` 利用を検討する
 - DTO を UI ごとに手書きで重複定義しすぎない
 - `lib/api.ts` には base client と薄い helper だけを置く
 
@@ -391,7 +383,7 @@ apps/web/src
 - `features/cms-news/*`
 - `features/cms-blog/*`
 - `features/cms-events/*`
-- `features/cms-admin/*`
+- `features/cms-admin/*` は独自管理画面を再導入する場合のみ作成する
 
 ### 分割ルール
 
@@ -402,7 +394,7 @@ apps/web/src
 
 ## 11. 認証・認可のフロント方針
 
-- ログイン状態は Better Auth のセッション API を基準に判断する
+- ログイン状態は Payload auth のセッションを基準に判断する
 - CMS レイアウトで未認証なら `/login` へリダイレクトする
 - `admin` 専用画面はレイアウト段階でガードする
 - role に応じてサイドメニュー、ボタン、編集導線を出し分ける

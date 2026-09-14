@@ -1,6 +1,6 @@
 # 高専祭2026 ホームページ
 
-このリポジトリは、`apps/web` の Next.js フロントエンドと `apps/api` の Hono API を同じモノレポで管理します。
+このリポジトリは、`apps/web` の Next.js フロントエンドと `apps/api` の Payload CMS 設定を同じモノレポで管理します。
 
 ## 初回セットアップ
 
@@ -38,7 +38,7 @@ direnv allow
 ```
 
 `flake.nix` では Node.js 22 を使い、`corepack` 経由で `pnpm@9.15.4` を有効化します。
-`better-sqlite3` のビルドに必要なツールも同時に読み込みます。
+Payload と画像処理まわりの依存ビルドに必要なツールも同時に読み込みます。
 
 ```bash
 pnpm install
@@ -48,7 +48,7 @@ pnpm dev
 ## プロジェクト構成
 
 - `apps/web`: Next.js フロントエンド
-- `apps/api`: Hono API サーバー
+- `apps/api`: Payload CMS Admin / REST API / collection 定義
 - `apps/db/data`: SQLite のデータ保存先
 - `packages/shared`: API と Web で共有する型・定義
 - `packages/config`: 共有 tsconfig
@@ -57,11 +57,13 @@ pnpm dev
 ## よく使うコマンド
 
 - `pnpm dev`: Web と API をまとめて起動
-- `pnpm dev:web`: Web だけ起動
-- `pnpm dev:api`: API だけ起動
+- `pnpm dev:web`: Web を `http://localhost:3001` で起動
+- `pnpm dev:api`: Payload Admin を `http://localhost:8787/admin` で起動
 - `pnpm build`: 全ワークスペースをビルド
 - `pnpm check`: 型チェック
 - `pnpm lint`: lint 相当の確認
+- `pnpm payload:types`: Payload 型定義の生成
+- `pnpm payload:migrate`: Payload migration の実行
 
 ## 参考
 
