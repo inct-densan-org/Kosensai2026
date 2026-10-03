@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { GoogleAnalytics } from '@next/third-parties/google'
-import './globals.css'
 
+require('./globals.css')
 
 export const metadata: Metadata = {
   title: "一関工業高等専門学校 高専祭2026",

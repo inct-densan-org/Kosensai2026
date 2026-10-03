@@ -191,3 +191,12 @@ button:disabled {
   animation: moveVoxelForward var(--duration) linear infinite;
   animation-delay: var(--delay);
 }
+/* スクロールバーを非表示（レイアウト幅を画面幅と一致させる） */
+.hidden-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hidden-scrollbar::-webkit-scrollbar {
+  display: none;
+}
