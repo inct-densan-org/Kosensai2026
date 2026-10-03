@@ -89,7 +89,7 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
   if (!width || !height) return null;
 
   return (
-    <div className="relative w-full min-h-screen bg-[#0072C3] bg-no-repeat bg-[image:var(--mesh-gradient)]">
+    <div className="relative w-full min-h-screen bg-no-repeat bg-[image:var(--mesh-gradient)]">
       <Navigation />
       {/* {!open && (
         <div className="w-full fixed z-50 top-16 left-0 md:top-36 md:left-6 bg-transparent pointer-events-none">
@@ -121,11 +121,11 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
         <div
           className={`px-4 md:px-12 py-0 flex flex-col items-center gap-12 ${width > height ? "justify-center" : ""}`}
         >
-          <div className="bg-white/10 rounded-2xl p-6 shadow-lg text-white w-full max-w-[700px]">
-            <h3 className="text-2xl font-bold mb-4 text-center">
+          <div className="w-full max-w-[700px] rounded-2xl border border-white/35 bg-white/20 p-6 text-[var(--text-color-default)] shadow-[0_10px_28px_rgba(48,96,128,0.10)] backdrop-blur-sm">
+            <h3 className="mb-4 text-center text-2xl font-extrabold text-[var(--text-color-default)]/95">
               ごみの分別にご協力ください
             </h3>
-            <ul className="list-disc list-inside space-y-2 mb-4 text-left">
+            <ul className="mb-4 list-inside list-disc space-y-2 text-left font-semibold leading-relaxed text-[var(--text-color-default)]/90">
               <li>
                 ゴミ箱は、屋外マップに表示されている指定の場所に設置されています。
               </li>
@@ -137,10 +137,10 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
                 その他のごみについても、ゴミ箱の表示に従って正しい分別をお願いいたします。
               </li>
             </ul>
-            <p className="text-sm text-left">
+            <p className="text-left text-sm font-medium text-[var(--text-color-default)]/75">
               詳細な分別方法については、一関市のガイドラインをご参照ください。
             </p>
-            <a
+            {/* <a
               href="https://www.city.ichinoseki.iwate.jp/~kouiki-gyousei/garbage/21/335/"
               target="_blank"
               rel="noopener noreferrer"
@@ -155,7 +155,7 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
               className="text-blue-300 hover:underline mt-2 ml-4 inline-block"
             >
               分別方法の詳細はこちら (PDF)
-            </a>
+            </a> */}
           </div>
 
           <div className="w-full max-w-[700px]">
@@ -220,7 +220,7 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
             />
           </div>
 
-          <div className="w-full max_w-[700px]">
+          <div className="w-full max-w-[700px]">
             <h3 className="text-2xl font-bold text-center mb-4">
               専攻科・教育棟
             </h3>

@@ -324,3 +324,8 @@ textarea {
     @apply font-sans;
   }
 }
+
+/* デフォルト変数定義 */
+html {
+  --text-color-default: #306070;
+}

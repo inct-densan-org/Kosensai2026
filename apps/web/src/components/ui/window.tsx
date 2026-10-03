@@ -17,7 +17,7 @@ export function Window({title, children, color, subtitle, className, titleAction
             "flex flex-col",
             className
         )}
-             style={{color: color}}>
+            style={{color: color}}>
 
             {/* Title Bar (fixed height) */}
             <div
