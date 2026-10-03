@@ -184,7 +184,7 @@ export function MapPage({
                           event.stopPropagation(); // Prevent modal from closing if it does
                           handleCopyClick(e.idx, postersData[e.idx].title);
                         }}
-                        className="ml-2 rounded-full border-0 bg-transparent p-1 transition-colors duration-200 hover:bg-white/20"
+                        className="ml-2 rounded-full border-0 bg-transparent p-1 outline-none transition-colors duration-200 hover:bg-white/20 focus:outline-none focus-visible:outline-none focus-visible:ring-0"
                         aria-label="URLをコピー"
                       >
                         <Paperclip size={16} />

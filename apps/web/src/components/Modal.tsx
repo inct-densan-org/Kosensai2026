@@ -29,7 +29,7 @@ export function Modal({
           <button
             {...props}
             className={cn(
-              "relative w-full h-full border-0 bg-transparent p-0 text-inherit shadow-none hover:bg-transparent",
+              "relative w-full h-full border-0 bg-transparent p-0 text-inherit shadow-none outline-none hover:bg-transparent focus:outline-none focus-visible:outline-none focus-visible:ring-0",
               props.className,
             )}
           >
