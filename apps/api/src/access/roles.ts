@@ -87,6 +87,26 @@ export const canManageShopScopedContent: Access = ({ req }) => {
   }
 }
 
+export const canManageAssignedShops: Access = ({ req }) => {
+  const role = readRole(req.user)
+
+  if (role === 'admin') {
+    return true
+  }
+
+  const assignedShopIds = readAssignedShopIds(req.user)
+
+  if (role !== 'shop_staff' || assignedShopIds.length === 0) {
+    return false
+  }
+
+  return {
+    id: {
+      in: assignedShopIds,
+    },
+  }
+}
+
 export const publishedOrAuthenticated: Access = ({ req }) => {
   if (req.user) {
     return true

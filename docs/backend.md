@@ -68,9 +68,13 @@ Payload auth を使う CMS ユーザーです。
 
 記事タグです。作成・更新は実行委員以上、削除は管理者に限定します。
 
+### `blog-article-types`
+
+ブログ記事の主分類です。管理は管理者のみ行い、ブログ記事ではこの collection から 1 つ選択します。
+
 ### `shops`
 
-屋台・企画情報です。メニューは `menuItems` の array field として同一 collection 内に持ちます。
+屋台・企画情報です。`code` と `name` は管理者のみ更新できます。`menu` は画像なしのリッチテキストで、管理者またはその屋台の屋台担当者だけ更新できます。
 
 ### `news-articles`
 

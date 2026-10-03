@@ -188,14 +188,9 @@ export const BlogArticles: CollectionConfig = {
     ...publicationFields,
     {
       name: 'articleType',
-      type: 'select',
+      type: 'relationship',
+      relationTo: 'blog-article-types' as never,
       required: true,
-      options: [
-        { label: '屋台紹介', value: 'shop-feature' },
-        { label: 'レビュー', value: 'review' },
-        { label: 'ハイライト', value: 'highlight' },
-        { label: '舞台裏', value: 'behind-the-scenes' },
-      ],
     },
     {
       name: 'coverMedia',
@@ -207,9 +202,41 @@ export const BlogArticles: CollectionConfig = {
         description: 'ブログ一覧や詳細で使うカバー画像です。記事編集画面内で選択・アップロードできます。',
       },
     },
+  ],
+}
+
+export const BlogArticleTypes: CollectionConfig = {
+  slug: 'blog-article-types',
+  admin: {
+    useAsTitle: 'name',
+    defaultColumns: ['name', 'code', 'sortOrder'],
+  },
+  access: {
+    create: admins,
+    read: shopStaffOrAbove,
+    update: admins,
+    delete: admins,
+  },
+  fields: [
     {
-      name: 'authorDisplayName',
+      name: 'code',
       type: 'text',
+      required: true,
+      unique: true,
+      admin: {
+        description: '公開側で使う安定した識別子です。',
+      },
+    },
+    {
+      name: 'name',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'sortOrder',
+      type: 'number',
+      required: true,
+      defaultValue: 0,
     },
   ],
 }

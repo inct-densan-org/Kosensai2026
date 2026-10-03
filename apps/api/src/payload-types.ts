@@ -71,6 +71,7 @@ export interface Config {
     tags: Tag;
     shops: Shop;
     users: User;
+    'blog-article-types': BlogArticleType;
     'news-articles': NewsArticle;
     'blog-articles': BlogArticle;
     'shop-announcements': ShopAnnouncement;
@@ -86,6 +87,7 @@ export interface Config {
     tags: TagsSelect<false> | TagsSelect<true>;
     shops: ShopsSelect<false> | ShopsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    'blog-article-types': BlogArticleTypesSelect<false> | BlogArticleTypesSelect<true>;
     'news-articles': NewsArticlesSelect<false> | NewsArticlesSelect<true>;
     'blog-articles': BlogArticlesSelect<false> | BlogArticlesSelect<true>;
     'shop-announcements': ShopAnnouncementsSelect<false> | ShopAnnouncementsSelect<true>;
@@ -165,6 +167,24 @@ export interface Shop {
   id: number;
   code: string;
   name: string;
+  /**
+   * 屋台のお品書きや補足説明です。本文中の画像挿入はできません。
+   */
+  menu?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -202,6 +222,21 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-article-types".
+ */
+export interface BlogArticleType {
+  id: number;
+  /**
+   * 公開側で使う安定した識別子です。
+   */
+  code: string;
+  name: string;
+  sortOrder: number;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -261,12 +296,11 @@ export interface BlogArticle {
   publishedAt?: string | null;
   scheduledAt?: string | null;
   tags?: (number | Tag)[] | null;
-  articleType: 'shop-feature' | 'review' | 'highlight' | 'behind-the-scenes';
+  articleType: number | BlogArticleType;
   /**
    * ブログ一覧や詳細で使うカバー画像です。記事編集画面内で選択・アップロードできます。
    */
   coverMedia?: (number | null) | Media;
-  authorDisplayName?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -355,6 +389,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'blog-article-types';
+        value: number | BlogArticleType;
       } | null)
     | ({
         relationTo: 'news-articles';
@@ -449,6 +487,7 @@ export interface TagsSelect<T extends boolean = true> {
 export interface ShopsSelect<T extends boolean = true> {
   code?: T;
   name?: T;
+  menu?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -480,6 +519,17 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-article-types_select".
+ */
+export interface BlogArticleTypesSelect<T extends boolean = true> {
+  code?: T;
+  name?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "news-articles_select".
  */
 export interface NewsArticlesSelect<T extends boolean = true> {
@@ -508,7 +558,6 @@ export interface BlogArticlesSelect<T extends boolean = true> {
   tags?: T;
   articleType?: T;
   coverMedia?: T;
-  authorDisplayName?: T;
   updatedAt?: T;
   createdAt?: T;
 }

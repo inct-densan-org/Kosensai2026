@@ -10,7 +10,7 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
-import { BlogArticles, NewsArticles, ShopAnnouncements } from './collections/Articles'
+import { BlogArticles, BlogArticleTypes, NewsArticles, ShopAnnouncements } from './collections/Articles'
 import { EventStatusOverrides } from './collections/EventStatusOverrides'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
@@ -32,6 +32,7 @@ export default buildConfig({
     Tags,
     Shops,
     Users,
+    BlogArticleTypes,
     NewsArticles,
     BlogArticles,
     ShopAnnouncements,
