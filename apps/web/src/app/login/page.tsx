@@ -22,11 +22,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     <main className="grid min-h-screen place-items-center bg-sky-50 px-4 py-12 text-slate-950">
       <section className="w-full max-w-sm rounded-lg border border-sky-100 bg-white p-6 shadow-sm">
         <div className="mb-6 grid gap-2">
-          <p className="text-sm font-semibold text-sky-700">高専祭2026 運営向け</p>
-          <h1 className="text-2xl font-bold tracking-normal">ログイン</h1>
-          <p className="text-sm leading-6 text-slate-600">
-            配布されたユーザー名とパスワードでログインしてください。
-          </p>
+          <p className="text-xl font-semibold text-sky-700">高専祭2026 運営ログイン</p>
         </div>
         <LoginForm redirectTo={nextPath} />
       </section>
