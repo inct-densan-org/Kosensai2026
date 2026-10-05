@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import './globals.css'
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
@@ -37,6 +38,9 @@ export default function RootLayout({
   return (
     <html lang="ja" className={cn("overflow-x-hidden hidden-scrollbar", "font-sans", geist.variable)}>
       <body>{children}</body>
+      {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+      )}
     </html>
   )
 }

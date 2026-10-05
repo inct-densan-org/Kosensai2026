@@ -185,7 +185,7 @@ export default function LoadingCurtain() {
                 </p>
                 <div className="flex flex-col items-center text-sm md:text-base tracking-widest font-light opacity-90 border-t border-white/30 pt-4">
                     <p>2026.10.24(土) - 25(日)</p>
-                    <p>09:00 ~ 17:00</p>
+                    <p>10:00 ~ 17:00</p>
                     <p>一関工業高等専門学校</p>
                 </div>
                 <div className="flex flex-col items-center text-sm md:text-base tracking-widest font-light opacity-90 mt-auto border-t border-white/30 pt-4">
