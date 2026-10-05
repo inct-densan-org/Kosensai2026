@@ -14,6 +14,7 @@ type SlideMenuProps = {
   index?: number;
 };
 
+
 export default function SlideMenu({
   mode,
   open,
