@@ -38,6 +38,10 @@ export default buildConfig({
     ShopAnnouncements,
     EventStatusOverrides,
   ],
+  routes: {
+    admin: '/api/admin',
+    api: '/api',
+  },
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [
       ...defaultFeatures,
@@ -48,7 +52,9 @@ export default buildConfig({
       }),
     ],
   }),
-  serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:8787',
+  serverURL:
+    process.env.PAYLOAD_PUBLIC_SERVER_URL ||
+    `http://localhost:${process.env.API_PORT || '8787'}`,
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

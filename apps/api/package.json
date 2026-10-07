@@ -10,15 +10,15 @@
   },
   "scripts": {
     "build": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=8000\" next build",
-    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev --port 8787",
-    "devsafe": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev --port 8787",
+    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev --port ${API_PORT:-8787}",
+    "devsafe": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev --port ${API_PORT:-8787}",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "payload:migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
     "payload:types": "pnpm run generate:types",
-    "start": "cross-env NODE_OPTIONS=--no-deprecation next start --port 8787",
+    "start": "cross-env NODE_OPTIONS=--no-deprecation next start --port ${API_PORT:-8787}",
     "test": "pnpm run test:int && pnpm run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts",
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts"

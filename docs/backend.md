@@ -44,6 +44,9 @@ apps/api
 ## 4. 環境変数
 
 ```env
+WEB_PORT=3001
+API_PORT=8787
+NEXT_PUBLIC_API_URL=http://localhost:8787
 DATABASE_URL=file:../db/data/kosensai.sqlite
 PAYLOAD_SECRET=replace-with-a-32-character-secret
 PAYLOAD_PUBLIC_SERVER_URL=http://localhost:8787

@@ -29,7 +29,7 @@ export const getCurrentUser = async () => {
     return null
   }
 
-  const response = await fetch(`${apiBaseUrl}/api/users/me`, {
+  const response = await fetch(`${apiBaseUrl}/users/me`, {
     headers: {
       cookie: cookieHeader,
       ...(payloadToken ? { authorization: `Bearer ${payloadToken}` } : {}),

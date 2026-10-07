@@ -5,7 +5,7 @@
 ## Setup
 
 ```bash
-cp .env.example .env
+cp ../../.env.sample ../../.env
 pnpm install
 pnpm dev
 ```
@@ -13,6 +13,9 @@ pnpm dev
 ## Environment
 
 ```env
+WEB_PORT=3001
+API_PORT=8787
+NEXT_PUBLIC_API_URL=http://localhost:8787
 DATABASE_URL=file:../db/data/kosensai.sqlite
 PAYLOAD_SECRET=YOUR_SECRET_HERE
 PAYLOAD_PUBLIC_SERVER_URL=http://localhost:8787

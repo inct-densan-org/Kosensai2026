@@ -142,7 +142,7 @@ export const login = async (_prevState: LoginState, formData: FormData): Promise
     }
   }
 
-  const response = await fetch(`${apiBaseUrl}/api/users/login`, {
+  const response = await fetch(`${apiBaseUrl}/users/login`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',

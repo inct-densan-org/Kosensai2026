@@ -12,8 +12,7 @@
 1. 環境変数を用意します。
 
 ```bash
-cp apps/api/.env.example apps/api/.env
-cp apps/web/env.example apps/web/.env.local
+cp .env.sample .env
 ```
 
 2. 依存をインストールします。
@@ -57,9 +56,10 @@ pnpm dev
 ## よく使うコマンド
 
 - `pnpm dev`: Web と API をまとめて起動
-- `pnpm dev:web`: Web を `http://localhost:3001` で起動
-- `pnpm dev:api`: Payload Admin を `http://localhost:8787/admin` で起動
+- `pnpm dev:web`: `.env` の `WEB_PORT` で Web を起動
+- `pnpm dev:api`: `.env` の `API_PORT` で API を起動
 - `pnpm build`: 全ワークスペースをビルド
+- `pnpm start`: ビルド済みの Web と API を同時起動
 - `pnpm check`: 型チェック
 - `pnpm lint`: lint 相当の確認
 - `pnpm payload:types`: Payload 型定義の生成
