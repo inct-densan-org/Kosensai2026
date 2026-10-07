@@ -3,14 +3,15 @@
   "private": true,
   "packageManager": "pnpm@9.15.4",
   "scripts": {
-    "dev": "concurrently -k -n web,api \"pnpm --filter @kosensai/web dev\" \"pnpm --filter @kosensai/api dev\"",
-    "dev:web": "pnpm --filter @kosensai/web dev",
-    "dev:api": "pnpm --filter @kosensai/api dev",
-    "build": "turbo run build",
+    "dev": "set -a; [ ! -f .env ] || . ./.env; set +a; concurrently -k -n web,api \"pnpm --filter @kosensai/web dev\" \"pnpm --filter @kosensai/api dev\"",
+    "dev:web": "set -a; [ ! -f .env ] || . ./.env; set +a; pnpm --filter @kosensai/web dev",
+    "dev:api": "set -a; [ ! -f .env ] || . ./.env; set +a; pnpm --filter @kosensai/api dev",
+    "build": "set -a; [ ! -f .env ] || . ./.env; set +a; turbo run build",
+    "start": "set -a; [ ! -f .env ] || . ./.env; set +a; concurrently -k -n web,api \"pnpm --filter @kosensai/web start\" \"pnpm --filter @kosensai/api start\"",
     "lint": "turbo run lint",
     "check": "turbo run check",
-    "db:generate": "pnpm --filter @kosensai/api db:generate",
-    "db:migrate": "pnpm --filter @kosensai/api db:migrate"
+    "payload:types": "pnpm --filter @kosensai/api payload:types",
+    "payload:migrate": "pnpm --filter @kosensai/api payload:migrate"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
