@@ -18,5 +18,13 @@
     "@types/node": "^22.10.2",
     "turbo": "^2.5.0",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "pnpm": "^11.10.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "better-sqlite3": "^9.6.0"
+    }
   }
 }
