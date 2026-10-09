@@ -3,10 +3,10 @@
 import Image from "next/image";
 import { useEffect, useState, type CSSProperties } from "react";
 
-// 画像は public/top 下に置く（サイズは各SVGの width / height）
-const clock = { src: "/top/clock.svg", width: 1440, height: 1024 };
-const step = { src: "/top/step.svg", width: 1440, height: 1018 };
-const day = { src: "/top/day.svg", width: 1440, height: 1018 };
+// 画像は public/img/top 下に置く（サイズは各SVGの width / height）
+const clock = { src: "/img/top/clock.svg", width: 1440, height: 1024 };
+const step = { src: "/img/top/step.svg", width: 1440, height: 1018 };
+const day = { src: "/img/top/day.svg", width: 1440, height: 1018 };
 
 // ヒーローの画像（clock / step / day）
 // 画像の読み込みに時間がかかるため、読み込みが終わってから右からフェードインさせる。
