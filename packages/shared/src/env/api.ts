@@ -1,9 +1,9 @@
 import { z } from 'zod'
 
 export const apiEnvSchema = z.object({
-  DATABASE_PATH: z.string().min(1).default('../db/data/kosensai.sqlite'),
-  PORT: z.coerce.number().int().positive().default(8787),
-  CORS_ORIGIN: z.string().url().default('http://localhost:3000')
+  DATABASE_URL: z.string().min(1).default('file:../db/data/kosensai.sqlite'),
+  PAYLOAD_SECRET: z.string().min(1),
+  PAYLOAD_PUBLIC_SERVER_URL: z.string().url().default('http://localhost:8787')
 })
 
 export type ApiEnv = z.infer<typeof apiEnvSchema>

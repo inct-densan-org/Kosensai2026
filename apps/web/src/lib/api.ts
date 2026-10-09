@@ -1,8 +1,6 @@
 import { parseWebEnv } from '@kosensai/shared'
-import type { AppType } from '@kosensai/api/index'
-import { hc } from 'hono/client'
 
 const { NEXT_PUBLIC_API_URL } = parseWebEnv(process.env)
-const apiBaseUrl = NEXT_PUBLIC_API_URL.replace(/\/$/, '')
+const apiOrigin = NEXT_PUBLIC_API_URL.replace(/\/$/, '').replace(/\/api$/, '')
 
-export const client = hc<AppType>(apiBaseUrl)
+export const apiBaseUrl = `${apiOrigin}/api`
