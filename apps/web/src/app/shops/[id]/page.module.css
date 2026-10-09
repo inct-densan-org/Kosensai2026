@@ -1,0 +1,45 @@
+.page {
+  color: #222;
+  line-height: 1.7;
+  min-height: 100vh;
+  padding: 40px 0;
+  background: white;
+}
+
+.content {
+  width: min(900px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.title {
+  margin: 24px 0 32px;
+  font-size: clamp(20px, 3vw, 28px);
+  line-height: 1.6;
+  text-align: center;
+}
+
+.details {
+  display: grid;
+  gap: 24px;
+}
+
+.description {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.page a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (min-width: 768px) {
+  .details {
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .details > img {
+    max-height: none;
+  }
+}

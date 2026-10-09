@@ -1,4 +1,4 @@
-import LoadingCurtain from "@/components/common/LoadingCurtain";
+import LoadingCurtain from "@/components/ui/LoadingCurtain";
 import { Noto_Serif_JP } from "next/font/google";
 
 const notoSerifJP = Noto_Serif_JP({
