@@ -1,7 +1,7 @@
-import HeroPC from "./components/HeroPC";
-import HeroScroll from "./components/HeroScroll";
-import TopBar, { PAGE_BACKGROUND } from "./components/TopBar";
-import ContentCard from "@/components/common/ContentCard";
+import HeroPC from "@/components/common/top/HeroPC";
+import HeroScroll from "@/components/common/top/HeroScroll";
+import TopBar, { PAGE_BACKGROUND } from "@/components/common/TopBar";
+import TopSection, { screensHeight } from "@/components/common/top/TopSection";
 
 export default function TopPage() {
   return (
@@ -13,15 +13,15 @@ export default function TopPage() {
       <div className="relative min-h-dvh w-full" style={{ backgroundColor: PAGE_BACKGROUND }}>
         <TopBar current="HOME" />
 
-        {/* 各項目の本文カード（内容は仮） */}
-        <div className="mx-auto w-[min(960px,calc(100%-32px))] py-16">
-          <ContentCard>
-            <h2 className="m-0 text-2xl font-bold text-[#1f3a4a]">お知らせ</h2>
-            <p className="mt-4 mb-0 leading-relaxed text-[#2c4655]">
-              ここに各項目の本文が入ります。
-            </p>
-          </ContentCard>
-        </div>
+        {/* 各項目（screens: 確保する高さ。画面何枚分か） */}
+        <TopSection id="greeting" title="ごあいさつ" screens={1} />
+        <TopSection id="news" title="ニュース" screens={1} />
+        <TopSection id="access" title="アクセス" screens={2} />
+        <TopSection id="stalls" title="屋台" screens={1} />
+        <TopSection id="sponsors" title="協賛" screens={0.5} />
+
+        {/* フッター（見出しなし・0.5画面） */}
+        <footer className="w-full" style={{ minHeight: screensHeight(0.5) }} />
       </div>
     </main>
   );

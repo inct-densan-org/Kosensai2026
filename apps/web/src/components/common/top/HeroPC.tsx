@@ -1,8 +1,5 @@
-import Image from "next/image";
 import type { CSSProperties } from "react";
-import clock from "../resource/clock.svg";
-import step from "../resource/step.svg";
-import day from "../resource/day.svg";
+import HeroImages from "./HeroImages";
 import { shipporiMincho } from "../fonts";
 
 // デザイン基準: 1440 x 1024。ヒーローは常に1画面で完結する。
@@ -57,12 +54,6 @@ const subtitleFirstClass =
 const subtitleSecondClass =
   "bottom-[calc(100cqh*192/1024)] right-[calc(50%+100cqw*256/1440)] max-[512px]:bottom-[calc(100cqh*480/1024)] max-[512px]:right-[calc(50%+100cqw*420/1440)]";
 
-// day 用のデザインフレーム: 画面に収まる倍率で拡縮（左右中央・下揃え）
-const dayFrameStyle: CSSProperties = {
-  width: "calc(var(--fit) * 1440)",
-  height: "calc(var(--fit) * 1024)",
-};
-
 export default function HeroPC({ id }: { id?: string }) {
   return (
     <section
@@ -70,42 +61,8 @@ export default function HeroPC({ id }: { id?: string }) {
       className="relative h-dvh w-full overflow-hidden bg-linear-to-br from-[#73C1D7] to-[#C7ECF4]"
       style={sectionStyle}
     >
-      {/* 背面: clock（1440x1024）
-          フレームとは別に、縦横比を保ったまま画面全体を覆うように拡縮・中央配置 */}
-      <Image
-        src={clock}
-        alt=""
-        priority
-        className="absolute inset-0 z-0 h-full w-full object-cover"
-      />
-
-      {/* 前面: step（1440x1018）
-          縦横比を保ったまま画面全体を覆うように拡縮し、中央部分を残す */}
-      <Image
-        src={step}
-        alt=""
-        priority
-        className="absolute inset-0 z-10 h-full w-full object-cover"
-      />
-
-      {/* day 用のデザインフレーム（画面内に収まる） */}
-      {/* スマホでは下からの余白を追加 */}
-      <div
-        className="absolute bottom-0 left-1/2 z-20 -translate-x-1/2 max-[512px]:bottom-[calc(100cqh*64/1024)]"
-        style={dayFrameStyle}
-      >
-
-        {/* 開催日（1440x1018・配置は画像内で調整済み）: フレーム下端
-            日付の数字が約48px（画像内は約64px）になるよう 0.75 倍に縮小。
-            文字ブロックの下端中央（x=720, y=951）を基準に縮小し、下からの余白を維持。
-            スマホでは 1.75 倍に拡大 */}
-        <Image
-          src={day}
-          alt="10月24日(土)・25日(日) 開催"
-          priority
-          className="absolute bottom-0 left-0 h-auto w-full origin-[50%_calc(100%*951/1018)] scale-75 max-[512px]:scale-[1.75]"
-        />
-      </div>
+      {/* 画像（clock・step → day の順に右からフェードイン） */}
+      <HeroImages />
 
       {/* メインタイトル */}
       <h1

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { shipporiMincho } from "../fonts";
+import { shipporiMincho } from "./fonts";
 
 // デザイン基準: 1440 x 1024 の画面で縦幅 96px。
 // 高さ・文字サイズは画面高さに比例して拡縮する（n / 1024）。
@@ -12,6 +12,9 @@ import { shipporiMincho } from "../fonts";
 
 // ページ自体の背景色（page.tsx のヒーロー以下の背景と揃える）
 export const PAGE_BACKGROUND = "#F2F4F0";
+
+// トップバーの高さ（下の header の h-[...] と揃える）
+export const TOP_BAR_HEIGHT = "calc(100svh*96/1024)";
 
 type NavItem = {
   label: string;
