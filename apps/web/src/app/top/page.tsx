@@ -1,7 +1,7 @@
 import HeroPC from "./components/HeroPC";
 import HeroScroll from "./components/HeroScroll";
 import TopBar, { PAGE_BACKGROUND } from "./components/TopBar";
-import ContentCard from "./components/ContentCard";
+import ContentCard from "@/components/common/ContentCard";
 
 export default function TopPage() {
   return (
