@@ -1,0 +1,40 @@
+.page {
+  min-height: 100vh;
+  padding: 32px 16px 64px;
+  background: white;
+  color: #222;
+  line-height: 1.7;
+}
+.content {
+  max-width: 800px;
+  margin: auto;
+}
+.title {
+  font-size: 28px;
+  line-height: 1.5;
+}
+.note {
+  margin: 12px 0;
+  color: #555;
+  font-size: 14px;
+}
+.navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 24px 0;
+}
+.navigation a {
+  padding: 8px 12px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.navigation a:focus-visible {
+  outline: 3px solid #222;
+  outline-offset: 4px;
+}
+
+.noticeCard {
+  margin-bottom: 24px;
+}

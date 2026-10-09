@@ -1,0 +1,35 @@
+.shop {
+  color: #222;
+  line-height: 1.7;
+}
+.modalTitle {
+  margin: 0 40px 24px 0;
+  font-size: 18px;
+  line-height: 1.6;
+}
+.poster {
+  display: block;
+  width: min(100%, 270px);
+  height: auto;
+  max-height: 52dvh;
+  object-fit: contain;
+  margin: 0 auto;
+}
+.linkButton {
+  display: inline-flex;
+  width: 100%;
+  margin-top: 24px;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1px solid #777;
+  border-radius: 8px;
+  background: white;
+  color: #222;
+  text-decoration: none;
+}
+.note {
+  font-size: 14px;
+  color: #555;
+}
