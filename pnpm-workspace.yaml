@@ -2,3 +2,10 @@ packages:
   - "apps/*"
   - "packages/*"
 
+overrides:
+  better-sqlite3: ^9.6.0
+
+onlyBuiltDependencies:
+  - sharp
+  - esbuild
+  - unrs-resolver
