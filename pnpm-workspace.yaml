@@ -9,3 +9,9 @@ onlyBuiltDependencies:
   - sharp
   - esbuild
   - unrs-resolver
+
+allowBuilds:
+  '@prisma/client': false
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
