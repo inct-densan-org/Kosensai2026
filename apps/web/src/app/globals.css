@@ -51,7 +51,8 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-/* 前回 db-setup 由来: coming soon 画面から引き継いだ手書きグローバルスタイル */
+/* 前回 db-setup 由来: coming soon 画面から引き継いだ手書きグローバルスタイル
+   ※ .page / .hero / .panel / .statusCard / .list などのクラスは現在 app 内で未参照 */
 * {
   box-sizing: border-box;
 }
@@ -199,7 +200,8 @@ textarea {
   }
 }
 
-/* ファイルの末尾などに追記 */
+/* feature/top 由来: ボクセル前進アニメーション（--tx / --duration / --delay を JS から渡す想定）
+   ※ 現在どのコンポーネントからも参照されていない（MovingVoxelTerrain は自前の <style> を使用）。不要なら削除可 */
 @keyframes moveVoxelForward {
   from {
     /* var(--tx) でJSからX座標を受け取ります */
@@ -213,6 +215,17 @@ textarea {
 .animate-voxel {
   animation: moveVoxelForward var(--duration) linear infinite;
   animation-delay: var(--delay);
+}
+
+/* feature/top 由来: スクロールバーを非表示（レイアウト幅を画面幅と一致させる）
+   app/layout.tsx の <html> と components/ui/window.tsx で使うためグローバルに置く */
+.hidden-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hidden-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 /* このブランチでの変更 / Tailwind/shadcn 由来: CSS 変数を Tailwind v4 theme token として公開 */
@@ -325,7 +338,19 @@ textarea {
   }
 }
 
-/* デフォルト変数定義 */
+/* develop 由来: デフォルト文字色（layout-wrapper.tsx / Maps/Page.tsx から var(--text-color-default) で参照） */
 html {
   --text-color-default: #306070;
+}
+
+/* トップバーの高さ（TopBar.tsx の header の h-[...] と揃える）。
+   スマホ（512px 未満）ではトップバーの代わりにハンバーガーメニューを表示するため 0 */
+:root {
+  --top-bar-height: calc(100svh * 96 / 1024);
+}
+
+@media (width < 512px) {
+  :root {
+    --top-bar-height: 0px;
+  }
 }
