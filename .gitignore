@@ -17,3 +17,5 @@ apps/db/data/*
 .pnpm-home
 result
 .idea
+# TypeScript の差分ビルドキャッシュ（環境ごとに変わるため管理しない）
+*.tsbuildinfo
