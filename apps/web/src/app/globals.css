@@ -342,3 +342,15 @@ textarea {
 html {
   --text-color-default: #306070;
 }
+
+/* トップバーの高さ（TopBar.tsx の header の h-[...] と揃える）。
+   スマホ（512px 未満）ではトップバーの代わりにハンバーガーメニューを表示するため 0 */
+:root {
+  --top-bar-height: calc(100svh * 96 / 1024);
+}
+
+@media (width < 512px) {
+  :root {
+    --top-bar-height: 0px;
+  }
+}

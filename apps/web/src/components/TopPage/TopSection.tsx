@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { shipporiMincho } from "@/components/common/fonts";
-import { TOP_BAR_HEIGHT } from "@/components/common/TopBar";
+import { TOP_BAR_HEIGHT } from "@/components/common/pageLayout";
 
 // トップページの各項目（ごあいさつ・ニュースなど）の枠
 // - 大見出し＋本文エリアで構成する
