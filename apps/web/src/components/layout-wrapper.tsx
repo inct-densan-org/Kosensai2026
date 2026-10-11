@@ -6,9 +6,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
     <div
       className="w-full min-h-screen py-20"
       style={{
-        backgroundColor: "#7fc7db",
-        backgroundImage:
-          "linear-gradient(120deg, #2299bd 0%, #7fc7db 48%, #d6f6ff 100%)",
+        backgroundColor: "#F2F4F0",
         backgroundAttachment: "fixed",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",

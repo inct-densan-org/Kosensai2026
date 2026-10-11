@@ -25,7 +25,7 @@ type NavItem = {
 const NAV_ITEMS: NavItem[] = [
   { label: "HOME", href: "/protected/top" },
   { label: "NEWS" },
-  { label: "MAP" },
+  { label: "MAP", href: "/protected/map" },
   { label: "EVENTS" },
 ];
 

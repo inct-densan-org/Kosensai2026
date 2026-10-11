@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 // import { ReactNode } from "react";
+import TopBar from "@/components/common/TopBar";
 import { LayoutWrapper, PageContainer } from "@/components/layout-wrapper";
 
 export const metadata: Metadata = {
@@ -14,6 +15,9 @@ export const metadata: Metadata = {
 export default function MapLayout({ children }: { children: React.ReactNode }) {
   return (
     <LayoutWrapper>
+      <div className="-mt-20">
+        <TopBar current="MAP" />
+      </div>
       <div className="py-6 text-center">
         <h1
           className="leading-snug tracking-normal font-bold"

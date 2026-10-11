@@ -8,7 +8,6 @@ import SlideMenu from "@/components/Maps/Menu";
 // import { Search } from "lucide-react";
 // import { Button } from "@/components/ui/button";
 import "./style.module.css";
-import Navigation from "@/components/top/Navigation";
 
 const MAX_INDEX = 54;
 export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
@@ -90,7 +89,6 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
 
   return (
     <div className="relative w-full min-h-screen bg-no-repeat bg-[image:var(--mesh-gradient)]">
-      <Navigation />
       {/* {!open && (
         <div className="w-full fixed z-50 top-16 left-0 md:top-36 md:left-6 bg-transparent pointer-events-none">
           <Button
