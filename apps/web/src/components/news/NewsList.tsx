@@ -1,24 +1,16 @@
 import Link from 'next/link'
+import type { NewsArticle } from '@/lib/news'
+import { formatNewsDate } from '@/lib/news'
 
-const articles = [
-  {
-    id: 1,
-    title: 'aaa',
-    date: '2026/9/30',
-  },
-  {
-    id: 2,
-    title: 'bbb',
-    date: '2026/9/30',
-  },
-  {
-    id: 3,
-    title: 'ccc',
-    date: '2026/9/30',
-  },
-]
+type NewsListProps = {
+  articles: NewsArticle[]
+}
 
-export default function NewsList() {
+export default function NewsList({ articles }: NewsListProps) {
+  if (articles.length === 0) {
+    return <p className="rounded-md bg-[#aaa] px-3 py-4 text-center">現在お知らせはありません。</p>
+  }
+
   return (
     <div className="flex flex-col overflow-hidden rounded-md bg-[#aaa]">
       {articles.map((article) => (
@@ -29,7 +21,7 @@ export default function NewsList() {
         >
           <div className="min-w-0">
             <div className="text-sm font-bold">
-              {article.date}
+              {formatNewsDate(article.publishedAt ?? article.createdAt)}
             </div>
 
             <div className="truncate text-base font-bold">
@@ -38,7 +30,7 @@ export default function NewsList() {
           </div>
 
           <span className="self-center text-lg">
-            &gt;
+            →
           </span>
         </Link>
       ))}

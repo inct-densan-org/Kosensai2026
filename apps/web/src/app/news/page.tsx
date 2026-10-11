@@ -1,7 +1,10 @@
 
 import NewsList from '@/components/news/NewsList'
+import { getNewsArticles } from '@/lib/news'
 
-export default function NewsPage() {
+export default async function NewsPage() {
+  const articles = await getNewsArticles()
+
   return (
     <main className="min-h-screen bg-[#f5f5f5] px-4 py-6">
       <div className="mx-auto w-full max-w-md">
@@ -9,7 +12,7 @@ export default function NewsPage() {
           NEWS
         </h1>
 
-        <NewsList />
+        <NewsList articles={articles} />
       </div>
     </main>
   )

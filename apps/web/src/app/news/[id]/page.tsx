@@ -1,28 +1,7 @@
 import Link from 'next/link'
-
-const articles = [
-  {
-    id: 1,
-    title: 'aaa',
-    date: '2026/9/30',
-    category: 'ニュース',
-    content: 'ここに記事の内容が入ります。',
-  },
-  {
-    id: 2,
-    title: 'bbb',
-    date: '2026/9/30',
-    category: 'ニュース',
-    content: 'ここに記事の内容が入ります。',
-  },
-  {
-    id: 3,
-    title: 'ccc',
-    date: '2026/9/30',
-    category: 'ニュース',
-    content: 'ここに記事の内容が入ります。',
-  },
-]
+import RichText from '@/components/common/RichText'
+import { formatNewsDate, getNewsArticle } from '@/lib/news'
+import { notFound } from 'next/navigation'
 
 type Props = {
   params: Promise<{
@@ -32,25 +11,10 @@ type Props = {
 
 export default async function NewsDetailPage({ params }: Props) {
   const { id } = await params
-  const article = articles.find((item) => item.id === Number(id))
+  const article = await getNewsArticle(id)
 
   if (!article) {
-    return (
-      <main className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold">
-            記事が見つかりません
-          </h1>
-
-          <Link
-            href="/news"
-            className="mt-4 inline-block underline"
-          >
-            NEWS一覧に戻る
-          </Link>
-        </div>
-      </main>
-    )
+    notFound()
   }
 
   return (
@@ -66,13 +30,14 @@ export default async function NewsDetailPage({ params }: Props) {
           </h2>
 
           <div className="mt-4 flex gap-4 text-sm font-bold">
-            <span>{article.date}</span>
-            <span>{article.category}</span>
+            <span>{formatNewsDate(article.publishedAt ?? article.createdAt)}</span>
+            <span>ニュース</span>
           </div>
 
-          <div className="mt-5 whitespace-pre-wrap text-sm leading-7">
-            {article.content}
-          </div>
+          <RichText
+            content={article.body}
+            className="mt-5 text-sm leading-7"
+          />
         </article>
 
         <Link
