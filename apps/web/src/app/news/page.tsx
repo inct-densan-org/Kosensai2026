@@ -1,16 +1,18 @@
 
 import NewsList from '@/components/news/NewsList'
+import { PAGE_BACKGROUND } from '@/components/common/pageLayout'
+import { shipporiMincho } from '@/components/common/fonts'
 import { getNewsArticles } from '@/lib/news'
 
 export default async function NewsPage() {
   const articles = await getNewsArticles()
 
   return (
-    <main className="min-h-screen bg-[#f5f5f5] px-4 py-6">
-      <div className="mx-auto w-full max-w-md">
-        <h1 className="mb-4 text-center text-3xl font-bold">
-          NEWS
-        </h1>
+    <main className="min-h-screen px-5 py-12 sm:px-8 sm:py-16" style={{ backgroundColor: PAGE_BACKGROUND }}>
+      <div className="mx-auto w-full max-w-3xl">
+        <header className="mb-8 border-b border-black/20 pb-8 sm:mb-10 sm:pb-9">
+          <h1 className={`${shipporiMincho.className} !text-4xl !font-bold !leading-none tracking-[0.08em] sm:!text-6xl`}>NEWS</h1>
+        </header>
 
         <NewsList articles={articles} />
       </div>
