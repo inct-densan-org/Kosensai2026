@@ -354,3 +354,16 @@ html {
     --top-bar-height: 0px;
   }
 }
+
+/* フッターの 1px 相当（Footer.tsx で calc(var(--footer-unit) * n) として使う）。
+   1440x1024 基準で、画面の高さ・横幅のどちらかが足りない場合は小さい方に合わせて縮める。
+   スマホ（512px 未満）では組織を縦に並べるため固定の倍率にする */
+:root {
+  --footer-unit: min(100svh / 1024, 100vw / 1440);
+}
+
+@media (width < 512px) {
+  :root {
+    --footer-unit: 0.6px;
+  }
+}
