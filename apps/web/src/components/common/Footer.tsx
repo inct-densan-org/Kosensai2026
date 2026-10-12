@@ -11,6 +11,7 @@ import xLogo from "@public/img/top/logo-black.png";
 // 組織ごとに「ロゴ（高さ150）＋右側に縦並びの文字」を横に並べる
 //   組織名（32）→ 余白12 → OFFICIAL SNS（32）→ 余白12 → SNS アイコン（Instagram 48 / X 40）→ 余白4 → SNS 名
 //   組織名の左下には役割（製作・協力など、24）を添える
+//   ロゴの下には余白8を空けて一言（16）を添えられる（ロゴの位置を他の組織と揃えるため、高さには含めない）
 // スマホ（512px 未満）では組織を縦に並べる
 
 // 1440x1024 基準の n px
@@ -28,6 +29,8 @@ type Organization = {
   name: string;
   role?: string;
   logo: StaticImageData;
+  // ロゴの下に添える一言
+  note?: string;
   sns: Sns[];
 };
 
@@ -45,6 +48,7 @@ const ORGANIZATIONS: Organization[] = [
     name: "電子計算機部",
     role: "製作",
     logo: densanLogo,
+    note: "展示もやってます！",
     sns: [
       { label: "Instagram", logo: instagramLogo, height: 48 },
       { label: "Twitter(新X)", logo: xLogo, height: 40 },
@@ -92,10 +96,20 @@ function SnsLink({ label, logo, height, href }: Sns) {
   );
 }
 
-function OrganizationItem({ name, role, logo, sns }: Organization) {
+function OrganizationItem({ name, role, logo, note, sns }: Organization) {
   return (
     <div className="flex items-center" style={{ gap: u(16) }}>
-      <Image src={logo} alt={`${name}のロゴ`} sizes="320px" className="w-auto shrink-0" style={{ height: u(150) }} />
+      <div className="relative shrink-0">
+        <Image src={logo} alt={`${name}のロゴ`} sizes="320px" className="w-auto" style={{ height: u(150) }} />
+        {note && (
+          <p
+            className="absolute top-full left-1/2 m-0 -translate-x-1/2 leading-none whitespace-nowrap"
+            style={{ marginTop: u(8), fontSize: u(16) }}
+          >
+            {note}
+          </p>
+        )}
+      </div>
 
       <div className="flex flex-col">
         {/* 組織名。役割（製作・協力）は組織名の左下に添える */}
@@ -123,7 +137,7 @@ function OrganizationItem({ name, role, logo, sns }: Organization) {
 export default function Footer() {
   return (
     <footer
-      className={`${shipporiMincho.className} flex w-full items-center justify-evenly text-[#1b1f23] max-[512px]:flex-col max-[512px]:items-start max-[512px]:gap-10 max-[512px]:px-6 max-[512px]:py-12`}
+      className={`${shipporiMincho.className} flex w-full items-center justify-evenly bg-[#FDFDFD] text-[#1b1f23] max-[512px]:flex-col max-[512px]:items-start max-[512px]:gap-10 max-[512px]:px-6 max-[512px]:py-12`}
       style={{ minHeight: u(256) }}
     >
       {ORGANIZATIONS.map((organization) => (
