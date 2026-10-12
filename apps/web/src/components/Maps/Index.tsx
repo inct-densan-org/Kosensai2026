@@ -7,7 +7,7 @@ import { Modal } from "../Modal";
 import { postersData } from "@/posters.data"
 import styles from "./style.module.css";
 import { BusTimetable } from "./BusTable";
-import { Paperclip } from "lucide-react";
+import ShopModal from "@/components/shops/ShopModal";
 
 type NumberedPinProps = {
   number?: number | string;
@@ -95,22 +95,11 @@ export function MapPage({
   long?: boolean;
 }) {
   const [size, setSize] = useState(0);
+  const [selectedShopIndex, setSelectedShopIndex] = useState<number | null>(null);
   const transformRef = useRef<any>(null);
 
-  const isCurrentMap = shops?.some((shop) => shop.idx === currentId) ?? false;
-
-  const handleCopyClick = (idx: number, title: string) => {
-    const url = `${window.location.origin}/map?index=${idx}`;
-    navigator.clipboard
-      .writeText(url)
-      .then(() => {
-        alert(`"${title}"のURLをクリップボードにコピーしました！`);
-      })
-      .catch((err) => {
-        console.error("Failed to copy: ", err);
-        alert("URLのコピーに失敗しました。");
-      });
-  };
+  const activeShopIndex = selectedShopIndex ?? currentId;
+  const isCurrentMap = shops?.some((shop) => shop.idx === activeShopIndex) ?? false;
 
   // 初期サイズ設定
   useEffect(() => {
@@ -143,9 +132,10 @@ export function MapPage({
   }, [currentId, shops, size]);
 
   return (
-    <div
-      className={`bg-white/5 backdrop-blur-md overflow-hidden flex items-center justify-center mx-auto p-0 w-full aspect-square max-w-[700px] rounded-2xl shadow-lg ${isCurrentMap ? "border-yellow-300 border-4" : "border-transparent border-4"} origin-center`}
-    >
+    <>
+      <div
+        className={`bg-white/5 backdrop-blur-md overflow-hidden flex items-center justify-center mx-auto p-0 w-full aspect-square max-w-[700px] rounded-2xl shadow-lg ${isCurrentMap ? "border-yellow-300 border-4" : "border-transparent border-4"} origin-center`}
+      >
       <TransformWrapper
         initialScale={1}
         minScale={0.1}
@@ -169,64 +159,18 @@ export function MapPage({
                     transform: "translate(-50%, -50%)",
                   }}
                 >
-                  <Modal
-                    button={
-                      <NumberedPin
-                        number={postersData[e.idx].mapId}
-                        force={e.idx === currentId}
-                        size={size}
-                      />
-                    }
-                    title={postersData[e.idx].title}
-                    titleAction={
-                      <button
-                        onClick={(event) => {
-                          event.stopPropagation(); // Prevent modal from closing if it does
-                          handleCopyClick(e.idx, postersData[e.idx].title);
-                        }}
-                        className="ml-2 rounded-full border-0 bg-transparent p-1 outline-none transition-colors duration-200 hover:bg-white/20 focus:outline-none focus-visible:outline-none focus-visible:ring-0"
-                        aria-label="URLをコピー"
-                      >
-                        <Paperclip size={16} />
-                      </button>
-                    }
-                    ModalClass="fixed inset-0 z-[1000] top-24 left-1/2 translate-x-[-45vw] translate-y-0! w-[90vw] md:w-[60vw] md:translate-x-[-30vw] h-[400px]!  "
-                    className="object-contain"
+                  <button
+                    type="button"
+                    aria-label={`${postersData[e.idx].title}の概要を見る`}
+                    onClick={() => setSelectedShopIndex(e.idx)}
+                    className="m-0 block appearance-none rounded-none border-0 bg-transparent p-0 text-inherit hover:bg-transparent"
                   >
-                    <div className="h-[70dvh] flex flex-col">
-                      <p className="whitespace-pre-wrap grow-0">
-                        {postersData[e.idx].desc}
-                      </p>
-                      {postersData[e.idx].images.length === 1 ? (
-                        <div className="relative mb-4 h-auto aspect-[277/392] mx-auto w-auto max-w-full flex-shrink-0 grow">
-                          <Image
-                            src={postersData[e.idx].images[0]}
-                            alt={postersData[e.idx].title}
-                            fill
-                            className="object-contain"
-                          />
-                        </div>
-                      ) : (
-                        <div className="flex mt-4 space-x-2 items-center w-full h-full">
-                          {postersData[e.idx].images
-                            .slice(0, 2)
-                            .map((img, index) => (
-                              <div
-                                key={index}
-                                className="relative w-1/2 aspect-[277/392]"
-                              >
-                                <Image
-                                  src={img}
-                                  alt={`${postersData[e.idx].title} - image ${index + 1}`}
-                                  fill
-                                  className="object-contain rounded"
-                                />
-                              </div>
-                            ))}
-                        </div>
-                      )}
-                    </div>
-                  </Modal>
+                    <NumberedPin
+                      number={postersData[e.idx].mapId}
+                      force={e.idx === activeShopIndex}
+                      size={size}
+                    />
+                  </button>
                 </div>
               ))}
             {/* 静的ピン */}
@@ -280,8 +224,16 @@ export function MapPage({
               ))}
           </div>
         </TransformComponent>
-      </TransformWrapper>
-    </div>
+        </TransformWrapper>
+      </div>
+
+      {selectedShopIndex !== null && (
+        <ShopModal
+          index={selectedShopIndex}
+          onClose={() => setSelectedShopIndex(null)}
+        />
+      )}
+    </>
   );
 }
 

@@ -1,6 +1,6 @@
 import { FixedToolbarFeature, InlineToolbarFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import type { CollectionConfig } from 'payload'
-import { admins, canManageAssignedShops, publishedOrAuthenticated, readRole } from '@/access/roles'
+import { admins, anyone, canManageAssignedShops, readRole } from '@/access/roles'
 
 const adminOnlyFieldAccess = ({ req }: { req: { user?: unknown } }) => readRole(req.user) === 'admin'
 
@@ -12,7 +12,7 @@ export const Shops: CollectionConfig = {
   },
   access: {
     create: admins,
-    read: publishedOrAuthenticated,
+    read: anyone,
     update: canManageAssignedShops,
     delete: admins,
   },
