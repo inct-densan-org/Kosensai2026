@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { shipporiMincho } from '@/components/common/fonts'
+import { notoSansJP } from '@/components/common/fonts'
 import { apiOrigin } from '@/lib/api'
 
 type RichTextNode = {
@@ -90,12 +90,12 @@ function RichTextNodeView({ node }: { node: RichTextNode }) {
     case 'paragraph':
       return <p>{children}</p>
     case 'heading':
-      if (node.tag === 'h1') return <h1 className={`${shipporiMincho.className} mb-4 !text-[1.75rem] !font-bold !leading-[1.4] tracking-[0.03em] sm:!text-[2.1rem]`}>{children}</h1>
-      if (node.tag === 'h2') return <h2 className={`${shipporiMincho.className} mb-3 text-[1.45rem] font-bold leading-[1.45] tracking-[0.03em] sm:text-[1.75rem]`}>{children}</h2>
-      if (node.tag === 'h3') return <h3 className={`${shipporiMincho.className} mb-2 text-xl font-bold leading-[1.5] tracking-[0.03em]`}>{children}</h3>
-      if (node.tag === 'h4') return <h4 className={`${shipporiMincho.className} mb-2 text-lg font-bold leading-[1.5] tracking-[0.03em]`}>{children}</h4>
-      if (node.tag === 'h5') return <h5 className={`${shipporiMincho.className} mb-2 text-base font-bold leading-[1.5] tracking-[0.03em]`}>{children}</h5>
-      return <h6 className={`${shipporiMincho.className} mb-2 text-sm font-bold leading-[1.5] tracking-[0.03em]`}>{children}</h6>
+      if (node.tag === 'h1') return <h1 className={`${notoSansJP.className} mb-4 !text-[1.75rem] !font-bold !leading-[1.4] sm:!text-[2.1rem]`}>{children}</h1>
+      if (node.tag === 'h2') return <h2 className={`${notoSansJP.className} mb-3 text-[1.45rem] font-bold leading-[1.45] sm:text-[1.75rem]`}>{children}</h2>
+      if (node.tag === 'h3') return <h3 className={`${notoSansJP.className} mb-2 text-xl font-bold leading-[1.5]`}>{children}</h3>
+      if (node.tag === 'h4') return <h4 className={`${notoSansJP.className} mb-2 text-lg font-bold leading-[1.5]`}>{children}</h4>
+      if (node.tag === 'h5') return <h5 className={`${notoSansJP.className} mb-2 text-base font-bold leading-[1.5]`}>{children}</h5>
+      return <h6 className={`${notoSansJP.className} mb-2 text-sm font-bold leading-[1.5]`}>{children}</h6>
     case 'list':
       return node.listType === 'number'
         ? <ol className="list-decimal space-y-1 pl-6">{children}</ol>
@@ -161,7 +161,7 @@ export default function RichText({ content, className }: RichTextProps) {
   }
 
   return (
-    <div className={`space-y-4 ${className ?? ''}`}>
+    <div className={`${notoSansJP.className} space-y-4 ${className ?? ''}`}>
       {renderChildren(children, 'root')}
     </div>
   )

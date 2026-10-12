@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { ArrowLeft, CalendarDays } from 'lucide-react'
 import { PAGE_BACKGROUND } from '@/components/common/pageLayout'
-import { shipporiMincho } from '@/components/common/fonts'
+import { notoSansJP, shipporiMincho } from '@/components/common/fonts'
 import RichText from '@/components/common/RichText'
 import { formatNewsDate, getNewsArticle } from '@/lib/news'
 import { notFound } from 'next/navigation'
@@ -32,7 +32,7 @@ export default async function NewsDetailPage({ params }: Props) {
         </Link>
 
         <article className="border-y border-black/20 py-8 sm:py-10">
-          <div className="flex items-center gap-2 text-xs font-bold tracking-[0.12em] text-black/55">
+          <div className={`${notoSansJP.className} flex items-center gap-2 text-xs font-bold tracking-[0.12em] text-black/55`}>
             <CalendarDays size={15} aria-hidden />
             <time dateTime={article.publishedAt ?? article.createdAt}>
               {formatNewsDate(article.publishedAt ?? article.createdAt)}
@@ -46,7 +46,7 @@ export default async function NewsDetailPage({ params }: Props) {
           </h1>
 
           {article.excerpt && (
-            <p className="mt-6 border-l-2 border-black/35 pl-4 text-base leading-8 text-black/65 sm:text-lg">
+            <p className={`${notoSansJP.className} mt-6 border-l-2 border-black/35 pl-4 text-base leading-8 text-black/65 sm:text-lg`}>
               {article.excerpt}
             </p>
           )}

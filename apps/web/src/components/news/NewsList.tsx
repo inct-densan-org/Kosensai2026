@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { ArrowUpRight, CalendarDays } from 'lucide-react'
-import { shipporiMincho } from '@/components/common/fonts'
+import { notoSansJP } from '@/components/common/fonts'
 import type { NewsArticle } from '@/lib/news'
 import { formatNewsDate } from '@/lib/news'
 
@@ -24,7 +24,7 @@ export default function NewsList({ articles }: NewsListProps) {
         <Link
           key={article.id}
           href={`/news/${article.id}`}
-          className="group grid grid-cols-[1fr_auto] items-center gap-4 border border-black/15 bg-white/55 p-4 transition-colors hover:bg-white sm:p-5"
+          className={`${notoSansJP.className} group grid grid-cols-[1fr_auto] items-center gap-4 border border-black/15 bg-white/55 p-4 transition-colors hover:bg-white sm:p-5`}
         >
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-bold tracking-[0.1em] text-black/55">
@@ -39,7 +39,7 @@ export default function NewsList({ articles }: NewsListProps) {
               )}
             </div>
 
-            <h2 className={`${shipporiMincho.className} mt-2 text-base font-bold leading-snug tracking-[0.03em] sm:text-lg`}>
+            <h2 className="mt-2 text-base font-bold leading-snug sm:text-lg">
               {article.title}
             </h2>
 
