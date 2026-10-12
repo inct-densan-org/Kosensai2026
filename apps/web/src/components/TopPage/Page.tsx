@@ -4,7 +4,8 @@ import TopBar from "@/components/common/TopBar";
 import BackToTopButton from "@/components/common/BackToTopButton";
 import Footer from "@/components/common/Footer";
 import { PAGE_BACKGROUND } from "@/components/common/pageLayout";
-import TopSection from "./TopSection";
+import TopSection, { screensHeight } from "./TopSection";
+import ShopsSection from "./ShopsSection";
 
 export function TopPageClient() {
   return (
@@ -20,8 +21,10 @@ export function TopPageClient() {
         <TopSection id="greeting" title="ごあいさつ" screens={1} />
         <TopSection id="news" title="ニュース" screens={1} />
         <TopSection id="access" title="アクセス" screens={2} />
-        <TopSection id="stalls" title="屋台" screens={1} />
-        <TopSection id="sponsors" title="協賛" screens={1} />
+        <TopSection id="stalls" title="屋台・自主企画" screens={0}>
+          <ShopsSection />
+        </TopSection>
+        <TopSection id="sponsors" title="協賛" screens={0.5} />
 
         <Footer />
       </div>
