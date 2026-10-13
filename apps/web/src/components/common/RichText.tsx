@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { notoSansJP } from '@/components/common/fonts'
 import { apiOrigin } from '@/lib/api'
 
 type RichTextNode = {
@@ -86,13 +87,15 @@ function RichTextNodeView({ node }: { node: RichTextNode }) {
       return <>{formatText(node.text ?? '', node.format)}</>
     case 'linebreak':
       return <br />
+    case 'paragraph':
+      return <p>{children}</p>
     case 'heading':
-      if (node.tag === 'h1') return <h1 className="mb-4 text-2xl font-bold">{children}</h1>
-      if (node.tag === 'h2') return <h2 className="mb-3 text-xl font-bold">{children}</h2>
-      if (node.tag === 'h3') return <h3 className="mb-2 text-lg font-bold">{children}</h3>
-      if (node.tag === 'h4') return <h4 className="mb-2 font-bold">{children}</h4>
-      if (node.tag === 'h5') return <h5 className="mb-2 font-bold">{children}</h5>
-      return <h6 className="mb-2 font-bold">{children}</h6>
+      if (node.tag === 'h1') return <h1 className={`${notoSansJP.className} mb-4 !text-[1.75rem] !font-bold !leading-[1.4] sm:!text-[2.1rem]`}>{children}</h1>
+      if (node.tag === 'h2') return <h2 className={`${notoSansJP.className} mb-3 text-[1.45rem] font-bold leading-[1.45] sm:text-[1.75rem]`}>{children}</h2>
+      if (node.tag === 'h3') return <h3 className={`${notoSansJP.className} mb-2 text-xl font-bold leading-[1.5]`}>{children}</h3>
+      if (node.tag === 'h4') return <h4 className={`${notoSansJP.className} mb-2 text-lg font-bold leading-[1.5]`}>{children}</h4>
+      if (node.tag === 'h5') return <h5 className={`${notoSansJP.className} mb-2 text-base font-bold leading-[1.5]`}>{children}</h5>
+      return <h6 className={`${notoSansJP.className} mb-2 text-sm font-bold leading-[1.5]`}>{children}</h6>
     case 'list':
       return node.listType === 'number'
         ? <ol className="list-decimal space-y-1 pl-6">{children}</ol>
@@ -104,7 +107,7 @@ function RichTextNodeView({ node }: { node: RichTextNode }) {
     case 'link': {
       const url = typeof node.url === 'string' && isSafeUrl(node.url) ? node.url : '#'
 
-      return <a className="underline" href={url} target={node.newTab ? '_blank' : undefined} rel={node.newTab ? 'noreferrer' : undefined}>{children}</a>
+      return <a className="font-bold underline underline-offset-4" href={url} target={node.newTab ? '_blank' : undefined} rel={node.newTab ? 'noreferrer' : undefined}>{children}</a>
     }
     case 'upload': {
       if (!node.value || typeof node.value !== 'object' || !('url' in node.value)) {
@@ -127,13 +130,20 @@ function RichTextNodeView({ node }: { node: RichTextNode }) {
       }
 
       return (
-        <img
-          src={url}
-          alt={node.fields?.alt ?? media.alt ?? ''}
-          width={media.width ?? undefined}
-          height={media.height ?? undefined}
-          className="h-auto max-w-full"
-        />
+        <figure className="my-8">
+          <img
+            src={url}
+            alt={node.fields?.alt ?? media.alt ?? ''}
+            width={media.width ?? undefined}
+            height={media.height ?? undefined}
+            className="h-auto max-w-full border border-black/10"
+          />
+          {(node.fields?.alt ?? media.alt) && (
+            <figcaption className="mt-2 text-xs text-black/50">
+              {node.fields?.alt ?? media.alt}
+            </figcaption>
+          )}
+        </figure>
       )
     }
     case 'horizontalrule':
@@ -151,7 +161,7 @@ export default function RichText({ content, className }: RichTextProps) {
   }
 
   return (
-    <div className={`space-y-4 ${className ?? ''}`}>
+    <div className={`${notoSansJP.className} space-y-4 ${className ?? ''}`}>
       {renderChildren(children, 'root')}
     </div>
   )
