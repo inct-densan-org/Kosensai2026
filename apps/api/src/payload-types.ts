@@ -69,6 +69,8 @@ export interface Config {
   collections: {
     media: Media;
     tags: Tag;
+    'reaction-definitions': ReactionDefinition;
+    'content-reactions': ContentReaction;
     shops: Shop;
     users: User;
     'blog-article-types': BlogArticleType;
@@ -85,6 +87,8 @@ export interface Config {
   collectionsSelect: {
     media: MediaSelect<false> | MediaSelect<true>;
     tags: TagsSelect<false> | TagsSelect<true>;
+    'reaction-definitions': ReactionDefinitionsSelect<false> | ReactionDefinitionsSelect<true>;
+    'content-reactions': ContentReactionsSelect<false> | ContentReactionsSelect<true>;
     shops: ShopsSelect<false> | ShopsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'blog-article-types': BlogArticleTypesSelect<false> | BlogArticleTypesSelect<true>;
@@ -156,6 +160,36 @@ export interface Tag {
   id: number;
   name: string;
   color?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reaction-definitions".
+ */
+export interface ReactionDefinition {
+  id: number;
+  /**
+   * APIで使う一意なキー。作成後は変更しないでください。
+   */
+  key: string;
+  emoji: string;
+  enabled?: boolean | null;
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "content-reactions".
+ */
+export interface ContentReaction {
+  id: number;
+  contentType: 'news-articles' | 'blog-articles' | 'shop-announcements';
+  contentId: string;
+  reactionKey: string;
+  visitorId: string;
+  fingerprint: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -383,6 +417,14 @@ export interface PayloadLockedDocument {
         value: number | Tag;
       } | null)
     | ({
+        relationTo: 'reaction-definitions';
+        value: number | ReactionDefinition;
+      } | null)
+    | ({
+        relationTo: 'content-reactions';
+        value: number | ContentReaction;
+      } | null)
+    | ({
         relationTo: 'shops';
         value: number | Shop;
       } | null)
@@ -477,6 +519,31 @@ export interface MediaSelect<T extends boolean = true> {
 export interface TagsSelect<T extends boolean = true> {
   name?: T;
   color?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reaction-definitions_select".
+ */
+export interface ReactionDefinitionsSelect<T extends boolean = true> {
+  key?: T;
+  emoji?: T;
+  enabled?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "content-reactions_select".
+ */
+export interface ContentReactionsSelect<T extends boolean = true> {
+  contentType?: T;
+  contentId?: T;
+  reactionKey?: T;
+  visitorId?: T;
+  fingerprint?: T;
   updatedAt?: T;
   createdAt?: T;
 }
