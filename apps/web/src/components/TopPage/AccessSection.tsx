@@ -2,7 +2,9 @@
 "use client";
  
 import { useEffect, useRef, useState } from "react";
-import { shipporiMincho } from "@/components/common/fonts";
+import ContentCard from "@/components/common/ContentCard";
+import { notoSansJP, shipporiMincho } from "@/components/common/fonts";
+import Card from "@/components/common/WhiteCard";
  
 // このセクション全体のフォント（ここ1か所で切り替え）。
 // 見出し「アクセス」と同じ明朝に統一。サイト本文のフォントにしたいときは "" にする。
@@ -76,9 +78,6 @@ const findNext = (mins: number[], now: number | null) => (now === null ? -1 : mi
 const INK = "text-[#1f3a4a]";
 const LINE = "border-[#cfd8dc]";
  
-function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`border ${LINE} bg-white/70 ${className}`}>{children}</div>;
-}
  
 function Tag({ children }: { children: React.ReactNode }) {
   return <span className="inline-block border border-[#8a9aa3] bg-white px-2 text-[11px] font-bold leading-[1.6] tracking-[0.14em] text-[#1f3a4a]">{children}</span>;
@@ -114,13 +113,17 @@ const Svg = ({ children }: { children: React.ReactNode }) => (
 /* ───────── ① 地図 ───────── */
  
 const SCHOOL = "一関工業高等専門学校";
-// 地図の埋め込み元（どちらか一方を .env.local に設定。設定後は開発サーバーを再起動）
-// A) NEXT_PUBLIC_GOOGLE_MAPS_EMBED_URL … Googleマップの「共有 → 地図を埋め込む」で出る iframe の src="…" の中身（APIキー不要）
+// 地図の埋め込み元。既定は APIキー不要の Googleマップ埋め込み（学校名で検索した地図）
+// 差し替えたい場合は .env.local に設定（設定後は開発サーバーを再起動）
+// A) NEXT_PUBLIC_GOOGLE_MAPS_EMBED_URL … Googleマップの「共有 → 地図を埋め込む」で出る iframe の src="…" の中身
 // B) NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY … Maps Embed API のキー
 const MAP_EMBED_URL = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_URL;
 const MAP_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY;
-const MAP_SRC: string | null =
-  MAP_EMBED_URL || (MAP_KEY ? `https://www.google.com/maps/embed/v1/place?key=${MAP_KEY}&q=${encodeURIComponent(SCHOOL)}` : null);
+const MAP_SRC: string =
+  MAP_EMBED_URL ||
+  (MAP_KEY
+    ? `https://www.google.com/maps/embed/v1/place?key=${MAP_KEY}&q=${encodeURIComponent(SCHOOL)}`
+    : `https://maps.google.com/maps?q=${encodeURIComponent(SCHOOL)}&hl=ja&z=15&output=embed`);
  
 // 左に地図、右に基本情報（住所・電車・自動車・バス）の2列。狭い画面では縦に積む。
 const INFO: { label: string; value: string }[] = [
@@ -136,18 +139,14 @@ function MapAndInfo() {
     <div className="grid items-center gap-8 md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] md:gap-10">
       <div>
         <div className={`aspect-[7/5] w-full overflow-hidden border ${LINE} bg-white`}>
-          {MAP_SRC ? (
-            <iframe
-              title={`${SCHOOL}の地図`}
-              src={MAP_SRC}
-              className="block size-full border-0"
-              loading="lazy"
-              allowFullScreen
-              referrerPolicy="strict-origin-when-cross-origin"
-            />
-          ) : (
-            <div className="flex size-full items-center justify-center text-2xl text-[#51636d]">マップ</div>
-          )}
+          <iframe
+            title={`${SCHOOL}の地図`}
+            src={MAP_SRC}
+            className="block size-full border-0"
+            loading="lazy"
+            allowFullScreen
+            referrerPolicy="strict-origin-when-cross-origin"
+          />
         </div>
         <a href={openUrl} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-sm font-bold text-[#2f7f9c] underline underline-offset-4">
           Googleマップで開く ↗
@@ -218,13 +217,16 @@ function BusColumn({ tag, goTag, from, to, trips, now }: { tag: string; goTag: b
           const st = statusOf(i, nextIdx, live);
           const last = i === trips.length - 1;
           return (
+            // 時間軸上の点から線を引き、その先に時刻を示す
             <div
               key={t[0]}
-              className={`absolute left-14 right-0 flex h-10 items-center gap-2.5 border px-3 ${st === "next" ? "border-[#8a9aa3] border-b-4 border-b-[#2f7f9c] bg-white" : `${LINE} bg-[#f4f7f8]`} ${st === "past" ? "opacity-40" : ""}`}
+              className={`absolute left-[37px] right-0 flex h-10 items-center ${st === "past" ? "opacity-40" : ""}`}
               style={{ top: yOf(toMin(t[0])) - 20 }}
             >
-              <span className={`text-xl leading-none tracking-tight tabular-nums ${st === "next" ? "font-extrabold" : "font-bold"}`}>{t[0]}</span>
-              <span className={`text-xs ${st === "next" ? "font-bold" : "text-[#51636d]"}`}>着 {t[1]}</span>
+              <span className={`size-2 flex-none rounded-full ${st === "next" ? "bg-[#2f7f9c] ring-4 ring-[#2f7f9c]/20" : "bg-[#8a9aa3]"}`} aria-hidden="true" />
+              <span className={`w-6 flex-none ${st === "next" ? "h-0.5 bg-[#2f7f9c]" : "h-px bg-[#8a9aa3]"}`} aria-hidden="true" />
+              <span className={`ml-2.5 text-xl leading-none tracking-tight tabular-nums ${st === "next" ? "border-b-4 border-[#2f7f9c] pb-0.5 font-extrabold" : "font-bold"}`}>{t[0]}</span>
+              <span className={`ml-2.5 text-xs ${st === "next" ? "font-bold" : "text-[#51636d]"}`}>着 {t[1]}</span>
               {last && <span className="ml-auto border border-[#8a9aa3] bg-white px-[7px] text-[11px] font-bold leading-[1.6] tracking-[0.1em]">最終</span>}
             </div>
           );
@@ -306,7 +308,7 @@ function TrainCard({ now }: { now: number | null }) {
         ))}
       </div>
  
-      <div className="mb-2.5 mt-0.5 text-sm tracking-[0.04em] text-[#51636d]"><b className={INK}>{line.title}</b>｜{line.sub}</div>
+      <div className="mb-2.5 mt-0.5 text-sm tracking-[0.04em] text-[#51636d]"><b className={INK}>{line.title}</b>({line.sub})</div>
  
       {live && <NextBox dep={next ? next.t : "終了"} note={next ? `${remainText(next.m - now)}${next.note ? `・${next.note}` : ""}` : "本日の運行は終了しました"} />}
  
@@ -330,7 +332,7 @@ function TrainCard({ now }: { now: number | null }) {
                   <span
                     key={c.idx}
                     data-next={st === "next" ? "true" : undefined}
-                    className={`mb-1.5 mr-1.5 inline-flex min-h-11 items-baseline gap-1.5 border px-2.5 py-1 text-[28px] leading-[1.3] tracking-tight tabular-nums ${st === "next" ? "border-[#8a9aa3] border-b-4 border-b-[#2f7f9c] bg-white font-extrabold" : `${LINE} bg-[#f4f7f8] font-bold`} ${st === "past" ? "opacity-40" : ""}`}
+                    className={`mb-1.5 mr-1.5 inline-flex min-h-11 items-baseline gap-1.5 px-2.5 py-1 text-[28px] leading-[1.3] tracking-tight tabular-nums ${st === "next" ? "border-b-4 border-[#2f7f9c] font-extrabold" : "font-bold"} ${st === "past" ? "opacity-40" : ""}`}
                   >
                     {c.mm}
                     {c.note && <span className={`text-xs tracking-normal ${st === "next" ? "font-extrabold" : "font-bold text-[#51636d]"}`}>{c.note}</span>}
@@ -352,10 +354,10 @@ function TrainCard({ now }: { now: number | null }) {
  
 function RainCard() {
   return (
-    <Card className="px-[22px] py-[18px]">
+    <ContentCard className={notoSansJP.className}>
       <CardTitle icon={<Svg><path d="M3 12a9 9 0 0 1 18 0z" /><path d="M12 12v6a2 2 0 0 1-4 0" /></Svg>} label="RAIN" tag="NOTICE" title="雨天時の対応" />
       <p className="m-0 -mt-2.5 text-sm leading-[1.8]">雨天時も高専祭は開催されますが、一部の屋外企画が変更または中止になる場合があります。詳細は当サイトまたは公式SNSでご確認ください。</p>
-    </Card>
+    </ContentCard>
   );
 }
  
@@ -369,9 +371,6 @@ export default function AccessSection() {
       {/* バスと列車を横にスライドさせたい場合は、この2枚を overflow-x-auto + snap-x の枠に入れる */}
       <BusCard now={now} />
       <TrainCard now={now} />
-      <p className="m-0 -mt-4 text-xs leading-[1.8] text-[#51636d]">
-        列車は、高専祭の時間帯に合わせて10:00〜17:59発のみを掲載しています。2026年10月時点のJR東日本公式時刻表（土曜・休日）をもとにしています。ほかの時間帯やダイヤの乱れ・変更は、JR東日本の時刻表・運行情報でご確認ください。
-      </p>
       <RainCard />
     </div>
   );

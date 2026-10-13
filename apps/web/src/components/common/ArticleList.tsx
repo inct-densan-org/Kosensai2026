@@ -10,7 +10,9 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import ContentCard from "@/components/common/ContentCard";
 import { notoSansJP } from "@/components/common/fonts";
+import WhiteCard from "@/components/common/WhiteCard";
 import ReactionSummary from "@/components/common/ReactionSummary";
 import {
   getArticleTags,
@@ -24,6 +26,10 @@ type ArticleListProps = {
   articles: PublicArticle[];
   contentType: ReactionTargetType;
   hrefPrefix: string;
+  // 記事の並べ方
+  // - "plain": 記事ごとに枠線付きの行で並べる
+  // - "card": トップページのニュースと同じく、白いカードの大枠の中に記事を1件ずつ ContentCard で並べる
+  variant?: "plain" | "card";
 };
 
 const tagStyle = (tag: ArticleTag) => ({
@@ -35,7 +41,9 @@ export default function ArticleList({
   articles,
   contentType,
   hrefPrefix,
+  variant = "plain",
 }: ArticleListProps) {
+  const isCard = variant === "card";
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
@@ -101,8 +109,8 @@ export default function ArticleList({
     router.push(`${hrefPrefix}?tag=${tagId}`);
   };
 
-  return (
-    <div className={notoSansJP.className}>
+  const content = (
+    <>
       <div className="mb-8 border-y border-[#9AC7D6]/70 bg-[#f7fcfd]/60 px-4 py-4 sm:px-5">
         <div className="relative">
           <Search
@@ -197,24 +205,27 @@ export default function ArticleList({
       </div>
 
       {filteredArticles.length === 0 ? (
-        <div className="border-y border-black/20 py-12 text-center">
+        <div className={isCard ? "py-12 text-center text-[#1f3a4a]" : "border-y border-black/20 py-12 text-center"}>
           <p className="text-sm font-bold">条件に一致する記事がありません。</p>
-          <p className="mt-2 text-sm text-black/55">
+          <p className={`mt-2 text-sm ${isCard ? "text-[#51636d]" : "text-black/55"}`}>
             検索条件やタグを変更してください。
           </p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <ul className={`m-0 list-none p-0 ${isCard ? "space-y-3" : "space-y-4"}`}>
           {filteredArticles.map((article) => {
             const articleTags = getArticleTags(article);
-          return (
+            const link = (
             <Link
-              key={article.id}
               href={`${hrefPrefix}/${article.id}`}
-              className={`group grid grid-cols-[1fr_auto] items-center gap-4 border p-4 transition-colors sm:p-5 ${article.priority === "high" ? "border-[#d58a2a]/70 bg-[#fffaf0] hover:bg-[#fff4d8]" : "border-[#9AC7D6]/70 bg-[#f7fcfd]/75 hover:bg-white"}`}
+              className={
+                isCard
+                  ? "group grid grid-cols-[1fr_auto] items-center gap-4 text-[#1f3a4a]"
+                  : `group grid grid-cols-[1fr_auto] items-center gap-4 border p-4 transition-colors sm:p-5 ${article.priority === "high" ? "border-[#d58a2a]/70 bg-[#fffaf0] hover:bg-[#fff4d8]" : "border-[#9AC7D6]/70 bg-[#f7fcfd]/75 hover:bg-white"}`
+              }
             >
                 <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-bold tracking-[0.1em] text-black/55">
+                  <div className={`flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-bold tracking-[0.1em] ${isCard ? "text-[#51636d]" : "text-black/55"}`}>
                     <CalendarDays size={14} aria-hidden />
                     <time dateTime={article.publishedAt ?? article.createdAt}>
                       {formatNewsDate(article.publishedAt ?? article.createdAt)}
@@ -225,11 +236,11 @@ export default function ArticleList({
                       </span>
                     )}
                   </div>
-                  <h2 className="mt-2 text-base font-bold leading-snug sm:text-lg">
+                  <h2 className="m-0 mt-2 text-base font-bold leading-snug sm:text-lg">
                     {article.title}
                   </h2>
                   {article.excerpt && (
-                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-black/60">
+                    <p className={`m-0 line-clamp-2 text-sm leading-6 ${isCard ? "mt-1.5 text-[#51636d]" : "mt-2 text-black/60"}`}>
                       {article.excerpt}
                     </p>
                   )}
@@ -267,15 +278,26 @@ export default function ArticleList({
                   </div>
                 </div>
                 <ArrowUpRight
-                  size={22}
+                  size={isCard ? 20 : 22}
                   aria-hidden
-                  className="self-center text-[#287c95] transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
+                  className={`self-center transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 ${isCard ? "text-[#2f7f9c]" : "text-[#287c95]"}`}
                 />
               </Link>
             );
+            return (
+              <li key={article.id}>
+                {isCard ? <ContentCard bodyClassName="!p-4 sm:!p-5">{link}</ContentCard> : link}
+              </li>
+            );
           })}
-        </div>
+        </ul>
       )}
-    </div>
+    </>
+  );
+
+  return isCard ? (
+    <WhiteCard className="p-4 sm:p-5">{content}</WhiteCard>
+  ) : (
+    <div className={notoSansJP.className}>{content}</div>
   );
 }

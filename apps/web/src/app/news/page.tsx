@@ -12,7 +12,7 @@ export default async function NewsPage() {
       <PageBackground />
       <div className="mx-auto w-full max-w-3xl">
         <header className="mb-8 border-b border-black/20 pb-8 sm:mb-10 sm:pb-9">
-          <h1 className={`${shipporiMincho.className} !text-4xl !font-bold !leading-none tracking-[0.08em] sm:!text-6xl`}>NEWS</h1>
+          <h1 className={`${shipporiMincho.className} !text-4xl !font-bold !leading-none tracking-[0.08em] sm:!text-6xl`}>ニュース</h1>
         </header>
 
         <NewsList articles={articles} />

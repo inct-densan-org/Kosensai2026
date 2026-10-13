@@ -6,5 +6,5 @@ type NewsListProps = {
 }
 
 export default function NewsList({ articles }: NewsListProps) {
-  return <ArticleList articles={articles} contentType="news-articles" hrefPrefix="/news" />
+  return <ArticleList articles={articles} contentType="news-articles" hrefPrefix="/news" variant="card" />
 }

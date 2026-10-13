@@ -8,6 +8,7 @@ import { PAGE_BACKGROUND } from "@/components/common/pageLayout";
 import TopSection, { screensHeight } from "./TopSection";
 import ShopsSection from "./ShopsSection";
 import AccessSection from "./AccessSection";
+import NewsSection from "./NewsSection";
 
 export function TopPageClient() {
   return (
@@ -22,7 +23,9 @@ export function TopPageClient() {
 
         {/* 各項目（screens: 確保する高さ。画面何枚分か） */}
         <TopSection id="greeting" title="ごあいさつ" screens={1} />
-        <TopSection id="news" title="ニュース" screens={1} />
+        <TopSection id="news" title="ニュース" screens={0}>
+          <NewsSection />
+        </TopSection>
         <TopSection id="access" title="アクセス" screens={0} >
           <AccessSection />
         </TopSection>
