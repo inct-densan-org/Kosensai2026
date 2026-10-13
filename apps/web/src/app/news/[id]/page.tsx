@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ArrowLeft, CalendarDays } from 'lucide-react'
 import { PAGE_BACKGROUND } from '@/components/common/pageLayout'
 import { notoSansJP, shipporiMincho } from '@/components/common/fonts'
+import ReactionBar from '@/components/common/ReactionBar'
 import RichText from '@/components/common/RichText'
 import { formatNewsDate, getNewsArticle } from '@/lib/news'
 import { notFound } from 'next/navigation'
@@ -55,6 +56,10 @@ export default async function NewsDetailPage({ params }: Props) {
             content={article.body}
             className="mt-7 text-base leading-8 sm:mt-8 sm:text-lg"
           />
+
+          <div className="mt-10">
+            <ReactionBar contentType="news-articles" contentId={article.id} />
+          </div>
         </article>
       </div>
     </main>
