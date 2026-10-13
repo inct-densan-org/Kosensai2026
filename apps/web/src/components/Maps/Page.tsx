@@ -5,6 +5,7 @@ import { map1, map2, map3, map4, map5 } from "./map-data";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import SlideMenu from "@/components/Maps/Menu";
+import ContentCard from "@/components/common/ContentCard";
 // import { Search } from "lucide-react";
 // import { Button } from "@/components/ui/button";
 import "./style.module.css";
@@ -117,13 +118,13 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
         }
       >
         <div
-          className={`px-4 md:px-12 py-0 flex flex-col items-center gap-12 ${width > height ? "justify-center" : ""}`}
+          className={`px-0 py-0 flex flex-col items-center gap-12 ${width > height ? "justify-center" : ""}`}
         >
-          <div className="w-full max-w-[700px] rounded-2xl border border-white/35 bg-white/20 p-6 text-[var(--text-color-default)] shadow-[0_10px_28px_rgba(48,96,128,0.10)] backdrop-blur-sm">
-            <h3 className="mb-4 text-center text-2xl font-extrabold text-[var(--text-color-default)]/95">
+          <ContentCard className="w-full max-w-[740px]" bodyClassName="!p-6">
+            <h3 className="mb-4 text-center text-2xl font-extrabold">
               ごみの分別にご協力ください
             </h3>
-            <ul className="mb-4 list-inside list-disc space-y-2 text-left font-semibold leading-relaxed text-[var(--text-color-default)]/90">
+            <ul className="mb-4 list-inside list-disc space-y-2 text-left font-semibold leading-relaxed">
               <li>
                 ゴミ箱は、屋外マップに表示されている指定の場所に設置されています。
               </li>
@@ -135,7 +136,7 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
                 その他のごみについても、ゴミ箱の表示に従って正しい分別をお願いいたします。
               </li>
             </ul>
-            <p className="text-left text-sm font-medium text-[var(--text-color-default)]/75">
+            <p className="text-left text-sm font-medium text-[#51636d]">
               詳細な分別方法については、一関市のガイドラインをご参照ください。
             </p>
             {/* <a
@@ -154,9 +155,9 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
             >
               分別方法の詳細はこちら (PDF)
             </a> */}
-          </div>
+          </ContentCard>
 
-          <div className="w-full max-w-[700px]">
+          <ContentCard className="w-full max-w-[740px]" bodyClassName="!p-3 md:!p-4">
             <h3 className="text-2xl font-bold text-center mb-4">屋外</h3>
             <span id="map1"></span>
             <MapPage
@@ -168,9 +169,9 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
               w={width - (width > height ? 320 : 0)}
               long={!isSameOrigin}
             />
-          </div>
+          </ContentCard>
 
-          <div className="w-full max-w-[700px]">
+          <ContentCard className="w-full max-w-[740px]" bodyClassName="!p-3 md:!p-4">
             <h3 className="text-2xl font-bold text-center mb-4">
               管理・教育棟 1F
             </h3>
@@ -184,9 +185,9 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
               w={width - (width > height ? 320 : 0)}
               long={!isSameOrigin}
             />
-          </div>
+          </ContentCard>
 
-          <div className="w-full max-w-[700px]">
+          <ContentCard className="w-full max-w-[740px]" bodyClassName="!p-3 md:!p-4">
             <h3 className="text-2xl font-bold text-center mb-4">
               管理・教育棟 2F
             </h3>
@@ -200,9 +201,9 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
               w={width - (width > height ? 320 : 0)}
               long={!isSameOrigin}
             />
-          </div>
+          </ContentCard>
 
-          <div className="w-full max-w-[700px]">
+          <ContentCard className="w-full max-w-[740px]" bodyClassName="!p-3 md:!p-4">
             <h3 className="text-2xl font-bold text-center mb-4">
               管理・教育棟 3F
             </h3>
@@ -216,9 +217,9 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
               w={width - (width > height ? 320 : 0)}
               long={!isSameOrigin}
             />
-          </div>
+          </ContentCard>
 
-          <div className="w-full max-w-[700px]">
+          <ContentCard className="w-full max-w-[740px]" bodyClassName="!p-3 md:!p-4">
             <h3 className="text-2xl font-bold text-center mb-4">
               専攻科・教育棟
             </h3>
@@ -232,7 +233,7 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
               w={width - (width > height ? 320 : 0)}
               long={!isSameOrigin}
             />
-          </div>
+          </ContentCard>
         </div>
       </div>
     </div>

@@ -178,7 +178,7 @@ export default function ShopModal({ index, onClose }: ShopModalProps) {
           data-sheet-scroll
           className="min-h-0 flex-1 touch-pan-y overflow-y-auto px-5 pb-5 md:px-8 md:pb-8"
         >
-          {shop.images[0] && (
+          {shop.images?.[0] && (
             <div className="relative mx-auto aspect-[277/392] w-full max-w-md bg-slate-100">
               <Image
                 src={shop.images[0]}

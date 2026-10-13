@@ -1,8 +1,10 @@
 import { Metadata } from "next";
-// import { ReactNode } from "react";
-import { LayoutWrapper, PageContainer } from "@/components/layout-wrapper";
 import TopBar from "@/components/common/TopBar";
 import Footer from "@/components/common/Footer";
+import PageBackground from "@/components/common/PageBackground";
+import WhiteCard from "@/components/common/WhiteCard";
+import { PAGE_BACKGROUND } from "@/components/common/pageLayout";
+import { shipporiMincho } from "@/components/common/fonts";
 
 export const metadata: Metadata = {
   title: "校内マップ | 高専祭2026",
@@ -16,24 +18,22 @@ export const metadata: Metadata = {
 export default function MapLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      {/* LayoutWrapper の上余白に押し下げられないよう外に置き、画面上部に固定する */}
       <TopBar current="MAP" />
-      <LayoutWrapper>
-        <div className="py-6 text-center">
-          <h1
-            className="leading-snug tracking-normal font-bold"
-            style={{ fontSize: "2.5rem" }}
-          >
-            校内マップ
-          </h1>
-        </div>
-        <PageContainer>
-          <div className="rounded-2xl border border-white p-4 md:p-8">
-            {children}
-          </div>
-        </PageContainer>
-      </LayoutWrapper>
-      <Footer />
+      <div
+        className="relative isolate min-h-screen w-full"
+        style={{ backgroundColor: PAGE_BACKGROUND }}
+      >
+        <PageBackground />
+        <main className="mx-auto w-full max-w-[900px] px-4 py-12 sm:py-16">
+          <header className="mb-8 border-b border-black/20 pb-8 sm:mb-10 sm:pb-9">
+            <h1 className={`${shipporiMincho.className} !text-4xl !font-bold !leading-none tracking-[0.08em] sm:!text-6xl`}>
+              校内マップ
+            </h1>
+          </header>
+          <WhiteCard className="p-3 text-[#1f3a4a] md:p-6">{children}</WhiteCard>
+        </main>
+        <Footer />
+      </div>
     </>
   );
 }

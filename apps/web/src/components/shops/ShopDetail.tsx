@@ -25,7 +25,7 @@ export default function ShopDetail({ shop, announcements, posterIndex }: ShopDet
         )}
         <h2 className="mt-2 text-3xl font-bold">{shop?.name ?? poster.title}</h2>
 
-        {poster && (
+        {poster?.images && poster.images.length > 0 && (
           <div className="mt-12 flex flex-wrap justify-center gap-4">
             {poster.images.map((image, imageIndex) => (
               <div
@@ -45,7 +45,7 @@ export default function ShopDetail({ shop, announcements, posterIndex }: ShopDet
           </div>
         )}
 
-        {poster && (
+        {poster?.desc && (
           <ContentCard as="section" className="mt-8">
             <h2 className="text-xl font-bold">コメント</h2>
             <p className="mt-3 whitespace-pre-wrap leading-8">{poster.desc}</p>
