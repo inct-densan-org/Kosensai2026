@@ -4,6 +4,7 @@ import { PAGE_BACKGROUND } from '@/components/common/pageLayout'
 import { notoSansJP, shipporiMincho } from '@/components/common/fonts'
 import ReactionBar from '@/components/common/ReactionBar'
 import RichText from '@/components/common/RichText'
+import { getArticleTags } from '@/lib/articles'
 import { formatNewsDate, getNewsArticle } from '@/lib/news'
 import { notFound } from 'next/navigation'
 
@@ -20,6 +21,8 @@ export default async function NewsDetailPage({ params }: Props) {
   if (!article) {
     notFound()
   }
+
+  const tags = getArticleTags(article)
 
   return (
     <main className="min-h-screen px-5 py-10 sm:px-8 sm:py-20" style={{ backgroundColor: PAGE_BACKGROUND }}>
@@ -45,6 +48,24 @@ export default async function NewsDetailPage({ params }: Props) {
           <h1 className={`${shipporiMincho.className} mt-6 !text-3xl !font-bold !leading-[1.3] tracking-[0.04em] sm:!text-4xl`}>
             {article.title}
           </h1>
+
+          {tags.length > 0 && (
+            <div className="mt-5 flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <Link
+                  href={`/news?tag=${tag.id}`}
+                  key={tag.id}
+                  className="border-b border-dashed px-0.5 pb-0.5 text-xs font-bold"
+                  style={{
+                    borderColor: tag.color || '#496473',
+                    color: tag.color || '#496473',
+                  }}
+                >
+                  # {tag.name}
+                </Link>
+              ))}
+            </div>
+          )}
 
           {article.excerpt && (
             <p className={`${notoSansJP.className} mt-6 border-l-2 border-black/35 pl-4 text-base leading-8 text-black/65 sm:text-lg`}>

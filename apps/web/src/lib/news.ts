@@ -1,21 +1,14 @@
 import { apiBaseUrl } from './api'
+import type { ArticleBody, ArticleTag } from './articles'
 
-export type NewsRichText = {
-  root: {
-    children: Array<{
-      type?: string
-      [key: string]: unknown
-    }>
-    [key: string]: unknown
-  }
-  [key: string]: unknown
-}
+export type NewsRichText = ArticleBody
 
 export type NewsArticle = {
   id: number
   title: string
   excerpt?: string | null
   body: NewsRichText
+  tags?: (number | ArticleTag)[] | null
   status: 'draft' | 'scheduled' | 'published' | 'archived'
   publishedAt?: string | null
   createdAt: string
