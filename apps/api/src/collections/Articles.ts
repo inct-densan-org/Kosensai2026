@@ -1,8 +1,7 @@
 import { APIError, type CollectionBeforeValidateHook, type CollectionConfig } from 'payload'
 import {
   admins,
-  canCreateShopScopedContent,
-  canManageShopScopedContent,
+  anyone,
   committeeOrAdmins,
   publishedOrAuthenticated,
   readAssignedShopIds,
@@ -210,10 +209,11 @@ export const BlogArticleTypes: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'code', 'sortOrder'],
+    hidden: ({ user }) => user?.role !== 'admin',
   },
   access: {
     create: admins,
-    read: shopStaffOrAbove,
+    read: anyone,
     update: admins,
     delete: admins,
   },
@@ -246,11 +246,12 @@ export const ShopAnnouncements: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'shop', 'status', 'publishedAt'],
+    hidden: ({ user }) => user?.role !== 'admin',
   },
   access: {
-    create: canCreateShopScopedContent,
-    read: publishedOrAuthenticated,
-    update: canManageShopScopedContent,
+    create: admins,
+    read: anyone,
+    update: admins,
     delete: admins,
   },
   hooks: {
