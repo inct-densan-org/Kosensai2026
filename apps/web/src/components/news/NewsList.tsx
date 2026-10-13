@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowUpRight, CalendarDays } from 'lucide-react'
 import { notoSansJP } from '@/components/common/fonts'
+import ReactionSummary from '@/components/common/ReactionSummary'
 import type { NewsArticle } from '@/lib/news'
 import { formatNewsDate } from '@/lib/news'
 
@@ -24,7 +25,7 @@ export default function NewsList({ articles }: NewsListProps) {
         <Link
           key={article.id}
           href={`/news/${article.id}`}
-          className={`${notoSansJP.className} group grid grid-cols-[1fr_auto] items-center gap-4 border border-black/15 bg-white/55 p-4 transition-colors hover:bg-white sm:p-5`}
+          className={`${notoSansJP.className} group grid grid-cols-[1fr_auto] items-center gap-4 border border-[#9AC7D6]/70 bg-[#f7fcfd]/75 p-4 transition-colors hover:bg-white sm:p-5`}
         >
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-bold tracking-[0.1em] text-black/55">
@@ -48,12 +49,16 @@ export default function NewsList({ articles }: NewsListProps) {
                 {article.excerpt}
               </p>
             )}
+
+            <div className="mt-4">
+              <ReactionSummary contentType="news-articles" contentId={article.id} />
+            </div>
           </div>
 
           <ArrowUpRight
             size={22}
             aria-hidden
-            className="self-center text-black/65 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
+            className="self-center text-[#287c95] transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
           />
         </Link>
       ))}

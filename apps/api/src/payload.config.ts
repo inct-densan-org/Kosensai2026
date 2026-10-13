@@ -16,6 +16,18 @@ import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Shops } from './collections/Shops'
 import { Tags } from './collections/Tags'
+import { ContentReactions, ReactionDefinitions, reactionEndpoints } from './collections/Reactions'
+
+const defaultReactionDefinitions = [
+  { key: 'like', emoji: '👍', sortOrder: 10 },
+  { key: 'love', emoji: '❤️', sortOrder: 20 },
+  { key: 'great', emoji: '👏', sortOrder: 30 },
+  { key: 'funny', emoji: '😂', sortOrder: 40 },
+  { key: 'warm', emoji: '😊', sortOrder: 50 },
+  { key: 'excited', emoji: '🔥', sortOrder: 60 },
+  { key: 'celebrate', emoji: '🎉', sortOrder: 70 },
+  { key: 'useful', emoji: '💡', sortOrder: 80 },
+]
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -30,6 +42,8 @@ export default buildConfig({
   collections: [
     Media,
     Tags,
+    ReactionDefinitions,
+    ContentReactions,
     Shops,
     Users,
     BlogArticleTypes,
@@ -41,6 +55,27 @@ export default buildConfig({
   routes: {
     admin: '/api/admin',
     api: '/api',
+  },
+  endpoints: reactionEndpoints,
+  onInit: async (payload) => {
+    const existing = await payload.find({
+      collection: 'reaction-definitions',
+      limit: 1,
+      overrideAccess: true,
+    })
+
+    if (existing.totalDocs > 0) return
+
+    for (const definition of defaultReactionDefinitions) {
+      await payload.create({
+        collection: 'reaction-definitions',
+        data: {
+          ...definition,
+          enabled: true,
+        },
+        overrideAccess: true,
+      })
+    }
   },
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [

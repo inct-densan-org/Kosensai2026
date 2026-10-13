@@ -66,11 +66,23 @@ const isSafeUrl = (url: string) => {
 }
 
 const resolveMediaUrl = (url: string) => {
-  if (url.startsWith('/')) {
-    return `${apiOrigin}${url}`
-  }
+  try {
+    const parsedUrl = new URL(url, apiOrigin)
 
-  return isSafeUrl(url) ? url : null
+    if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
+      return null
+    }
+
+    // Payload may persist an internal API hostname in media.url. The browser
+    // should always request media from the configured public API origin.
+    if (parsedUrl.pathname.startsWith('/api/media/')) {
+      return `${apiOrigin}${parsedUrl.pathname}${parsedUrl.search}`
+    }
+
+    return parsedUrl.toString()
+  } catch {
+    return null
+  }
 }
 
 const renderChildren = (children: RichTextNode[] | undefined, keyPrefix: string) => {
