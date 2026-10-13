@@ -16,7 +16,10 @@ const CLOSE_DURATION_MS = 300
 
 export default function ShopModal({ index, onClose }: ShopModalProps) {
   const router = useRouter()
-  const shop = postersData[index]
+  const selectedShop = postersData[index]
+  const groupedShops = selectedShop
+  ? postersData.filter((poster) => poster.mapId === selectedShop.mapId)
+  : []
   const [isOpen, setIsOpen] = useState(false)
   const [hasOpened, setHasOpened] = useState(false)
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null)
@@ -75,7 +78,7 @@ export default function ShopModal({ index, onClose }: ShopModalProps) {
     return () => window.clearTimeout(timer)
   }, [hasOpened, isOpen, onClose, router])
 
-  if (!shop || isDesktop === null) {
+  if (!selectedShop || isDesktop === null) {
     return null
   }
 
@@ -161,43 +164,74 @@ export default function ShopModal({ index, onClose }: ShopModalProps) {
         </div>
 
         <header className="flex w-full shrink-0 items-center justify-between gap-4 px-5 py-6 md:px-8">
-          <h2 id={`shop-modal-title-${index}`} className="text-3xl font-bold text-slate-800">
-            {shop.title}
-          </h2>
-          <button
-            type="button"
-            aria-label="屋台概要を閉じる"
-            onClick={() => setIsOpen(false)}
-            className="grid min-h-12 min-w-12 place-items-center rounded-full bg-transparent p-0 text-slate-700 hover:bg-slate-100"
-          >
-            <X aria-hidden="true" size={32} />
-          </button>
+        <h2
+        id={`shop-modal-title-${index}`}
+        className="text-2xl font-bold text-slate-800"
+        >
+        屋台情報
+        <span className="ml-2 text-base font-normal text-slate-500">
+        全{groupedShops.length}件
+        </span>
+        </h2>
+
+        <button
+        type="button"
+        aria-label="屋台概要を閉じる"
+        onClick={() => setIsOpen(false)}
+        className="grid min-h-12 min-w-12 place-items-center rounded-full bg-transparent p-0 text-slate-700 hover:bg-slate-100"
+        >
+        <X aria-hidden="true" size={32} />
+        </button>
         </header>
 
         <div
-          data-sheet-scroll
-          className="min-h-0 flex-1 touch-pan-y overflow-y-auto px-5 pb-5 md:px-8 md:pb-8"
+      data-sheet-scroll
+      className="min-h-0 flex-1 touch-pan-y overflow-y-auto overscroll-contain px-5 pb-8 md:px-8"
+      >
+      <div className="space-y-8">
+      {groupedShops.map((poster, posterIndex) => {
+      const posterOriginalIndex = postersData.indexOf(poster)
+
+      return (
+        <article
+          key={`${poster.mapId}-${posterOriginalIndex}`}
+          className="border-b border-slate-200 pb-8 last:border-b-0"
         >
-          {shop.images[0] && (
-            <div className="relative mx-auto aspect-[277/392] w-full max-w-md bg-slate-100">
+          <h3 className="mb-4 text-xl font-bold text-slate-900">
+            {poster.title}
+          </h3>
+
+          {(poster.images ?? []).map((image, imageIndex) => (
+            <div
+              key={`${image}-${imageIndex}`}
+              className="relative mx-auto mb-4 aspect-[277/392] w-full max-w-md bg-slate-100"
+            >
               <Image
-                src={shop.images[0]}
-                alt={`${shop.title}のポスター`}
+                src={image}
+                alt={`${poster.title}のポスター ${imageIndex + 1}`}
                 fill
                 sizes="(max-width: 768px) 100vw, 480px"
                 className="object-contain"
-                priority
+                priority={posterIndex === 0 && imageIndex === 0}
               />
             </div>
-          )}
+          ))}
+
+          <p className="whitespace-pre-wrap leading-7 text-slate-700">
+            {poster.desc}
+          </p>
 
           <Link
-            href={`/shops/${index}/detail`}
+            href={`/shops/${posterOriginalIndex}/detail`}
             className="mt-5 block rounded-full bg-slate-900 px-5 py-3 text-center font-bold text-white"
           >
             詳細情報を見る
           </Link>
-        </div>
+        </article>
+      )
+      })}
+      </div>
+      </div>
       </section>
     </div>
   )
