@@ -3,6 +3,7 @@ import HeroScroll from "./HeroScroll";
 import TopBar from "@/components/common/TopBar";
 import BackToTopButton from "@/components/common/BackToTopButton";
 import Footer from "@/components/common/Footer";
+import PageBackground from "@/components/common/PageBackground";
 import { PAGE_BACKGROUND } from "@/components/common/pageLayout";
 import TopSection, { screensHeight } from "./TopSection";
 import ShopsSection from "./ShopsSection";
@@ -14,7 +15,8 @@ export function TopPageClient() {
       <HeroScroll heroId="hero" />
 
       {/* ヒーローより下の画面: スクロールするとトップバーが画面上部に固定される */}
-      <div className="relative min-h-dvh w-full" style={{ backgroundColor: PAGE_BACKGROUND }}>
+      <div className="relative isolate min-h-dvh w-full" style={{ backgroundColor: PAGE_BACKGROUND }}>
+        <PageBackground />
         <TopBar current="HOME" />
 
         {/* 各項目（screens: 確保する高さ。画面何枚分か） */}
