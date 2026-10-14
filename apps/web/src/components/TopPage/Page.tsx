@@ -5,10 +5,11 @@ import BackToTopButton from "@/components/common/BackToTopButton";
 import Footer from "@/components/common/Footer";
 import PageBackground from "@/components/common/PageBackground";
 import { PAGE_BACKGROUND } from "@/components/common/pageLayout";
-import TopSection, { screensHeight } from "./TopSection";
+import TopSection from "./TopSection";
 import ShopsSection from "./ShopsSection";
 import AccessSection from "./AccessSection";
 import NewsSection from "./NewsSection";
+import HelloSection from "./HelloSection";
 
 export function TopPageClient() {
   return (
@@ -22,11 +23,13 @@ export function TopPageClient() {
         <TopBar current="HOME" />
 
         {/* 各項目（screens: 確保する高さ。画面何枚分か） */}
-        <TopSection id="greeting" title="ごあいさつ" screens={1} />
+        <TopSection id="greeting" title="ごあいさつ" screens={1}>
+          <HelloSection />
+        </TopSection>
         <TopSection id="news" title="ニュース" screens={0}>
           <NewsSection />
         </TopSection>
-        <TopSection id="access" title="アクセス" screens={0} >
+        <TopSection id="access" title="アクセス" screens={0}>
           <AccessSection />
         </TopSection>
         <TopSection id="stalls" title="屋台・自主企画" screens={0}>

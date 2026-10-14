@@ -3,7 +3,6 @@ import { ArrowUpRight, CalendarDays } from "lucide-react";
 import ContentCard from "@/components/common/ContentCard";
 import { formatNewsDate, getNewsArticles, type NewsArticle } from "@/lib/news";
 import { screensHeight } from "./TopSection";
-import WhiteCard from "@/components/common/WhiteCard";
 
 // トップページのニュース項目
 // - 白いカード（送迎バスと同じ）の大枠の上に、記事を1件ずつ ContentCard で新しい順（重要なものを先頭）に並べ、一覧ページへのリンクを置く
@@ -35,8 +34,9 @@ export default async function NewsSection() {
   const articles = await loadNews();
 
   return (
-    <WhiteCard
-      className="flex flex-col p-4 text-[#1f3a4a] sm:p-5"
+    <ContentCard
+      className="flex min-h-0 flex-col text-[#1f3a4a]"
+      bodyClassName="flex min-h-0 flex-1 flex-col p-4 sm:p-5"
       style={{ maxHeight: `calc(${screensHeight(1)} - ${HEADING_AREA})` }}
     >
       {articles.length === 0 ? (
@@ -81,6 +81,6 @@ export default async function NewsSection() {
           ニュース一覧へ →
         </Link>
       </div>
-    </WhiteCard>
+    </ContentCard>
   );
 }
