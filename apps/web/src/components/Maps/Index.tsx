@@ -146,7 +146,8 @@ export function MapPage({
         initialScale={1}
         minScale={0.1}
         maxScale={10}
-        wheel={{ step: 0.2 }}
+        smooth
+        wheel={{ step: 0.003 }}
         pinch={{ step: 0.2 }}
         ref={transformRef}
       >
