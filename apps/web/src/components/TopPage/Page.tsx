@@ -5,6 +5,7 @@ import BackToTopButton from "@/components/common/BackToTopButton";
 import { PAGE_BACKGROUND } from "@/components/common/pageLayout";
 import ContentCard from "@/components/common/ContentCard";
 import TopSection, { screensHeight } from "./TopSection";
+import styles from "./top.module.css";
 
 export function TopPageClient() {
   return (
@@ -14,7 +15,7 @@ export function TopPageClient() {
 
       {/* ヒーローより下の画面: スクロールするとトップバーが画面上部に固定される */}
       <div
-        className="home-tech-background relative min-h-dvh w-full"
+        className={`${styles.techBackground} relative min-h-dvh w-full`}
         style={{ backgroundColor: PAGE_BACKGROUND }}
       >
         <TopBar current="HOME" />

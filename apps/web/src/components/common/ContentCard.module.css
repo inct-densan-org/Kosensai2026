@@ -1,0 +1,63 @@
+@keyframes circuitDraw {
+  0% {
+    stroke-dashoffset: 1200;
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.65;
+  }
+  78% {
+    stroke-dashoffset: 0;
+    opacity: 0.5;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes circuitNodeFlash {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  35%,
+  75% {
+    opacity: 0.8;
+  }
+}
+
+.circuitPath {
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  opacity: 0;
+}
+
+.circuitNode {
+  fill: currentColor;
+  opacity: 0;
+}
+
+.circuitVisible .circuitPath {
+  animation: circuitDraw 1.1s ease-out forwards;
+}
+
+.circuitVisible .circuitPathDelayed {
+  animation-delay: 0.16s;
+}
+
+.circuitVisible .circuitNode {
+  animation: circuitNodeFlash 0.7s ease-out 0.4s forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .circuitVisible .circuitPath,
+  .circuitVisible .circuitNode {
+    animation: none;
+    opacity: 0;
+  }
+}

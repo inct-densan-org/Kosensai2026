@@ -1,0 +1,45 @@
+.techBackground {
+  --manuscript-cell: clamp(20px, 5vw, 32px);
+  --manuscript-sheet: clamp(400px, 100vw, 640px);
+  background-image:
+    radial-gradient(ellipse at center, rgba(125, 211, 252, 0.12), transparent 68%),
+    radial-gradient(ellipse at center, rgba(251, 191, 36, 0.08), transparent 68%),
+    linear-gradient(
+      90deg,
+      transparent calc(50% - 23px),
+      rgba(31, 58, 74, 0.1) calc(50% - 22px),
+      transparent calc(50% - 21px),
+      transparent calc(50% + 21px),
+      rgba(31, 58, 74, 0.1) calc(50% + 22px),
+      transparent calc(50% + 23px)
+    ),
+    linear-gradient(
+      90deg,
+      transparent calc(50% - 20px),
+      #f2f4f0 calc(50% - 20px),
+      #f2f4f0 calc(50% + 20px),
+      transparent calc(50% + 20px)
+    ),
+    linear-gradient(rgba(31, 58, 74, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(31, 58, 74, 0.04) 1px, transparent 1px),
+    linear-gradient(rgba(31, 58, 74, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(31, 58, 74, 0.09) 1px, transparent 1px);
+  background-size:
+    150% 150%,
+    150% 150%,
+    100% 100%,
+    100% 100%,
+    var(--manuscript-cell) var(--manuscript-cell),
+    var(--manuscript-cell) var(--manuscript-cell),
+    var(--manuscript-sheet) var(--manuscript-sheet),
+    var(--manuscript-sheet) var(--manuscript-sheet);
+  background-position:
+    0% 0%,
+    100% 100%,
+    center,
+    center,
+    center,
+    center,
+    center,
+    center;
+}

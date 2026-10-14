@@ -3,6 +3,7 @@
 import type { ComponentPropsWithoutRef, CSSProperties, ElementType, ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import cardBackground from "./resource/card_background.webp";
+import styles from "./ContentCard.module.css";
 
 // 各ページの項目の本文を入れるカード（共通コンポーネント）
 // - 背景: #C2DAEB の上に card_background を重ね、素材の露出を上げて白い素材にする
@@ -116,7 +117,7 @@ export default function ContentCard({
         <div
           aria-hidden
           className={`pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-[inherit] text-sky-600 ${
-            isVisible ? "card-circuit-visible" : ""
+            isVisible ? styles.circuitVisible : ""
           }`}
         >
           <svg
@@ -126,12 +127,28 @@ export default function ContentCard({
             preserveAspectRatio="none"
             fill="none"
           >
-            <path className="card-circuit-path" d="M-20 120H100V55H245V105H410" />
-            <path className="card-circuit-path card-circuit-path-delayed" d="M1020 355H890V285H755V340H600" />
-            <path className="card-circuit-path card-circuit-path-delayed" d="M315 520V430H395V375H510" />
-            <circle className="card-circuit-node" cx="245" cy="55" r="5" />
-            <circle className="card-circuit-node card-circuit-path-delayed" cx="755" cy="285" r="5" />
-            <circle className="card-circuit-node card-circuit-path-delayed" cx="395" cy="430" r="5" />
+            <path className={styles.circuitPath} d="M-20 120H100V55H245V105H410" />
+            <path
+              className={`${styles.circuitPath} ${styles.circuitPathDelayed}`}
+              d="M1020 355H890V285H755V340H600"
+            />
+            <path
+              className={`${styles.circuitPath} ${styles.circuitPathDelayed}`}
+              d="M315 520V430H395V375H510"
+            />
+            <circle className={styles.circuitNode} cx="245" cy="55" r="5" />
+            <circle
+              className={`${styles.circuitNode} ${styles.circuitPathDelayed}`}
+              cx="755"
+              cy="285"
+              r="5"
+            />
+            <circle
+              className={`${styles.circuitNode} ${styles.circuitPathDelayed}`}
+              cx="395"
+              cy="430"
+              r="5"
+            />
           </svg>
         </div>
       )}
