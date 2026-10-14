@@ -6,7 +6,7 @@ import Image, { StaticImageData } from "next/image";
 import { Modal } from "../Modal";
 import { postersData } from "@/posters.data"
 import styles from "./style.module.css";
-import { BusTimetable } from "./BusTable";
+import { BusScheduleCard } from "@/components/TopPage/AccessSection";
 import ShopModal from "@/components/shops/ShopModal";
 
 type NumberedPinProps = {
@@ -208,12 +208,10 @@ export function MapPage({
                         />
                       }
                       title="バス時刻表"
-                      ModalClass="fixed inset-0 z-[1000] top-12 left-1/2 translate-x-[-45vw] translate-y-0! w-[90vw] md:w-[60vw] md:translate-x-[-30vw] h-[400px]!  "
-                      className="object-contain"
+                      withoutWindow
+                      ModalClass="fixed inset-0 z-[1000] !top-0 !left-0 !h-screen !w-screen !max-w-none !translate-x-0 !translate-y-0 !grid-cols-1 !items-center !overflow-y-auto !bg-transparent !p-4 md:!p-8"
                     >
-                      <div className="flex items-center">
-                        <BusTimetable />
-                      </div>
+                      <BusScheduleCard />
                     </Modal>
                   ) : (
                     <NumberedPin color={e.color} number={e.id} size={size} />
