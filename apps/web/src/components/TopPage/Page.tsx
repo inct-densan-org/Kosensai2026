@@ -14,7 +14,7 @@ export function TopPageClient() {
 
       {/* ヒーローより下の画面: スクロールするとトップバーが画面上部に固定される */}
       <div
-        className="home-tech-background relative min-h-dvh w-full"
+        className="relative min-h-dvh w-full"
         style={{ backgroundColor: PAGE_BACKGROUND }}
       >
         <TopBar current="HOME" />
@@ -22,7 +22,7 @@ export function TopPageClient() {
         {/* 各項目（screens: 確保する高さ。画面何枚分か） */}
         <TopSection id="greeting" title="ごあいさつ" screens={1.5}>
           <div className="mx-auto max-w-3xl space-y-6">
-            <ContentCard as="section" circuitReveal>
+            <ContentCard as="section">
               <div className="mb-6">
                 <span className="mb-3 inline-block rounded bg-sky-100/80 px-2.5 py-1 text-xs font-bold tracking-wider text-sky-800 uppercase">
                   WELCOME!! 校長挨拶
@@ -67,7 +67,7 @@ export function TopPageClient() {
               </div>
             </ContentCard>
 
-            <ContentCard as="section" circuitReveal>
+            <ContentCard as="section">
               <div className="mb-6">
                 <span className="mb-3 inline-block rounded bg-sky-100/80 px-2.5 py-1 text-xs font-bold tracking-wider text-sky-800 uppercase">
                   MESSAGE 代表挨拶
