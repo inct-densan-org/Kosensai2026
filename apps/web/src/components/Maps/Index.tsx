@@ -140,7 +140,7 @@ export function MapPage({
   return (
     <>
       <div
-        className={`bg-white/5 backdrop-blur-md overflow-hidden flex items-center justify-center mx-auto p-0 w-full aspect-square max-w-[700px] rounded-2xl shadow-lg ${isCurrentMap ? "border-yellow-300 border-4" : "border-transparent border-4"} origin-center`}
+        className={`overflow-hidden flex items-center justify-center mx-auto p-0 w-full aspect-square max-w-[700px] ${isCurrentMap ? "border-yellow-300 border-4" : "border-transparent border-4"} origin-center`}
       >
       <TransformWrapper
         initialScale={1}
