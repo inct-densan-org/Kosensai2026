@@ -19,9 +19,6 @@ export default async function BlogDetailPage({
   if (!article) notFound();
 
   const tags = getArticleTags(article);
-  const articleType =
-    typeof article.articleType === "object" ? article.articleType : null;
-
   return (
     <main
       className="min-h-screen px-5 py-10 sm:px-8 sm:py-20"
@@ -42,12 +39,6 @@ export default async function BlogDetailPage({
             <time dateTime={article.publishedAt ?? article.createdAt}>
               {formatNewsDate(article.publishedAt ?? article.createdAt)}
             </time>
-            {articleType && (
-              <>
-                <span aria-hidden>·</span>
-                <span>{articleType.name}</span>
-              </>
-            )}
           </div>
           <h1
             className={`${shipporiMincho.className} mt-6 !text-3xl !font-bold !leading-[1.3] tracking-[0.04em] sm:!text-4xl`}

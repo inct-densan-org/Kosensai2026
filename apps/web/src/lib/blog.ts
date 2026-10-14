@@ -1,16 +1,7 @@
 import { apiBaseUrl } from "./api";
 import type { PublicArticle } from "./articles";
 
-export type BlogArticle = PublicArticle & {
-  articleType?:
-    | number
-    | {
-        id: number;
-        name: string;
-        code: string;
-      }
-    | null;
-};
+export type BlogArticle = PublicArticle;
 
 type BlogListResponse = { docs: BlogArticle[] };
 const blogEndpoint = `${apiBaseUrl}/blog-articles`;

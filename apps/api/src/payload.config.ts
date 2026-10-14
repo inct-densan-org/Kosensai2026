@@ -10,7 +10,7 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
-import { BlogArticles, BlogArticleTypes, NewsArticles, ShopAnnouncements } from './collections/Articles'
+import { BlogArticles, NewsArticles, ShopAnnouncements } from './collections/Articles'
 import { EventStatusOverrides } from './collections/EventStatusOverrides'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
@@ -46,7 +46,6 @@ export default buildConfig({
     ContentReactions,
     Shops,
     Users,
-    BlogArticleTypes,
     NewsArticles,
     BlogArticles,
     ShopAnnouncements,
@@ -95,8 +94,7 @@ export default buildConfig({
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: sqliteAdapter({
-    // スキーマ変更は手動で管理し、起動時のDrizzle自動pushによる重複作成を防ぐ。
-    push: false,
+    // 開発モードではPayload標準のschema pushでDBを自動同期する。
     client: {
       url: process.env.DATABASE_URL || '',
     },

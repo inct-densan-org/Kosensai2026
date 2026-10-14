@@ -178,7 +178,7 @@ export const BlogArticles: CollectionConfig = {
   slug: 'blog-articles',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'articleType', 'status', 'publishedAt'],
+    defaultColumns: ['title', 'status', 'publishedAt'],
   },
   access: {
     create: shopStaffOrAbove,
@@ -193,59 +193,6 @@ export const BlogArticles: CollectionConfig = {
     ...publicationFields,
     articleExcerptField,
     articleTagsField,
-    {
-      name: 'articleType',
-      type: 'relationship',
-      relationTo: 'blog-article-types' as never,
-      required: true,
-    },
-    {
-      name: 'coverMedia',
-      type: 'upload',
-      relationTo: 'media',
-      displayPreview: true,
-      admin: {
-        allowCreate: true,
-        description: 'ブログ一覧や詳細で使うカバー画像です。記事編集画面内で選択・アップロードできます。',
-      },
-    },
-  ],
-}
-
-export const BlogArticleTypes: CollectionConfig = {
-  slug: 'blog-article-types',
-  admin: {
-    useAsTitle: 'name',
-    defaultColumns: ['name', 'code', 'sortOrder'],
-    hidden: ({ user }) => user?.role !== 'admin',
-  },
-  access: {
-    create: admins,
-    read: anyone,
-    update: admins,
-    delete: admins,
-  },
-  fields: [
-    {
-      name: 'code',
-      type: 'text',
-      required: true,
-      unique: true,
-      admin: {
-        description: '公開側で使う安定した識別子です。',
-      },
-    },
-    {
-      name: 'name',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'sortOrder',
-      type: 'number',
-      required: true,
-      defaultValue: 0,
-    },
   ],
 }
 
