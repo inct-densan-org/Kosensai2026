@@ -22,9 +22,9 @@ type NavItem = {
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { label: "HOME", href: "/protected/top" },
+  { label: "HOME", href: "/top" },
   { label: "NEWS", href: "/news" },
-  { label: "MAP", href: "/protected/map" },
+  { label: "MAP", href: "/map" },
   { label: "EVENTS", href: "/events" },
   { label: "BLOG", href: "/blog" },
 ];

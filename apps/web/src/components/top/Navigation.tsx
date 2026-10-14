@@ -8,7 +8,7 @@ export default function Navigation({isTop = false}: {isTop?: boolean}) {
       <PageContainer className="fixed inset-x-0 top-6 z-[201]">
         <nav
             className={"h-12 w-full backdrop-blur-lg border-white border-[1px] rounded-xl flex items-center px-4 gap-2 justify-around"}>
-            <Link href={isTop ? "" : "/"} className={" text-md tracking-wider text-white"}
+            <Link href={isTop ? "" : "/top"} className={" text-md tracking-wider text-white"}
             >{isTop ? <ScrollToTop>HOME</ScrollToTop> : "HOME"}</Link>
             <Link href={"/news"} className={" text-sm tracking-widest text-white "}>NEWS</Link>
             <Link href={"/map"} className={" text-sm tracking-widest text-white"}>MAP</Link>
