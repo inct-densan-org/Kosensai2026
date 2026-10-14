@@ -1,9 +1,10 @@
 import ContentCard from "@/components/common/ContentCard";
+import { notoSansJP } from "@/components/common/fonts";
 
 export default function HelloSection() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <ContentCard as="section">
+      <ContentCard as="section" bodyClassName={notoSansJP.className}>
         <div className="mb-6">
           <span className="mb-3 inline-block rounded bg-sky-100/80 px-2.5 py-1 text-xs font-bold tracking-wider text-sky-800 uppercase">
             WELCOME!! 校長挨拶
@@ -42,7 +43,7 @@ export default function HelloSection() {
         </div>
       </ContentCard>
 
-      <ContentCard as="section">
+      <ContentCard as="section" bodyClassName={notoSansJP.className}>
         <div className="mb-6">
           <span className="mb-3 inline-block rounded bg-sky-100/80 px-2.5 py-1 text-xs font-bold tracking-wider text-sky-800 uppercase">
             MESSAGE 代表挨拶
@@ -55,8 +56,8 @@ export default function HelloSection() {
               className="col-start-1 row-start-2 aspect-square h-20 w-20 shrink-0 rounded-full border-2 border-white object-cover shadow-sm md:row-span-2 md:row-start-1 md:h-24 md:w-24"
             />
             <h3 className="col-span-2 row-start-1 text-balance text-lg font-bold text-gray-800 md:col-span-1 md:col-start-2 md:text-xl">
-              <span className="block md:inline">青春は timeless</span>{" "}
-              <span>～今しかない、この瞬間を～</span>
+              <span className="block md:inline">俺たちの高専祭へ</span>{" "}
+              <span>ようこそ</span>
             </h3>
             <p className="col-start-2 row-start-2 mt-1 text-sm text-gray-600 md:row-start-2 md:text-base">
               高専祭実行委員長 <span className="ml-1 font-bold text-gray-800">黒澤 陽季</span>
