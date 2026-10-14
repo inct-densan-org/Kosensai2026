@@ -19,4 +19,4 @@ result
 .idea
 # TypeScript の差分ビルドキャッシュ（環境ごとに変わるため管理しない）
 *.tsbuildinfo
-apps/web/src/app/deb-*
+apps/web/src/app/dev-*
