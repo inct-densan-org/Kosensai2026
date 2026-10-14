@@ -11,7 +11,10 @@
     "lint": "turbo run lint",
     "check": "turbo run check",
     "payload:types": "pnpm --filter @kosensai/api payload:types",
-    "payload:migrate": "pnpm --filter @kosensai/api payload:migrate"
+    "payload:migrate": "pnpm --filter @kosensai/api payload migrate:create",
+    "payload:push": "pnpm --filter @kosensai/api payload migrate",
+    "shops:seed": "pnpm --filter @kosensai/api shops:seed",
+    "tags:seed": "pnpm --filter @kosensai/api tags:seed"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
