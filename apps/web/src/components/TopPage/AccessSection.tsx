@@ -243,14 +243,27 @@ function BusColumn({ tag, goTag, from, to, trips, now }: { tag: string; goTag: b
  
 function BusCard({ now }: { now: number | null }) {
   return (
-    <ContentCard bodyClassName="!p-5">
+    <Card className="p-5">
+      <BusScheduleContent now={now} />
+    </Card>
+  );
+}
+
+function BusScheduleContent({ now }: { now: number | null }) {
+  return (
+    <>
       <CardTitle icon={<Svg><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></Svg>} label="2026/10/24 – 25" title="無料送迎バス" />
       <div className="flex flex-wrap gap-x-6 gap-y-8">
         <BusColumn tag="行き" goTag from="一ノ関駅" to="一関高専" trips={BUS_GO} now={now} />
         <BusColumn tag="帰り" goTag={false} from="一関高専" to="一ノ関駅" trips={BUS_BACK} now={now} />
       </div>
-    </ContentCard>
+    </>
   );
+}
+
+export function BusScheduleCard() {
+  const now = useNowMinutes();
+  return <BusCard now={now} />;
 }
  
 /* ───────── ③ 列車時刻表（路線タブ） ───────── */

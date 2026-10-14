@@ -6,7 +6,7 @@ import Image, { StaticImageData } from "next/image";
 import { Modal } from "../Modal";
 import { postersData } from "@/posters.data"
 import styles from "./style.module.css";
-import { BusTimetable } from "./BusTable";
+import { BusScheduleCard } from "@/components/TopPage/AccessSection";
 import ShopModal from "@/components/shops/ShopModal";
 import type { ShopAnnouncement } from "@/lib/shops";
 
@@ -101,8 +101,12 @@ export function MapPage({
   const [selectedShopIndex, setSelectedShopIndex] = useState<number | null>(null);
   const transformRef = useRef<any>(null);
 
-  const activeShopIndex = selectedShopIndex ?? currentId;
-  const isCurrentMap = shops?.some((shop) => shop.idx === activeShopIndex) ?? false;
+  const activeMapId =
+    selectedShopIndex !== null
+      ? postersData[selectedShopIndex]?.mapId
+      : currentId;
+  const isCurrentMap =
+    shops?.some((shop) => postersData[shop.idx]?.mapId === activeMapId) ?? false;
 
   // 初期サイズ設定
   useEffect(() => {
@@ -114,7 +118,9 @@ export function MapPage({
   useEffect(() => {
     if (!shops || currentId === null || !transformRef.current || !size) return;
 
-    const currentShop = shops.find((shop) => shop.idx === currentId);
+    const currentShop = shops.find(
+      (shop) => postersData[shop.idx]?.mapId === currentId,
+    );
     if (!currentShop) return;
 
     const ZOOM_SCALE = 2.8;
@@ -137,13 +143,14 @@ export function MapPage({
   return (
     <>
       <div
-        className={`bg-white/5 backdrop-blur-md overflow-hidden flex items-center justify-center mx-auto p-0 w-full aspect-square max-w-[700px] rounded-2xl shadow-lg ${isCurrentMap ? "border-yellow-300 border-4" : "border-transparent border-4"} origin-center`}
+        className={`overflow-hidden flex items-center justify-center mx-auto p-0 w-full aspect-square max-w-[700px] ${isCurrentMap ? "border-yellow-300 border-4" : "border-transparent border-4"} origin-center`}
       >
       <TransformWrapper
         initialScale={1}
         minScale={0.1}
         maxScale={10}
-        wheel={{ step: 0.2 }}
+        smooth
+        wheel={{ step: 0.003 }}
         pinch={{ step: 0.2 }}
         ref={transformRef}
       >
@@ -152,30 +159,36 @@ export function MapPage({
             <Image src={base} alt="構内図" fill className="object-contain" />
             {/* 企画ピン */}
             {shops &&
-              shops.map((e, index) => (
-                <div
-                  key={index}
-                  className="absolute"
-                  style={{
-                    top: `${e.y}%`,
-                    left: `${e.x}%`,
-                    transform: "translate(-50%, -50%)",
-                  }}
-                >
-                  <button
-                    type="button"
-                    aria-label={`${postersData[e.idx].title}の概要を見る`}
-                    onClick={() => setSelectedShopIndex(e.idx)}
-                    className="m-0 block appearance-none rounded-none border-0 bg-transparent p-0 text-inherit hover:bg-transparent"
+              shops.map((e, index) => {
+                const poster = postersData[e.idx];
+
+                return (
+                  <div
+                    key={index}
+                    className="absolute"
+                    style={{
+                      top: `${e.y}%`,
+                      left: `${e.x}%`,
+                      transform: "translate(-50%, -50%)",
+                    }}
                   >
-                    <NumberedPin
-                      number={postersData[e.idx].mapId}
-                      force={e.idx === activeShopIndex}
-                      size={size}
-                    />
-                  </button>
-                </div>
-              ))}
+                    <button
+                      type="button"
+                      aria-label={`${poster?.title ?? `企画 ${e.idx}`}の概要を見る`}
+                      onClick={() => {
+                        if (poster) setSelectedShopIndex(e.idx);
+                      }}
+                      className="m-0 block appearance-none rounded-none border-0 bg-transparent p-0 text-inherit hover:bg-transparent"
+                    >
+                      <NumberedPin
+                        number={poster?.mapId ?? e.idx}
+                        force={poster?.mapId === activeMapId}
+                        size={size}
+                      />
+                    </button>
+                  </div>
+                );
+              })}
             {/* 静的ピン */}
             {statics &&
               statics.map((e, idx) => (
@@ -198,12 +211,10 @@ export function MapPage({
                         />
                       }
                       title="バス時刻表"
-                      ModalClass="fixed inset-0 z-[1000] top-12 left-1/2 translate-x-[-45vw] translate-y-0! w-[90vw] md:w-[60vw] md:translate-x-[-30vw] h-[400px]!  "
-                      className="object-contain"
+                      withoutWindow
+                      ModalClass="fixed inset-0 z-[1000] !top-0 !left-0 !h-screen !w-screen !max-w-none !translate-x-0 !translate-y-0 !grid-cols-1 !items-center !overflow-y-auto !bg-transparent !p-4 md:!p-8"
                     >
-                      <div className="flex items-center">
-                        <BusTimetable />
-                      </div>
+                      <BusScheduleCard />
                     </Modal>
                   ) : (
                     <NumberedPin color={e.color} number={e.id} size={size} />

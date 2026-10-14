@@ -204,7 +204,7 @@ export default function ShopsSection() {
                   {shop.title}
                 </h3>
                 <Link
-                  href={`/protected/map?index=${index}&t=true`}
+                  href={`/protected/map?mapId=${shop.mapId}&t=true`}
                   tabIndex={setIndex === 1 ? undefined : -1}
                   className="pointer-events-auto relative z-20 mt-auto inline-flex items-center gap-1.5 self-start pt-4 text-sm font-bold text-[#287c95] underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#287c95]"
                   aria-label={`${shop.title}をマップで見る`}

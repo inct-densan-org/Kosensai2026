@@ -99,7 +99,7 @@ export default function ShopDetail({ shop, announcements, posterIndex }: ShopDet
         </section>
 
         <Link
-          href={`/protected/map?index=${posterIndex}`}
+          href={`/protected/map?mapId=${poster.mapId}`}
           className="mt-8 inline-block underline"
         >
           マップで場所を見る
