@@ -13,7 +13,6 @@ import {
 
 const articleStatusOptions = [
   { label: '下書き', value: 'draft' },
-  { label: '公開予約', value: 'scheduled' },
   { label: '公開', value: 'published' },
   { label: 'アーカイブ', value: 'archived' },
 ]
@@ -117,14 +116,6 @@ const publicationFields: CollectionConfig['fields'] = [
     admin: {
       hidden: true,
       readOnly: true,
-      description: '',
-    },
-  },
-  {
-    name: 'scheduledAt',
-    type: 'date',
-    admin: {
-      condition: (_data, siblingData) => siblingData.status === 'scheduled',
       description: '',
     },
   },
@@ -234,5 +225,6 @@ export const ShopAnnouncements: CollectionConfig = {
         description: 'このお知らせを掲載する屋台です。実行委員・屋台担当者は自分の担当屋台だけ選択できます。',
       },
     },
+    articleTagsField,
   ],
 }

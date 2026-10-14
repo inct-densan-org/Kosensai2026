@@ -280,9 +280,8 @@ export interface NewsArticle {
     };
     [k: string]: unknown;
   };
-  status: 'draft' | 'scheduled' | 'published' | 'archived';
+  status: 'draft' | 'published' | 'archived';
   publishedAt?: string | null;
-  scheduledAt?: string | null;
   excerpt?: string | null;
   tags?: (number | Tag)[] | null;
   priority: 'high' | 'medium';
@@ -311,9 +310,8 @@ export interface BlogArticle {
     };
     [k: string]: unknown;
   };
-  status: 'draft' | 'scheduled' | 'published' | 'archived';
+  status: 'draft' | 'published' | 'archived';
   publishedAt?: string | null;
-  scheduledAt?: string | null;
   excerpt?: string | null;
   tags?: (number | Tag)[] | null;
   updatedAt: string;
@@ -341,14 +339,14 @@ export interface ShopAnnouncement {
     };
     [k: string]: unknown;
   };
-  status: 'draft' | 'scheduled' | 'published' | 'archived';
+  status: 'draft' | 'published' | 'archived';
   publishedAt?: string | null;
-  scheduledAt?: string | null;
   priority?: ('high' | 'medium' | 'low') | null;
   /**
    * このお知らせを掲載する屋台です。実行委員・屋台担当者は自分の担当屋台だけ選択できます。
    */
   shop: number | Shop;
+  tags?: (number | Tag)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -569,7 +567,6 @@ export interface NewsArticlesSelect<T extends boolean = true> {
   body?: T;
   status?: T;
   publishedAt?: T;
-  scheduledAt?: T;
   excerpt?: T;
   tags?: T;
   priority?: T;
@@ -585,7 +582,6 @@ export interface BlogArticlesSelect<T extends boolean = true> {
   body?: T;
   status?: T;
   publishedAt?: T;
-  scheduledAt?: T;
   excerpt?: T;
   tags?: T;
   updatedAt?: T;
@@ -600,9 +596,9 @@ export interface ShopAnnouncementsSelect<T extends boolean = true> {
   body?: T;
   status?: T;
   publishedAt?: T;
-  scheduledAt?: T;
   priority?: T;
   shop?: T;
+  tags?: T;
   updatedAt?: T;
   createdAt?: T;
 }
