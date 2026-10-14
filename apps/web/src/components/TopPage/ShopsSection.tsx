@@ -180,14 +180,20 @@ export default function ShopsSection() {
 
             <ContentCard className="pointer-events-none relative z-20 h-full rounded-3xl" bodyClassName="flex h-full flex-col p-0 md:p-0">
               <div className="relative aspect-[3/4] shrink-0 overflow-hidden bg-[#dcecf0]">
-                <Image
-                  src={shop.images[0]}
-                  alt={`${shop.title}のポスター`}
-                  fill
-                  sizes="(max-width: 640px) 76vw, (max-width: 1024px) 320px, 340px"
-                  draggable={false}
-                  className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                />
+                {shop.images?.[0] ? (
+                  <Image
+                    src={shop.images[0]}
+                    alt={`${shop.title}のポスター`}
+                    fill
+                    sizes="(max-width: 640px) 76vw, (max-width: 1024px) 320px, 340px"
+                    draggable={false}
+                    className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-sm font-bold text-[#496473]">
+                    No Image
+                  </div>
+                )}
                 <span className="absolute left-3 top-3 rounded-full bg-[#1f3a4a]/90 px-3 py-1 text-xs font-bold text-white backdrop-blur-sm">
                   No. {String(shop.mapId).padStart(2, "0")}
                 </span>

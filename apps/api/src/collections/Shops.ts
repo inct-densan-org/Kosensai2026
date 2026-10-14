@@ -9,6 +9,7 @@ export const Shops: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'code'],
+    hidden: ({ user }) => user?.role !== 'admin',
   },
   access: {
     create: admins,

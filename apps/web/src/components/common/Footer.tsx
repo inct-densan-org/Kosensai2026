@@ -1,10 +1,10 @@
 import Image, { type StaticImageData } from "next/image";
 import { shipporiMincho } from "./fonts";
-import schoolBadge from "@public/img/top/schoolbadge1.png";
-import densanLogo from "@public/img/top/densan_logo.png";
-import gakuseikaiLogo from "@public/img/top/gakuseikai_logo.png";
-import instagramLogo from "@public/img/top/Instagram_Glyph_Gradient.png";
-import xLogo from "@public/img/top/logo-black.png";
+import schoolBadge from "@public/img/unit/schoolbadge1.png";
+import densanLogo from "@public/img/unit/densan_logo.png";
+import gakuseikaiLogo from "@public/img/unit/gakuseikai_logo.png";
+import instagramLogo from "@public/img/unit/Instagram_Glyph_Gradient.png";
+import xLogo from "@public/img/unit/logo-black.png";
 
 // デザイン基準: 1440 x 1024 の画面で縦幅 256px。
 // 寸法は globals.css の --footer-unit（1440x1024 基準の 1px 相当）の倍数で指定し、画面に合わせて拡縮する。

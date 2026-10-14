@@ -1,10 +1,11 @@
 import { cn } from "@/lib/utils";
+import PageBackground from "@/components/common/PageBackground";
 
 // 背景とかのレイアウトをまとめるコンポーネント
 export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className="w-full min-h-screen py-20"
+      className="relative isolate w-full min-h-screen py-20"
       style={{
         backgroundColor: "#7fc7db",
         backgroundImage:
@@ -15,6 +16,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
         color: "var(--text-color-default)",
       }}
     >
+      <PageBackground />
       {children}
     </div>
   );
