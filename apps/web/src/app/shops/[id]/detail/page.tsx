@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import ShopDetail from '@/components/shops/ShopDetail'
-import { getShopAnnouncements, getShopByName } from '@/lib/shops'
+import { getShopAnnouncements, getShopByCode } from '@/lib/shops'
 import { postersData } from '@/posters.data'
 
 type ShopDetailPageProps = {
@@ -11,16 +11,17 @@ type ShopDetailPageProps = {
 
 export default async function ShopDetailPage({ params }: ShopDetailPageProps) {
   const { id } = await params
-  const index = Number(id)
+  const mapId = Number(id)
+  const posterIndex = postersData.findIndex((poster) => poster.mapId === mapId)
 
-  if (!Number.isInteger(index) || index < 0 || !postersData[index]) {
+  if (!Number.isInteger(mapId) || posterIndex < 0) {
     notFound()
   }
 
-  const shop = await getShopByName(postersData[index].title)
+  const shop = await getShopByCode(mapId)
   const announcements = shop
     ? await getShopAnnouncements(String(shop.id))
     : []
 
-  return <ShopDetail shop={shop} announcements={announcements} posterIndex={index} />
+  return <ShopDetail shop={shop} announcements={announcements} posterIndex={posterIndex} />
 }

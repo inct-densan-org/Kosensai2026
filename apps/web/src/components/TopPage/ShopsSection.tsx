@@ -170,7 +170,7 @@ export default function ShopsSection() {
             className="group relative w-[min(76vw,270px)] shrink-0 snap-start sm:w-[320px] lg:w-[340px]"
           >
             <Link
-              href={`/shops/${index}/detail`}
+              href={`/shops/${shop.mapId}/detail`}
               tabIndex={setIndex === 1 ? undefined : -1}
               className="absolute inset-0 z-10 rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#287c95]"
               aria-label={`${shop.title}の詳細を見る`}

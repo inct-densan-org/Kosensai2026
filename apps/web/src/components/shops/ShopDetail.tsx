@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { Pin } from 'lucide-react'
 import ContentCard from '@/components/common/ContentCard'
 import RichText from '@/components/common/RichText'
 import { postersData } from '@/posters.data'
@@ -52,33 +53,50 @@ export default function ShopDetail({ shop, announcements, posterIndex }: ShopDet
           </ContentCard>
         )}
 
-        <ContentCard as="section" className="mt-8">
-          <h2 className="text-xl font-bold">メニュー</h2>
-          {shop?.menu ? (
-            <RichText content={shop.menu} className="mt-3 leading-8" />
-          ) : (
-            <p className="mt-3 text-slate-500">メニューはまだ登録されていません。</p>
-          )}
-        </ContentCard>
+        <section className="mt-10" aria-labelledby="shop-announcements-heading">
+          <div className="flex items-end justify-between gap-4 px-1">
+            <h2 id="shop-announcements-heading" className="text-xl font-bold text-slate-900">
+              屋台からのお知らせ
+            </h2>
+            {announcements.length > 0 && (
+              <span className="text-xs font-bold tracking-[0.12em] text-slate-500">
+                {announcements.length}件
+              </span>
+            )}
+          </div>
 
-        <ContentCard as="section" className="mt-8">
-          <h2 className="text-xl font-bold">屋台からのお知らせ</h2>
           {announcements.length > 0 ? (
-            <div className="mt-4 space-y-6">
-              {announcements.map((announcement) => (
-                <article key={announcement.id}>
-                  <h3 className="text-lg font-bold">{announcement.title}</h3>
-                  {announcement.excerpt && (
-                    <p className="mt-2 text-slate-600">{announcement.excerpt}</p>
-                  )}
+            <div className="mt-4 space-y-4">
+              {announcements.map((announcement) => {
+                const isHighPriority = announcement.priority === 'high'
+
+                return (
+                <ContentCard
+                  as="article"
+                  key={announcement.id}
+                  className={isHighPriority ? 'border-2 border-[#287c95]' : ''}
+                >
+                  <div className="flex flex-wrap items-center gap-2">
+                    {announcement.priority === 'high' && (
+                      <span
+                        aria-label="優先表示のお知らせ"
+                        title="優先表示のお知らせ"
+                        className="inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-[#287c95] text-white shadow-sm"
+                      >
+                        <Pin aria-hidden="true" size={15} className="fill-current" />
+                      </span>
+                    )}
+                    <h3 className="text-lg font-bold text-slate-900">{announcement.title}</h3>
+                  </div>
                   <RichText content={announcement.body} className="mt-3 leading-8" />
-                </article>
-              ))}
+                </ContentCard>
+                )
+              })}
             </div>
           ) : (
-            <p className="mt-3 text-slate-500">現在、お知らせはありません。</p>
+            <p className="mt-3 px-1 text-slate-500">現在、お知らせはありません。</p>
           )}
-        </ContentCard>
+        </section>
 
         <Link
           href={`/protected/map?index=${posterIndex}`}
