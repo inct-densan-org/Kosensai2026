@@ -14,7 +14,13 @@ import Navigation from "@/components/top/Navigation";
 import type { ShopAnnouncement } from "@/lib/shops";
 
 const MAX_INDEX = 54;
-export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
+export function MapPageClient({
+  sameOrigin,
+  latestShopAnnouncements = {},
+}: {
+  sameOrigin: boolean
+  latestShopAnnouncements?: Record<string, ShopAnnouncement>
+}) {
   const cache = useSearchParams().get("mapId") ?? undefined;
   const [fromCarousel, setFromCarousel] = useState<boolean>(
     useSearchParams().get("t") === "true",

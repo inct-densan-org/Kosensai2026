@@ -3,6 +3,7 @@
  
 import { useEffect, useRef, useState } from "react";
 import ContentCard from "@/components/common/ContentCard";
+import Card from "@/components/common/WhiteCard";
 import { notoSansJP, shipporiMincho } from "@/components/common/fonts";
  
 // このセクション全体のフォント（ここ1か所で切り替え）。

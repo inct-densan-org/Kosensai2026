@@ -216,7 +216,7 @@ export default function ShopModal({ index, onClose, latestAnnouncement }: ShopMo
           </p>
 
           <Link
-            href={`/shops/${shop.mapId}/detail`}
+            href={`/shops/${poster.mapId}/detail`}
             className="mt-5 block rounded-full bg-slate-900 px-5 py-3 text-center font-bold text-white"
           >
             詳細情報を見る
@@ -240,7 +240,11 @@ export default function ShopModal({ index, onClose, latestAnnouncement }: ShopMo
               <RichText content={latestAnnouncement.body} className="mt-3 text-sm leading-7 text-slate-700" />
             </section>
           )}
-        </div>
+        </article>
+      )
+      })}
+      </div>
+      </div>
       </section>
     </div>
   ), document.body)
