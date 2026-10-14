@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
+import { createPortal } from 'react-dom'
 import { postersData } from '@/posters.data'
 
 type ShopModalProps = {
@@ -135,7 +136,7 @@ export default function ShopModal({ index, onClose }: ShopModalProps) {
     ? `translateX(${isOpen ? '0' : '100%'})`
     : `translateY(${isOpen ? `${dragOffset}px` : '100%'})`
 
-  return (
+  return createPortal((
     <div
       role="presentation"
       aria-hidden={!isOpen}
@@ -145,7 +146,7 @@ export default function ShopModal({ index, onClose }: ShopModalProps) {
       <section
         role="dialog"
         aria-modal="true"
-        aria-labelledby={`shop-modal-title-${index}`}
+        aria-label={`${selectedShop.title}の詳細`}
         onPointerDown={startDragging}
         onPointerMove={moveSheet}
         onPointerUp={finishDragging}
@@ -163,17 +164,7 @@ export default function ShopModal({ index, onClose }: ShopModalProps) {
           <span className="h-1 w-12 rounded-full bg-slate-200" />
         </div>
 
-        <header className="flex w-full shrink-0 items-center justify-between gap-4 px-5 py-6 md:px-8">
-        <h2
-        id={`shop-modal-title-${index}`}
-        className="text-2xl font-bold text-slate-800"
-        >
-        屋台情報
-        <span className="ml-2 text-base font-normal text-slate-500">
-        全{groupedShops.length}件
-        </span>
-        </h2>
-
+        <header className="flex w-full shrink-0 items-center justify-end px-5 py-4 md:px-8">
         <button
         type="button"
         aria-label="屋台概要を閉じる"
@@ -234,5 +225,5 @@ export default function ShopModal({ index, onClose }: ShopModalProps) {
       </div>
       </section>
     </div>
-  )
+  ), document.body)
 }
