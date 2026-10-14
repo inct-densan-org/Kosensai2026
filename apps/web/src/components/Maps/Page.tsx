@@ -6,13 +6,14 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import SlideMenu from "@/components/Maps/Menu";
 import ContentCard from "@/components/common/ContentCard";
+import { postersData } from "@/posters.data";
 // import { Search } from "lucide-react";
 // import { Button } from "@/components/ui/button";
 import "./style.module.css";
 
 const MAX_INDEX = 54;
 export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
-  const cache = useSearchParams().get("index") ?? undefined;
+  const cache = useSearchParams().get("mapId") ?? undefined;
   const [fromCarousel, setFromCarousel] = useState<boolean>(
     useSearchParams().get("t") === "true",
   );
@@ -57,7 +58,7 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
     const timer = setTimeout(
       () => {
         const matched = Object.values(maps).find((d) =>
-          d.shops.some((shop) => shop.idx === index),
+          d.shops.some((shop) => postersData[shop.idx]?.mapId === index),
         );
         const id = matched?.id;
         const el = document.getElementById(id ?? "map1");

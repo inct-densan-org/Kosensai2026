@@ -98,8 +98,12 @@ export function MapPage({
   const [selectedShopIndex, setSelectedShopIndex] = useState<number | null>(null);
   const transformRef = useRef<any>(null);
 
-  const activeShopIndex = selectedShopIndex ?? currentId;
-  const isCurrentMap = shops?.some((shop) => shop.idx === activeShopIndex) ?? false;
+  const activeMapId =
+    selectedShopIndex !== null
+      ? postersData[selectedShopIndex]?.mapId
+      : currentId;
+  const isCurrentMap =
+    shops?.some((shop) => postersData[shop.idx]?.mapId === activeMapId) ?? false;
 
   // 初期サイズ設定
   useEffect(() => {
@@ -111,7 +115,9 @@ export function MapPage({
   useEffect(() => {
     if (!shops || currentId === null || !transformRef.current || !size) return;
 
-    const currentShop = shops.find((shop) => shop.idx === currentId);
+    const currentShop = shops.find(
+      (shop) => postersData[shop.idx]?.mapId === currentId,
+    );
     if (!currentShop) return;
 
     const ZOOM_SCALE = 2.8;
@@ -149,30 +155,36 @@ export function MapPage({
             <Image src={base} alt="構内図" fill className="object-contain" />
             {/* 企画ピン */}
             {shops &&
-              shops.map((e, index) => (
-                <div
-                  key={index}
-                  className="absolute"
-                  style={{
-                    top: `${e.y}%`,
-                    left: `${e.x}%`,
-                    transform: "translate(-50%, -50%)",
-                  }}
-                >
-                  <button
-                    type="button"
-                    aria-label={`${postersData[e.idx].title}の概要を見る`}
-                    onClick={() => setSelectedShopIndex(e.idx)}
-                    className="m-0 block appearance-none rounded-none border-0 bg-transparent p-0 text-inherit hover:bg-transparent"
+              shops.map((e, index) => {
+                const poster = postersData[e.idx];
+
+                return (
+                  <div
+                    key={index}
+                    className="absolute"
+                    style={{
+                      top: `${e.y}%`,
+                      left: `${e.x}%`,
+                      transform: "translate(-50%, -50%)",
+                    }}
                   >
-                    <NumberedPin
-                      number={postersData[e.idx].mapId}
-                      force={e.idx === activeShopIndex}
-                      size={size}
-                    />
-                  </button>
-                </div>
-              ))}
+                    <button
+                      type="button"
+                      aria-label={`${poster?.title ?? `企画 ${e.idx}`}の概要を見る`}
+                      onClick={() => {
+                        if (poster) setSelectedShopIndex(e.idx);
+                      }}
+                      className="m-0 block appearance-none rounded-none border-0 bg-transparent p-0 text-inherit hover:bg-transparent"
+                    >
+                      <NumberedPin
+                        number={poster?.mapId ?? e.idx}
+                        force={poster?.mapId === activeMapId}
+                        size={size}
+                      />
+                    </button>
+                  </div>
+                );
+              })}
             {/* 静的ピン */}
             {statics &&
               statics.map((e, idx) => (
