@@ -28,14 +28,14 @@ export const map1:Data = {
     { idx:8, x:66, y:73 },
     { idx:9, x:48, y:70.5 },
     { idx:10, x:48, y:67 },
-    { idx:11, x:48, y:52 },
-    { idx:12, x:51.5, y:53 },
-    { idx:13, x:51.5, y:48.5 },
-    { idx:14, x:51.5, y:44 },
-    { idx:15, x:51.5, y:39.5 },
-    { idx:16, x:51.5, y:35 },
-    { idx:18, x:48, y:39.5 },
-    { idx:19, x:42.8, y:78.2 },
+    { idx:12, x:48, y:52 },
+    { idx:13, x:51.5, y:53 },
+    { idx:14, x:51.5, y:48.5 },
+    { idx:15, x:51.5, y:44 },
+    { idx:16, x:51.5, y:39.5 },
+    { idx:17, x:51.5, y:35 },
+    { idx:19, x:48, y:39.5 },
+    { idx:20, x:42.8, y:78.2 },
   ],
 
   labels:[
@@ -80,8 +80,8 @@ export const map2:Data = {
   id:"map2",
   image:image2,
   shops:[
-    { idx:20, x:24.7, y:31 },
-    { idx:21, x:13, y:53 },
+    { idx:21, x:24.7, y:31 },
+    { idx:28, x:13, y:53 },
     { idx:23, x:40, y:57 },
     { idx:24, x:46.8, y:53 },
     { idx:25, x:53.8, y:53 },
@@ -99,9 +99,9 @@ export const map3:Data = {
   id:"map3",
   image:image3,
   shops:[
-    { idx:27, x:45, y:54 },
-    { idx:28, x:53, y:54 },
-    { idx:29, x:80, y:54}
+    { idx:30, x:45, y:54 },
+    { idx:31, x:53, y:54 },
+    { idx:32, x:80, y:54}
   ],
   labels:[
     { name:"管理・教育棟 2F", x:10, y:20 },
@@ -119,10 +119,10 @@ export const map4:Data = {
   id:"map4",
   image:image4,
   shops:[
-    { idx:30, x:31, y:55 },
-    { idx:31, x:38, y:55 },
-    { idx:32, x:45, y:55 },
-    { idx:33, x:51.5, y:55 },
+    { idx:35, x:31, y:55 },
+    { idx:36, x:38, y:55 },
+    { idx:37, x:45, y:55 },
+    { idx:38, x:51.5, y:55 },
   
   ],
   labels:[
@@ -135,22 +135,22 @@ export const map5:Data = {
   id:"map5",
   image:image5,
   shops:[
-    { idx:34, x:13, y:37 },
-    { idx:35, x:39, y:37 },
+    { idx:40, x:13, y:37 },
+    { idx:41, x:39, y:37 },
   
-    { idx:36, x:61, y:17 },
-    { idx:37, x:61, y:37 },
-    { idx:38, x:87.5, y:37},
+    { idx:42, x:61, y:17 },
+    { idx:34, x:61, y:37 },
+    { idx:43, x:87.5, y:37},
  
-    { idx:39, x:13.1, y:57 },
-    { idx:40, x:38.8, y:57 },
-    { idx:41, x:13.1, y:77 },
-    { idx:42, x:38.8, y:77 },
+    { idx:44, x:13.1, y:57 },
+    { idx:45, x:38.8, y:57 },
+    { idx:46, x:13.1, y:77 },
+    { idx:47, x:38.8, y:77 },
 
-    { idx:43, x:61, y:57 },
-    { idx:44, x:87.5, y:57},
-    { idx:45, x:61, y:77 },
-    { idx:46, x:87.5, y:77}
+    { idx:48, x:61, y:57 },
+    { idx:49, x:87.5, y:57},
+    { idx:50, x:61, y:77 },
+    { idx:51, x:87.5, y:77}
 
   ],
   labels:[
