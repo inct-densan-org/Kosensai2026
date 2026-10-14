@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {Dialog, DialogContent, DialogTitle, DialogTrigger} from "./ui/dialog";
 import { cn } from "@/lib/utils";
 import { Window } from "@/components/ui/window"; // Import the updated Window component
@@ -11,7 +11,8 @@ export function Modal({
   defaultOpen = false,
   className = "",
   ModalClass = "",
-  titleAction
+  titleAction,
+  withoutWindow = false,
 }: {
   children: React.ReactNode;
   button: React.ReactNode;
@@ -21,9 +22,12 @@ export function Modal({
   className?: string;
   ModalClass?:string;
   titleAction?: React.ReactNode;
+  withoutWindow?: boolean;
 }) {
+  const [open, setOpen] = useState(defaultOpen);
+
   return (
-    <Dialog defaultOpen={defaultOpen}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
         render={(props) => (
           <button
@@ -39,13 +43,20 @@ export function Modal({
       >
         {button}
       </DialogTrigger>
-      <DialogContent className={cn("bg-transparent border-none shadow-none p-0 w-auto max-w-none",ModalClass)}>
+      <DialogContent
+        className={cn("bg-transparent border-none shadow-none p-0 w-auto max-w-none", ModalClass)}
+        onPointerDown={(event) => {
+          if (event.target === event.currentTarget) setOpen(false);
+        }}
+      >
       
       <DialogTitle className="w-0! h-0! hidden">
       </DialogTitle>
-        <Window title={title} subtitle={subtitle} className={cn("max-h-[80vh] w-[90vw] md:w-[60vw]", className)} titleAction={titleAction}>
-          {children}
-        </Window>
+        {withoutWindow ? children : (
+          <Window title={title} subtitle={subtitle} className={cn("max-h-[80vh] w-[90vw] md:w-[60vw]", className)} titleAction={titleAction}>
+            {children}
+          </Window>
+        )}
       </DialogContent>
     </Dialog>
   );

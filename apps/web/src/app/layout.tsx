@@ -1,9 +1,12 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { GoogleAnalytics } from '@next/third-parties/google'
+import { headers } from 'next/headers'
+import { notFound, redirect } from 'next/navigation'
 import './globals.css'
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { canAccessProtectedPages, getCurrentUser } from '@/lib/auth'
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -30,11 +33,27 @@ export const metadata: Metadata = {
 
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: Readonly<{
   children: ReactNode
 }>) {
+  const route = (await headers()).get('x-protected-path')?.split('?')[0]
+  const isPublicRoute = route === '/' || route === '/login'
+
+  if (!isPublicRoute) {
+    const user = await getCurrentUser()
+
+    if (!user) {
+      const nextPath = route?.startsWith('/') ? route : '/'
+      redirect(`/login?next=${encodeURIComponent(nextPath)}`)
+    }
+
+    if (!canAccessProtectedPages(user)) {
+      notFound()
+    }
+  }
+
   return (
     <html lang="ja" className={cn("overflow-x-hidden hidden-scrollbar", "font-sans", geist.variable)}>
       <body>{children}</body>

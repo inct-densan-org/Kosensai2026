@@ -4,7 +4,7 @@ import { cookies } from 'next/headers'
 import { apiBaseUrl } from './api'
 import { payloadTokenCookieName } from './auth-cookie'
 
-type ProtectedRole = 'committee' | 'admin'
+type ProtectedRole = 'shop_staff' | 'committee' | 'admin'
 
 type AuthUser = {
   role?: unknown
@@ -14,7 +14,7 @@ type MeResponse = {
   user?: AuthUser | null
 }
 
-const protectedRoles = new Set<ProtectedRole>(['committee', 'admin'])
+const protectedRoles = new Set<ProtectedRole>(['shop_staff', 'committee', 'admin'])
 
 const isProtectedRole = (role: unknown): role is ProtectedRole => {
   return typeof role === 'string' && protectedRoles.has(role as ProtectedRole)

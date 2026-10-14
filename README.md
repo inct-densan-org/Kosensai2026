@@ -64,6 +64,7 @@ pnpm dev
 - `pnpm lint`: lint 相当の確認
 - `pnpm payload:types`: Payload 型定義の生成
 - `pnpm payload:migrate`: Payload migration の実行
+- `pnpm push`: Payload のスキーマを開発用DBへ反映
 
 ## 参考
 

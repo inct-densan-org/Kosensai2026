@@ -18,6 +18,8 @@
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "payload:migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
     "payload:types": "pnpm run generate:types",
+    "tags:seed": "cross-env NODE_OPTIONS=--no-deprecation tsx scripts/seed-tags.ts",
+    "shops:seed": "cross-env NODE_OPTIONS=--no-deprecation tsx scripts/seed-shops.ts",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start --port ${API_PORT:-8787}",
     "test": "pnpm run test:int && pnpm run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts",

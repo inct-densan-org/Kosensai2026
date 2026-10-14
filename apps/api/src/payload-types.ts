@@ -69,9 +69,10 @@ export interface Config {
   collections: {
     media: Media;
     tags: Tag;
+    'reaction-definitions': ReactionDefinition;
+    'content-reactions': ContentReaction;
     shops: Shop;
     users: User;
-    'blog-article-types': BlogArticleType;
     'news-articles': NewsArticle;
     'blog-articles': BlogArticle;
     'shop-announcements': ShopAnnouncement;
@@ -85,9 +86,10 @@ export interface Config {
   collectionsSelect: {
     media: MediaSelect<false> | MediaSelect<true>;
     tags: TagsSelect<false> | TagsSelect<true>;
+    'reaction-definitions': ReactionDefinitionsSelect<false> | ReactionDefinitionsSelect<true>;
+    'content-reactions': ContentReactionsSelect<false> | ContentReactionsSelect<true>;
     shops: ShopsSelect<false> | ShopsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
-    'blog-article-types': BlogArticleTypesSelect<false> | BlogArticleTypesSelect<true>;
     'news-articles': NewsArticlesSelect<false> | NewsArticlesSelect<true>;
     'blog-articles': BlogArticlesSelect<false> | BlogArticlesSelect<true>;
     'shop-announcements': ShopAnnouncementsSelect<false> | ShopAnnouncementsSelect<true>;
@@ -161,10 +163,43 @@ export interface Tag {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reaction-definitions".
+ */
+export interface ReactionDefinition {
+  id: number;
+  /**
+   * APIで使う一意なキー。作成後は変更しないでください。
+   */
+  key: string;
+  emoji: string;
+  enabled?: boolean | null;
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "content-reactions".
+ */
+export interface ContentReaction {
+  id: number;
+  contentType: 'news-articles' | 'blog-articles' | 'shop-announcements';
+  contentId: string;
+  reactionKey: string;
+  visitorId: string;
+  fingerprint: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "shops".
  */
 export interface Shop {
   id: number;
+  /**
+   * フロントのpostersData[].mapIdと一致させる識別子です。
+   */
   code: string;
   name: string;
   /**
@@ -225,27 +260,11 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "blog-article-types".
- */
-export interface BlogArticleType {
-  id: number;
-  /**
-   * 公開側で使う安定した識別子です。
-   */
-  code: string;
-  name: string;
-  sortOrder: number;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "news-articles".
  */
 export interface NewsArticle {
   id: number;
   title: string;
-  excerpt?: string | null;
   body: {
     root: {
       type: string;
@@ -264,6 +283,7 @@ export interface NewsArticle {
   status: 'draft' | 'scheduled' | 'published' | 'archived';
   publishedAt?: string | null;
   scheduledAt?: string | null;
+  excerpt?: string | null;
   tags?: (number | Tag)[] | null;
   priority: 'high' | 'medium';
   updatedAt: string;
@@ -276,7 +296,6 @@ export interface NewsArticle {
 export interface BlogArticle {
   id: number;
   title: string;
-  excerpt?: string | null;
   body: {
     root: {
       type: string;
@@ -295,12 +314,8 @@ export interface BlogArticle {
   status: 'draft' | 'scheduled' | 'published' | 'archived';
   publishedAt?: string | null;
   scheduledAt?: string | null;
+  excerpt?: string | null;
   tags?: (number | Tag)[] | null;
-  articleType: number | BlogArticleType;
-  /**
-   * ブログ一覧や詳細で使うカバー画像です。記事編集画面内で選択・アップロードできます。
-   */
-  coverMedia?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -311,7 +326,6 @@ export interface BlogArticle {
 export interface ShopAnnouncement {
   id: number;
   title: string;
-  excerpt?: string | null;
   body: {
     root: {
       type: string;
@@ -330,7 +344,7 @@ export interface ShopAnnouncement {
   status: 'draft' | 'scheduled' | 'published' | 'archived';
   publishedAt?: string | null;
   scheduledAt?: string | null;
-  tags?: (number | Tag)[] | null;
+  priority?: ('high' | 'medium' | 'low') | null;
   /**
    * このお知らせを掲載する屋台です。実行委員・屋台担当者は自分の担当屋台だけ選択できます。
    */
@@ -383,16 +397,20 @@ export interface PayloadLockedDocument {
         value: number | Tag;
       } | null)
     | ({
+        relationTo: 'reaction-definitions';
+        value: number | ReactionDefinition;
+      } | null)
+    | ({
+        relationTo: 'content-reactions';
+        value: number | ContentReaction;
+      } | null)
+    | ({
         relationTo: 'shops';
         value: number | Shop;
       } | null)
     | ({
         relationTo: 'users';
         value: number | User;
-      } | null)
-    | ({
-        relationTo: 'blog-article-types';
-        value: number | BlogArticleType;
       } | null)
     | ({
         relationTo: 'news-articles';
@@ -482,6 +500,31 @@ export interface TagsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reaction-definitions_select".
+ */
+export interface ReactionDefinitionsSelect<T extends boolean = true> {
+  key?: T;
+  emoji?: T;
+  enabled?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "content-reactions_select".
+ */
+export interface ContentReactionsSelect<T extends boolean = true> {
+  contentType?: T;
+  contentId?: T;
+  reactionKey?: T;
+  visitorId?: T;
+  fingerprint?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "shops_select".
  */
 export interface ShopsSelect<T extends boolean = true> {
@@ -519,26 +562,15 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "blog-article-types_select".
- */
-export interface BlogArticleTypesSelect<T extends boolean = true> {
-  code?: T;
-  name?: T;
-  sortOrder?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "news-articles_select".
  */
 export interface NewsArticlesSelect<T extends boolean = true> {
   title?: T;
-  excerpt?: T;
   body?: T;
   status?: T;
   publishedAt?: T;
   scheduledAt?: T;
+  excerpt?: T;
   tags?: T;
   priority?: T;
   updatedAt?: T;
@@ -550,14 +582,12 @@ export interface NewsArticlesSelect<T extends boolean = true> {
  */
 export interface BlogArticlesSelect<T extends boolean = true> {
   title?: T;
-  excerpt?: T;
   body?: T;
   status?: T;
   publishedAt?: T;
   scheduledAt?: T;
+  excerpt?: T;
   tags?: T;
-  articleType?: T;
-  coverMedia?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -567,12 +597,11 @@ export interface BlogArticlesSelect<T extends boolean = true> {
  */
 export interface ShopAnnouncementsSelect<T extends boolean = true> {
   title?: T;
-  excerpt?: T;
   body?: T;
   status?: T;
   publishedAt?: T;
   scheduledAt?: T;
-  tags?: T;
+  priority?: T;
   shop?: T;
   updatedAt?: T;
   createdAt?: T;

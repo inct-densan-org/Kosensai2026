@@ -128,7 +128,7 @@ const getSafeInternalPath = (path: FormDataEntryValue | null) => {
 }
 
 const getFallbackPath = (user: LoginResponse['user']) => {
-  return user?.role === 'admin' ? '/cms/admin/users' : '/protected/map'
+  return user?.role === 'admin' ? '/cms/admin/users' : '/map'
 }
 
 export const login = async (_prevState: LoginState, formData: FormData): Promise<LoginState> => {

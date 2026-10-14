@@ -1,6 +1,7 @@
 import { APIError, type CollectionBeforeValidateHook, type CollectionConfig } from 'payload'
 import {
   admins,
+  anyone,
   canCreateShopScopedContent,
   canManageShopScopedContent,
   committeeOrAdmins,
@@ -99,10 +100,6 @@ const publicationFields: CollectionConfig['fields'] = [
     required: true,
   },
   {
-    name: 'excerpt',
-    type: 'textarea',
-  },
-  {
     name: 'body',
     type: 'richText',
     required: true,
@@ -131,13 +128,19 @@ const publicationFields: CollectionConfig['fields'] = [
       description: '',
     },
   },
-  {
-    name: 'tags',
-    type: 'relationship',
-    relationTo: 'tags' as never,
-    hasMany: true,
-  },
 ]
+
+const articleExcerptField = {
+  name: 'excerpt',
+  type: 'textarea' as const,
+}
+
+const articleTagsField = {
+  name: 'tags',
+  type: 'relationship' as const,
+  relationTo: 'tags' as never,
+  hasMany: true,
+}
 
 export const NewsArticles: CollectionConfig = {
   slug: 'news-articles',
@@ -156,6 +159,8 @@ export const NewsArticles: CollectionConfig = {
   },
   fields: [
     ...publicationFields,
+    articleExcerptField,
+    articleTagsField,
     {
       name: 'priority',
       type: 'select',
@@ -173,7 +178,7 @@ export const BlogArticles: CollectionConfig = {
   slug: 'blog-articles',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'articleType', 'status', 'publishedAt'],
+    defaultColumns: ['title', 'status', 'publishedAt'],
   },
   access: {
     create: shopStaffOrAbove,
@@ -186,58 +191,8 @@ export const BlogArticles: CollectionConfig = {
   },
   fields: [
     ...publicationFields,
-    {
-      name: 'articleType',
-      type: 'relationship',
-      relationTo: 'blog-article-types' as never,
-      required: true,
-    },
-    {
-      name: 'coverMedia',
-      type: 'upload',
-      relationTo: 'media',
-      displayPreview: true,
-      admin: {
-        allowCreate: true,
-        description: 'ブログ一覧や詳細で使うカバー画像です。記事編集画面内で選択・アップロードできます。',
-      },
-    },
-  ],
-}
-
-export const BlogArticleTypes: CollectionConfig = {
-  slug: 'blog-article-types',
-  admin: {
-    useAsTitle: 'name',
-    defaultColumns: ['name', 'code', 'sortOrder'],
-  },
-  access: {
-    create: admins,
-    read: shopStaffOrAbove,
-    update: admins,
-    delete: admins,
-  },
-  fields: [
-    {
-      name: 'code',
-      type: 'text',
-      required: true,
-      unique: true,
-      admin: {
-        description: '公開側で使う安定した識別子です。',
-      },
-    },
-    {
-      name: 'name',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'sortOrder',
-      type: 'number',
-      required: true,
-      defaultValue: 0,
-    },
+    articleExcerptField,
+    articleTagsField,
   ],
 }
 
@@ -245,11 +200,11 @@ export const ShopAnnouncements: CollectionConfig = {
   slug: 'shop-announcements',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'shop', 'status', 'publishedAt'],
+    defaultColumns: ['title', 'shop', 'priority', 'status', 'publishedAt'],
   },
   access: {
     create: canCreateShopScopedContent,
-    read: publishedOrAuthenticated,
+    read: anyone,
     update: canManageShopScopedContent,
     delete: admins,
   },
@@ -258,6 +213,17 @@ export const ShopAnnouncements: CollectionConfig = {
   },
   fields: [
     ...publicationFields,
+    {
+      name: 'priority',
+      type: 'select',
+      required: false,
+      defaultValue: 'medium',
+      options: [
+        { label: '高', value: 'high' },
+        { label: '中', value: 'medium' },
+        { label: '低', value: 'low' },
+      ],
+    },
     {
       name: 'shop',
       type: 'relationship',
