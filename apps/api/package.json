@@ -17,7 +17,6 @@
     "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "payload:migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
-    "payload:push": "cross-env NODE_OPTIONS=--no-deprecation payload push",
     "payload:types": "pnpm run generate:types",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start --port ${API_PORT:-8787}",
     "test": "pnpm run test:int && pnpm run test:e2e",
