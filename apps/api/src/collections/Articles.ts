@@ -2,6 +2,8 @@ import { APIError, type CollectionBeforeValidateHook, type CollectionConfig } fr
 import {
   admins,
   anyone,
+  canCreateShopScopedContent,
+  canManageShopScopedContent,
   committeeOrAdmins,
   publishedOrAuthenticated,
   readAssignedShopIds,
@@ -98,10 +100,6 @@ const publicationFields: CollectionConfig['fields'] = [
     required: true,
   },
   {
-    name: 'excerpt',
-    type: 'textarea',
-  },
-  {
     name: 'body',
     type: 'richText',
     required: true,
@@ -130,13 +128,19 @@ const publicationFields: CollectionConfig['fields'] = [
       description: '',
     },
   },
-  {
-    name: 'tags',
-    type: 'relationship',
-    relationTo: 'tags' as never,
-    hasMany: true,
-  },
 ]
+
+const articleExcerptField = {
+  name: 'excerpt',
+  type: 'textarea' as const,
+}
+
+const articleTagsField = {
+  name: 'tags',
+  type: 'relationship' as const,
+  relationTo: 'tags' as never,
+  hasMany: true,
+}
 
 export const NewsArticles: CollectionConfig = {
   slug: 'news-articles',
@@ -155,6 +159,8 @@ export const NewsArticles: CollectionConfig = {
   },
   fields: [
     ...publicationFields,
+    articleExcerptField,
+    articleTagsField,
     {
       name: 'priority',
       type: 'select',
@@ -185,6 +191,8 @@ export const BlogArticles: CollectionConfig = {
   },
   fields: [
     ...publicationFields,
+    articleExcerptField,
+    articleTagsField,
     {
       name: 'articleType',
       type: 'relationship',
@@ -245,13 +253,12 @@ export const ShopAnnouncements: CollectionConfig = {
   slug: 'shop-announcements',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'shop', 'status', 'publishedAt'],
-    hidden: ({ user }) => user?.role !== 'admin',
+    defaultColumns: ['title', 'shop', 'priority', 'status', 'publishedAt'],
   },
   access: {
-    create: admins,
+    create: canCreateShopScopedContent,
     read: anyone,
-    update: admins,
+    update: canManageShopScopedContent,
     delete: admins,
   },
   hooks: {
@@ -259,6 +266,17 @@ export const ShopAnnouncements: CollectionConfig = {
   },
   fields: [
     ...publicationFields,
+    {
+      name: 'priority',
+      type: 'select',
+      required: false,
+      defaultValue: 'medium',
+      options: [
+        { label: '高', value: 'high' },
+        { label: '中', value: 'medium' },
+        { label: '低', value: 'low' },
+      ],
+    },
     {
       name: 'shop',
       type: 'relationship',

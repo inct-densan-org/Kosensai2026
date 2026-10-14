@@ -4,7 +4,6 @@
 import { useEffect, useRef, useState } from "react";
 import ContentCard from "@/components/common/ContentCard";
 import { notoSansJP, shipporiMincho } from "@/components/common/fonts";
-import Card from "@/components/common/WhiteCard";
  
 // このセクション全体のフォント（ここ1か所で切り替え）。
 // 見出し「アクセス」と同じ明朝に統一。サイト本文のフォントにしたいときは "" にする。
@@ -303,7 +302,7 @@ function TrainCard({ now }: { now: number | null }) {
   });
  
   return (
-    <Card className="p-5">
+    <ContentCard bodyClassName="!p-5">
       <CardTitle icon={<Svg><rect x="5" y="3" width="14" height="14" rx="3" /><path d="M5 11h14M8 21l2-4M16 21l-2-4" /></Svg>} label="一ノ関駅発" tag="JR" title="列車時刻表" />
  
       <div role="tablist" aria-label="路線と方向" className="flex flex-wrap">
@@ -359,7 +358,7 @@ function TrainCard({ now }: { now: number | null }) {
       </div>
  
       {line.footnote &&<p className="m-0 mt-1.5 text-xs leading-[1.7] text-[#51636d]">{line.footnote}</p>}
-    </Card>
+    </ContentCard>
   );
 }
  

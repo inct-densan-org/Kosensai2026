@@ -199,6 +199,9 @@ export interface ContentReaction {
  */
 export interface Shop {
   id: number;
+  /**
+   * フロントのpostersData[].mapIdと一致させる識別子です。
+   */
   code: string;
   name: string;
   /**
@@ -279,7 +282,6 @@ export interface BlogArticleType {
 export interface NewsArticle {
   id: number;
   title: string;
-  excerpt?: string | null;
   body: {
     root: {
       type: string;
@@ -298,6 +300,7 @@ export interface NewsArticle {
   status: 'draft' | 'scheduled' | 'published' | 'archived';
   publishedAt?: string | null;
   scheduledAt?: string | null;
+  excerpt?: string | null;
   tags?: (number | Tag)[] | null;
   priority: 'high' | 'medium';
   updatedAt: string;
@@ -310,7 +313,6 @@ export interface NewsArticle {
 export interface BlogArticle {
   id: number;
   title: string;
-  excerpt?: string | null;
   body: {
     root: {
       type: string;
@@ -329,6 +331,7 @@ export interface BlogArticle {
   status: 'draft' | 'scheduled' | 'published' | 'archived';
   publishedAt?: string | null;
   scheduledAt?: string | null;
+  excerpt?: string | null;
   tags?: (number | Tag)[] | null;
   articleType: number | BlogArticleType;
   /**
@@ -345,7 +348,6 @@ export interface BlogArticle {
 export interface ShopAnnouncement {
   id: number;
   title: string;
-  excerpt?: string | null;
   body: {
     root: {
       type: string;
@@ -364,7 +366,7 @@ export interface ShopAnnouncement {
   status: 'draft' | 'scheduled' | 'published' | 'archived';
   publishedAt?: string | null;
   scheduledAt?: string | null;
-  tags?: (number | Tag)[] | null;
+  priority?: ('high' | 'medium' | 'low') | null;
   /**
    * このお知らせを掲載する屋台です。実行委員・屋台担当者は自分の担当屋台だけ選択できます。
    */
@@ -601,11 +603,11 @@ export interface BlogArticleTypesSelect<T extends boolean = true> {
  */
 export interface NewsArticlesSelect<T extends boolean = true> {
   title?: T;
-  excerpt?: T;
   body?: T;
   status?: T;
   publishedAt?: T;
   scheduledAt?: T;
+  excerpt?: T;
   tags?: T;
   priority?: T;
   updatedAt?: T;
@@ -617,11 +619,11 @@ export interface NewsArticlesSelect<T extends boolean = true> {
  */
 export interface BlogArticlesSelect<T extends boolean = true> {
   title?: T;
-  excerpt?: T;
   body?: T;
   status?: T;
   publishedAt?: T;
   scheduledAt?: T;
+  excerpt?: T;
   tags?: T;
   articleType?: T;
   coverMedia?: T;
@@ -634,12 +636,11 @@ export interface BlogArticlesSelect<T extends boolean = true> {
  */
 export interface ShopAnnouncementsSelect<T extends boolean = true> {
   title?: T;
-  excerpt?: T;
   body?: T;
   status?: T;
   publishedAt?: T;
   scheduledAt?: T;
-  tags?: T;
+  priority?: T;
   shop?: T;
   updatedAt?: T;
   createdAt?: T;

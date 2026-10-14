@@ -2,20 +2,23 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { X } from 'lucide-react'
+import { Pin, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import { createPortal } from 'react-dom'
 import { postersData } from '@/posters.data'
+import RichText from '@/components/common/RichText'
+import type { ShopAnnouncement } from '@/lib/shops'
 
 type ShopModalProps = {
   index: number
   onClose?: () => void
+  latestAnnouncement?: ShopAnnouncement
 }
 
 const CLOSE_DURATION_MS = 300
 
-export default function ShopModal({ index, onClose }: ShopModalProps) {
+export default function ShopModal({ index, onClose, latestAnnouncement }: ShopModalProps) {
   const router = useRouter()
   const selectedShop = postersData[index]
   const groupedShops = selectedShop
@@ -213,16 +216,31 @@ export default function ShopModal({ index, onClose }: ShopModalProps) {
           </p>
 
           <Link
-            href={`/shops/${posterOriginalIndex}/detail`}
+            href={`/shops/${shop.mapId}/detail`}
             className="mt-5 block rounded-full bg-slate-900 px-5 py-3 text-center font-bold text-white"
           >
             詳細情報を見る
           </Link>
-        </article>
-      )
-      })}
-      </div>
-      </div>
+
+          {latestAnnouncement && (
+            <section className="mt-6 border-t border-slate-200 pt-5">
+              <p className="text-xs font-bold tracking-[0.12em] text-slate-500">屋台からのお知らせ</p>
+              <h3 className={`mt-2 flex items-center gap-2 text-lg font-bold text-slate-800 ${latestAnnouncement.priority === 'high' ? 'rounded-lg border-2 border-[#287c95] bg-[#e6f4f7] px-3 py-2' : ''}`}>
+                {latestAnnouncement.priority === 'high' && (
+                  <span
+                    aria-label="優先表示のお知らせ"
+                    title="優先表示のお知らせ"
+                    className="inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-[#287c95] text-white shadow-sm"
+                  >
+                    <Pin aria-hidden="true" size={15} className="fill-current" />
+                  </span>
+                )}
+                {latestAnnouncement.title}
+              </h3>
+              <RichText content={latestAnnouncement.body} className="mt-3 text-sm leading-7 text-slate-700" />
+            </section>
+          )}
+        </div>
       </section>
     </div>
   ), document.body)

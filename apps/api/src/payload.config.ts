@@ -95,6 +95,8 @@ export default buildConfig({
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: sqliteAdapter({
+    // スキーマ変更は手動で管理し、起動時のDrizzle自動pushによる重複作成を防ぐ。
+    push: false,
     client: {
       url: process.env.DATABASE_URL || '',
     },

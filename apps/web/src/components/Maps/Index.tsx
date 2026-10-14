@@ -8,6 +8,7 @@ import { postersData } from "@/posters.data"
 import styles from "./style.module.css";
 import { BusScheduleCard } from "@/components/TopPage/AccessSection";
 import ShopModal from "@/components/shops/ShopModal";
+import type { ShopAnnouncement } from "@/lib/shops";
 
 type NumberedPinProps = {
   number?: number | string;
@@ -85,6 +86,7 @@ export function MapPage({
   currentId = null,
   w,
   long = false,
+  latestShopAnnouncements = {},
 }: {
   base: StaticImageData;
   shops?: Shop[] | null;
@@ -93,6 +95,7 @@ export function MapPage({
   currentId?: number | null;
   w: number;
   long?: boolean;
+  latestShopAnnouncements?: Record<string, ShopAnnouncement>;
 }) {
   const [size, setSize] = useState(0);
   const [selectedShopIndex, setSelectedShopIndex] = useState<number | null>(null);
@@ -241,6 +244,7 @@ export function MapPage({
       {selectedShopIndex !== null && (
         <ShopModal
           index={selectedShopIndex}
+          latestAnnouncement={latestShopAnnouncements[String(postersData[selectedShopIndex].mapId)]}
           onClose={() => setSelectedShopIndex(null)}
         />
       )}
