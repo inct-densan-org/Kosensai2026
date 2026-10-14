@@ -23,6 +23,9 @@ export const Shops: CollectionConfig = {
       type: 'text',
       required: true,
       unique: true,
+      admin: {
+        description: 'フロントのpostersData[].mapIdと一致させる識別子です。',
+      },
       access: {
         update: adminOnlyFieldAccess,
       },

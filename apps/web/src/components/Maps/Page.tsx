@@ -9,9 +9,11 @@ import ContentCard from "@/components/common/ContentCard";
 // import { Search } from "lucide-react";
 // import { Button } from "@/components/ui/button";
 import "./style.module.css";
+import Navigation from "@/components/top/Navigation";
+import type { ShopAnnouncement } from "@/lib/shops";
 
 const MAX_INDEX = 54;
-export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
+export function MapPageClient({ sameOrigin, latestShopAnnouncements }: { sameOrigin: boolean; latestShopAnnouncements: Record<string, ShopAnnouncement> }) {
   const cache = useSearchParams().get("index") ?? undefined;
   const [fromCarousel, setFromCarousel] = useState<boolean>(
     useSearchParams().get("t") === "true",
@@ -168,6 +170,7 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
               currentId={index}
               w={width - (width > height ? 320 : 0)}
               long={!isSameOrigin}
+              latestShopAnnouncements={latestShopAnnouncements}
             />
           </ContentCard>
 
@@ -184,6 +187,7 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
               currentId={index}
               w={width - (width > height ? 320 : 0)}
               long={!isSameOrigin}
+              latestShopAnnouncements={latestShopAnnouncements}
             />
           </ContentCard>
 
@@ -200,6 +204,7 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
               currentId={index}
               w={width - (width > height ? 320 : 0)}
               long={!isSameOrigin}
+              latestShopAnnouncements={latestShopAnnouncements}
             />
           </ContentCard>
 
@@ -216,6 +221,7 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
               currentId={index}
               w={width - (width > height ? 320 : 0)}
               long={!isSameOrigin}
+              latestShopAnnouncements={latestShopAnnouncements}
             />
           </ContentCard>
 
@@ -232,6 +238,7 @@ export function MapPageClient({ sameOrigin }: { sameOrigin: boolean }) {
               currentId={index}
               w={width - (width > height ? 320 : 0)}
               long={!isSameOrigin}
+              latestShopAnnouncements={latestShopAnnouncements}
             />
           </ContentCard>
         </div>
