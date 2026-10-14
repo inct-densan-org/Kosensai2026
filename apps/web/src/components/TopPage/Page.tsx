@@ -10,6 +10,7 @@ import ShopsSection from "./ShopsSection";
 import AccessSection from "./AccessSection";
 import NewsSection from "./NewsSection";
 import HelloSection from "./HelloSection";
+import VariousNoticeSection from "@/components/TopPage/VariousNoticeSection";
 
 export function TopPageClient() {
   return (
@@ -32,8 +33,12 @@ export function TopPageClient() {
         <TopSection id="access" title="アクセス" screens={0}>
           <AccessSection />
         </TopSection>
+
         <TopSection id="stalls" title="屋台・自主企画" screens={0}>
           <ShopsSection />
+        </TopSection>
+        <TopSection id="various-notice" title="" screens={0.5} >
+            <VariousNoticeSection />
         </TopSection>
         <TopSection id="sponsors" title="協賛" screens={0.5} />
 
