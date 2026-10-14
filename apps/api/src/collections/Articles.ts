@@ -234,5 +234,6 @@ export const ShopAnnouncements: CollectionConfig = {
         description: 'このお知らせを掲載する屋台です。実行委員・屋台担当者は自分の担当屋台だけ選択できます。',
       },
     },
+    articleTagsField,
   ],
 }
