@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight, CalendarDays } from "lucide-react";
 import ContentCard from "@/components/common/ContentCard";
+import Card from "@/components/common/WhiteCard";
 import { formatNewsDate, getNewsArticles, type NewsArticle } from "@/lib/news";
 import { screensHeight } from "./TopSection";
 
@@ -34,9 +35,8 @@ export default async function NewsSection() {
   const articles = await loadNews();
 
   return (
-    <ContentCard
-      className="flex min-h-0 flex-col text-[#1f3a4a]"
-      bodyClassName="flex min-h-0 flex-1 flex-col p-4 sm:p-5"
+    <Card
+      className="flex min-h-0 flex-col p-4 text-[#1f3a4a] sm:p-5"
       style={{ maxHeight: `calc(${screensHeight(1)} - ${HEADING_AREA})` }}
     >
       {articles.length === 0 ? (
@@ -81,6 +81,6 @@ export default async function NewsSection() {
           ニュース一覧へ →
         </Link>
       </div>
-    </ContentCard>
+    </Card>
   );
 }

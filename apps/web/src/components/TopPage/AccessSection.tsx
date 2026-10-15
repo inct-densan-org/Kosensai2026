@@ -262,9 +262,14 @@ function BusScheduleContent({ now }: { now: number | null }) {
   );
 }
 
+// マップページのモーダル用（トップページの BusCard とは別のカードで表示する）
 export function BusScheduleCard() {
   const now = useNowMinutes();
-  return <BusCard now={now} />;
+  return (
+    <ContentCard className={`${notoSansJP.className} ${INK}`} bodyClassName="!p-5">
+      <BusScheduleContent now={now} />
+    </ContentCard>
+  );
 }
  
 /* ───────── ③ 列車時刻表（路線タブ） ───────── */
@@ -303,7 +308,7 @@ function TrainCard({ now }: { now: number | null }) {
   });
  
   return (
-    <ContentCard bodyClassName="!p-5">
+    <Card className="p-5">
       <CardTitle icon={<Svg><rect x="5" y="3" width="14" height="14" rx="3" /><path d="M5 11h14M8 21l2-4M16 21l-2-4" /></Svg>} label="一ノ関駅発" tag="JR" title="列車時刻表" />
  
       <div role="tablist" aria-label="路線と方向" className="flex flex-wrap">
@@ -359,7 +364,7 @@ function TrainCard({ now }: { now: number | null }) {
       </div>
  
       {line.footnote &&<p className="m-0 mt-1.5 text-xs leading-[1.7] text-[#51636d]">{line.footnote}</p>}
-    </ContentCard>
+    </Card>
   );
 }
  
