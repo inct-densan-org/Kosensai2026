@@ -6,6 +6,7 @@ import {
   CalendarDays,
   ChevronDown,
   Search,
+  Store,
   X,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -26,6 +27,8 @@ type ArticleListProps = {
   articles: PublicArticle[];
   contentType: ReactionTargetType;
   hrefPrefix: string;
+  filterHrefPrefix?: string;
+  prioritizePriority?: boolean;
   // 記事の並べ方
   // - "plain": 記事ごとに枠線付きの行で並べる
   // - "card": トップページのニュースと同じく、白いカードの大枠の中に記事を1件ずつ ContentCard で並べる
@@ -41,12 +44,15 @@ export default function ArticleList({
   articles,
   contentType,
   hrefPrefix,
+  filterHrefPrefix,
+  prioritizePriority = true,
   variant = "plain",
 }: ArticleListProps) {
   const isCard = variant === "card";
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
+  const [tagQuery, setTagQuery] = useState("");
   const [tagMenuOpen, setTagMenuOpen] = useState(false);
 
   const tags = useMemo(() => {
@@ -76,14 +82,16 @@ export default function ArticleList({
     });
 
     return filtered.sort((a, b) => {
-      if (a.priority === "high" && b.priority !== "high") return -1;
-      if (a.priority !== "high" && b.priority === "high") return 1;
+      if (prioritizePriority) {
+        if (a.priority === "high" && b.priority !== "high") return -1;
+        if (a.priority !== "high" && b.priority === "high") return 1;
+      }
       return (
         new Date(b.publishedAt ?? b.createdAt).getTime() -
         new Date(a.publishedAt ?? a.createdAt).getTime()
       );
     });
-  }, [articles, query, selectedTags]);
+  }, [articles, prioritizePriority, query, selectedTags]);
 
   const toggleTag = (tagId: number) => {
     setSelectedTags((current) =>
@@ -97,6 +105,15 @@ export default function ArticleList({
     selectedTags.includes(tag.id),
   );
 
+  const visibleTags = useMemo(() => {
+    const normalizedTagQuery = tagQuery.trim().toLocaleLowerCase("ja");
+    if (!normalizedTagQuery) return tags;
+
+    return tags.filter((tag) =>
+      tag.name.toLocaleLowerCase("ja").includes(normalizedTagQuery),
+    );
+  }, [tagQuery, tags]);
+
   useEffect(() => {
     const tagId = Number(
       new URLSearchParams(window.location.search).get("tag"),
@@ -106,7 +123,12 @@ export default function ArticleList({
 
   const openTag = (tagId: number) => {
     setSelectedTags([tagId]);
-    router.push(`${hrefPrefix}?tag=${tagId}`);
+    const filterUrl = new URL(
+      filterHrefPrefix ?? hrefPrefix,
+      window.location.origin,
+    );
+    filterUrl.searchParams.set("tag", String(tagId));
+    router.push(`${filterUrl.pathname}${filterUrl.search}`);
   };
 
   const content = (
@@ -161,9 +183,23 @@ export default function ArticleList({
               <div
                 role="listbox"
                 aria-label="タグで絞り込み"
-                className="absolute left-0 top-full z-10 mt-2 flex max-h-48 min-w-48 flex-col gap-1 overflow-y-auto border border-[#9AC7D6] bg-[#f7fcfd] p-2 shadow-lg"
+                className="absolute left-0 top-full z-10 mt-2 flex max-h-72 min-w-56 flex-col gap-1 overflow-y-auto border border-[#9AC7D6] bg-[#f7fcfd] p-2 shadow-lg"
               >
-                {tags.map((tag) => {
+                <div className="relative mb-1">
+                  <Search
+                    className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-[#287c95]"
+                    size={14}
+                    aria-hidden
+                  />
+                  <input
+                    value={tagQuery}
+                    onChange={(event) => setTagQuery(event.target.value)}
+                    placeholder="タグを検索"
+                    aria-label="タグを検索"
+                    className="w-full border border-[#9AC7D6] bg-white py-1.5 pl-7 pr-2 text-xs text-[#1f3a4a] outline-none placeholder:text-[#496473]/65 focus:border-[#287c95]"
+                  />
+                </div>
+                {visibleTags.map((tag) => {
                   const selected = selectedTags.includes(tag.id);
                   return (
                     <button
@@ -178,6 +214,11 @@ export default function ArticleList({
                     </button>
                   );
                 })}
+                {visibleTags.length === 0 && (
+                  <p className="m-0 px-3 py-2 text-xs text-[#51636d]">
+                    該当するタグがありません。
+                  </p>
+                )}
               </div>
             )}
             {selectedTagObjects.length > 0 && (
@@ -221,7 +262,7 @@ export default function ArticleList({
               className={
                 isCard
                   ? "group grid grid-cols-[1fr_auto] items-center gap-4 text-[#1f3a4a]"
-                  : `group grid grid-cols-[1fr_auto] items-center gap-4 border p-4 transition-colors sm:p-5 ${article.priority === "high" ? "border-[#d58a2a]/70 bg-[#fffaf0] hover:bg-[#fff4d8]" : "border-[#9AC7D6]/70 bg-[#f7fcfd]/75 hover:bg-white"}`
+                  : `group grid grid-cols-[1fr_auto] items-center gap-4 border p-4 transition-colors sm:p-5 ${prioritizePriority && article.priority === "high" ? "border-[#d58a2a]/70 bg-[#fffaf0] hover:bg-[#fff4d8]" : "border-[#9AC7D6]/70 bg-[#f7fcfd]/75 hover:bg-white"}`
               }
             >
                 <div className="min-w-0">
@@ -230,7 +271,13 @@ export default function ArticleList({
                     <time dateTime={article.publishedAt ?? article.createdAt}>
                       {formatNewsDate(article.publishedAt ?? article.createdAt)}
                     </time>
-                    {article.priority === "high" && (
+                    {article.sourceLabel && (
+                      <span className="inline-flex items-center gap-1 text-[#287c95]">
+                        <Store size={13} aria-hidden />
+                        {article.sourceLabel}
+                      </span>
+                    )}
+                    {prioritizePriority && article.priority === "high" && (
                       <span className="border border-[#d58a2a] bg-[#ffe7ad] px-2 py-0.5 text-[10px] tracking-[0.15em] text-[#8a4b08]">
                         IMPORTANT
                       </span>
@@ -260,7 +307,7 @@ export default function ArticleList({
                             className={
                               isSelected
                                 ? "border border-[#287c95] bg-[#dcecf0] p-0 px-1.5 py-1 text-[11px] font-bold text-[#1f3a4a]"
-                                : "border-b border-dashed bg-transparent p-0 px-0.5 pb-0.5 text-[11px] font-bold"
+                                : "rounded-sm border bg-transparent p-0 px-1.5 py-1 text-[11px] font-bold transition-colors hover:bg-[#dcecf0]"
                             }
                             style={isSelected ? undefined : tagStyle(tag)}
                           >
