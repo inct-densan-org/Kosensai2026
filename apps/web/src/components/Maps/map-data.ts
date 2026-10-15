@@ -38,11 +38,12 @@ export const map1: Data = {
     { idx: 18, x: 51.5, y: 31.5 },
     { idx: 19, x: 48, y: 39.5 },
     { idx: 20, x: 42.8, y: 78.2 },
-    // { idx: 52, x: 11.5, y: 22 },
-    // { idx: 53, x: 37.5, y: 20 },
-    // { idx: 54, x: 15.5, y: 24 },
-    // { idx: 55, x: 41.5, y: 20 },
-    // { idx: 56, x: 9.5, y: 20 },
+    { idx: 52, x: 10, y: 27 },
+    { idx: 53, x: 37, y: 12 },
+    { idx: 55, x: 42, y: 12 },
+    { idx: 56, x: 17, y: 27 },
+    { idx: 54, x: 13.5, y: 27 },
+    { idx: 57, x: 45, y: 28, color: "blue" },
   ],
 
   labels: [
@@ -68,7 +69,7 @@ export const map1: Data = {
     { id: "ごみ箱", x: 18, y: 31.5, color: "green" },
     { id: "バス", x: 65, y: 92, color: "blue", timeTable: true },
     { id: "保健室", x: 35, y: 50, color: "blue" },
-    { id: "献血", x: 45, y: 28, color: "red" },
+    
   ],
 };
 

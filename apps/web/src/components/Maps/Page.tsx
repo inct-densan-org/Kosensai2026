@@ -7,13 +7,12 @@ import { useSearchParams } from "next/navigation";
 import SlideMenu from "@/components/Maps/Menu";
 import ContentCard from "@/components/common/ContentCard";
 import { postersData } from "@/posters.data";
-// import { Search } from "lucide-react";
-// import { Button } from "@/components/ui/button";
 import "./style.module.css";
-import Navigation from "@/components/top/Navigation";
 import type { ShopAnnouncement } from "@/lib/shops";
 
-const MAX_INDEX = 54;
+const MAP_ID_MIN = Math.min(...postersData.map((poster) => poster.mapId));
+const MAP_ID_MAX = Math.max(...postersData.map((poster) => poster.mapId));
+const MAP_ID_RANGE = MAP_ID_MAX - MAP_ID_MIN + 1;
 export function MapPageClient({
   sameOrigin,
   latestShopAnnouncements = {},
@@ -54,12 +53,12 @@ export function MapPageClient({
       return;
     }
 
-    if (index > MAX_INDEX) {
-      setIndex(index - (MAX_INDEX + 1));
+    if (index > MAP_ID_MAX) {
+      setIndex(index - MAP_ID_RANGE);
       return;
     }
-    if (index < 0) {
-      setIndex(index + (MAX_INDEX + 1));
+    if (index < MAP_ID_MIN) {
+      setIndex(index + MAP_ID_RANGE);
       return;
     }
 
@@ -89,7 +88,8 @@ export function MapPageClient({
         setIsSameOrigin(true);
         setFromCarousel(false);
       },
-      isSameOrigin ? 50 : 3000,
+      isSameOrigin ? 100 : 100,
+      //↑同一オリジンからの遷移出ないときにアニメーションを挿入する場合などに遅延をかけるよう。今回は不使用
     );
 
     return () => clearTimeout(timer);
