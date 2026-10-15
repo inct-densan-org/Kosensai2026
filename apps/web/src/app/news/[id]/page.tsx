@@ -55,7 +55,7 @@ export default async function NewsDetailPage({ params }: Props) {
                 <Link
                   href={`/news?tag=${tag.id}`}
                   key={tag.id}
-                  className="border-b border-dashed px-0.5 pb-0.5 text-xs font-bold"
+                  className="rounded-sm border px-1.5 py-1 text-xs font-bold transition-colors hover:bg-[#dcecf0]"
                   style={{
                     borderColor: tag.color || '#496473',
                     color: tag.color || '#496473',

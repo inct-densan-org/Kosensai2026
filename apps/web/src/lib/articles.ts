@@ -21,7 +21,8 @@ export type PublicArticle = {
   excerpt?: string | null
   body: ArticleBody
   tags?: (number | ArticleTag)[] | null
-  priority?: 'high' | 'medium'
+  sourceLabel?: string | null
+  priority?: 'high' | 'medium' | 'low'
   publishedAt?: string | null
   createdAt: string
 }

@@ -134,7 +134,8 @@ export function MapPage({
       () => {
         transformRef.current.setTransform(offsetX, offsetY, ZOOM_SCALE);
       },
-      long ? 3500 : 600,
+      long ? 600 : 600,
+      //↑mapページにもヒーローアニメーションを乗せるときなどに、longが乗ってくるので少し遅延をいれると良い
     ); // 1000ms後に実行
 
     return () => clearTimeout(timer); // クリーンアップ
@@ -181,7 +182,7 @@ export function MapPage({
                       className="m-0 block appearance-none rounded-none border-0 bg-transparent p-0 text-inherit hover:bg-transparent"
                     >
                       <NumberedPin
-                        number={poster?.mapId ?? e.idx}
+                        number={poster?.pinLabel ?? poster?.mapId ?? e.idx}
                         force={poster?.mapId === activeMapId}
                         size={size}
                       />
