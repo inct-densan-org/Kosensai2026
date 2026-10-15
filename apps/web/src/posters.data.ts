@@ -7,12 +7,12 @@ export const postersData = [
             "/img/shops/01.webp"
         ]
     },
-     {
+    {
         mapId: 2,
         title: "5Mポテト&フランク",
         desc: "数種のポテトとフランクフルトを安く販売しています！是非お越しください！",
         images: [
-            "/img/shops/03.webp"
+            "/img/shops/02.webp"
         ]
     },
     {
@@ -20,7 +20,7 @@ export const postersData = [
         title: "留学⽣会",
         desc: "マレーシアやインドネシアで親しまれている「アパムバリック」！お好きなトッピングを選んで、アジアの味を楽しもう！",
         images: [
-            "/img/shops/04.webp"
+            "/img/shops/03.webp"
         ]
     },
     {
@@ -28,7 +28,7 @@ export const postersData = [
         title: "テニドナ",
         desc: "テニスラケットを中華鍋に持ち替えて、今年もドーナツ揚げます！\n高専祭を楽しみながらの食べ歩きにはもちろん、帰り際のお土産にもぴったり！\n部員一同お待ちしています！",
         images: [
-            "/img/shops/05.webp"
+            "/img/shops/04.webp"
         ]
     },
     {
@@ -36,7 +36,7 @@ export const postersData = [
         title: "たい焼きショップすいみー",
         desc: "水泳部で作ってるたいやきです。",
         images: [
-            "/img/shops/06.webp"
+            "/img/shops/05.webp"
         ]
     },
     {
@@ -44,7 +44,7 @@ export const postersData = [
         title: "Moffy",
         desc: "ひとつひとつ心を込めて手編みした、かわいらしい作品を販売します。やさしい手触りと手作りならではの温かみを感じる、Moffyの作品をぜひご覧ください。",
         images: [
-            "/img/shops/12.webp"
+            "/img/shops/06.webp"
         ]
     },
     {
@@ -52,7 +52,7 @@ export const postersData = [
         title: "HOTDOG KING",
         desc: "ボリューム満点な美味しいホットドッグをそこそこ安く提供しています。\nとりあえず食べてみてください。",
         images: [
-            "/img/shops/08.webp"
+            "/img/shops/07.webp"
         ]
     },
     {
@@ -60,15 +60,15 @@ export const postersData = [
         title: "Nagia Drink",
         desc: "高専祭2026限定！Nagia Crewの「Nagia Drink」🍹✨個性豊かなドリンクと、ダンス部メンバーの名前入りうちわをGETしよう！ぜひ遊びに来てね！",
         images: [
-            "/img/shops/13.webp"
+            "/img/shops/08.webp"
         ]
     },
-     {
+    {
         mapId: 9,
         title: "4E おふくろのナガポテ",
         desc: "今年も4Eロングポテトやります！魂込めてロングポテト揚げてます！あの超有名熱波師エレガント博也もいます！高専祭史上一番美味い屋台飯をご賞味あれ！",
         images: [
-            "/img/shops/10.webp"
+            "/img/shops/09.webp"
         ]
     },
     {
@@ -76,7 +76,7 @@ export const postersData = [
         title: "JK-Cafe",
         desc: "焼きたてふわふわのパンケーキを楽しめるJK-Cafe\nお好みのトッピングで、自分だけの一皿をお楽しみください！",
         images: [
-            "/img/shops/11.webp"
+            "/img/shops/10.webp"
         ]
     },
     {
@@ -84,19 +84,22 @@ export const postersData = [
         title: "chEEsEball太郎",
         desc: "揚げたてのおいしいチーズボールを提供します！食べ歩きにもぴったり！ぜひご賞味ください！",
         images: [
-            "/img/shops/07.webp"
+            "/img/shops/11.webp"
         ]
     },
     {
         mapId: 12,
-        title: "弓道同好会 巻藁演武"
+        title: "弓道同好会 巻藁演武",
+        images: [
+            "/img/shops/12.webp"
+        ]
     },
     {
         mapId: 13,
         title: "⾼専ワッフル",
         desc: "外はサクッ、中はフワッ！焼きたてアツアツの絶品ワッフルはいかがですか？トッピングも豊富にご用意しています。甘い香りに誘われて、ぜひお立ち寄りください！",
         images: [
-            "/img/shops/09.webp"
+            "/img/shops/13.webp"
         ]
     },
     {
@@ -118,7 +121,7 @@ export const postersData = [
     {
         mapId: 16,
         title: "♪Mナルド",
-        desc: "某ハンバーガー店のクルー複数名が普段以上に全力で取り組みます！！\n出来立てのハンバーガーを是非お召し上がりください！\n本家に勝ちに行くので何度でもご来店お待ちしております。",
+        desc: "某ハンバーガー店のクルー監修\nできたてのハンバーガーをぜひお召し上がりください！\n本家に勝ちに行くので何度でもご来店お待ちしております。",
         images: [
             "/img/shops/16.webp"
         ]
@@ -128,7 +131,7 @@ export const postersData = [
         title: "たこ焼きうぃんぶるどん",
         desc: "美味しいたこ焼きを提供します！他では味わえない変わり種のたこ焼きもご用意してるので是非来てください！",
         images: [
-            "/img/shops/02.webp"
+            "/img/shops/17.webp"
         ]
     },
     {
@@ -151,14 +154,14 @@ export const postersData = [
         mapId: 20,
         title: "🍍SUGAR DOPE🍊",
         desc: "フルーツのジューシーさと飴のパリパリ食感がクセになる！高専祭限定「🍍SUGAR DOPE🍊」、ぜひご賞味あれ！",
-        images: ["/img/shops/17.webp"]
+        images: ["/img/shops/20.webp"]
     },
     {
         mapId: 21,
         title: "総合技研部-5inch Gauge Project-",
         desc: "総合技研部では、例年通りの無料で5インチゲージ乗車体験に加え、今年度は1回100円で運転体験ができます！普段は部員しかできない運転を、ぜひ体験してみてください！",
         images: [
-            "/img/shops/20.webp"
+            "/img/shops/21.webp"
         ]
     },
     {
@@ -166,19 +169,22 @@ export const postersData = [
         title: "Let's play Densan!",
         desc: "プログラミングや電子工作による製作を活動としている電子計算機部の作品展示コーナーです！\n\nコンテスト出場作品からゲームやWebサイト、電子工作まで実際に触れて体験できるものもあり、楽しみながら作品を見ることができます！",
         images: [
-            "/img/shops/21.webp"
+            "/img/shops/22.webp"
         ]
     },
     {
         mapId: 23,
-        title: "熊本地震支援バザー"
+        title: "熊本地震支援バザー",
+        images: [
+            "/img/shops/23.webp"
+        ]
     },
     {
         mapId: 24,
         title: "ガンプラ展示会　Re evolution",
-        desc: "「ガンダム売るし、飾るよ！」\nあのガンプラ展示会が超進化を遂げて大復活!!過去最高に充実したコンテンツで送る高専祭の目玉企画（自称）、是非お楽しみください",
+      desc: "「そうとも。このプラモこそ、人類を導くガンプラだ！」 あのガンプラ展示会が超進化を遂げて大復活!!過去最高に充実したコンテンツで送る高専祭の目玉企画（自称）、是非お楽しみください",
         images: [
-            "/img/shops/22.webp"
+            "/img/shops/24.webp"
         ]
     },
     {
@@ -186,7 +192,7 @@ export const postersData = [
         title: "デジタル⽔族館",
         desc: "あなたが描いた絵が命を宿し、教室を泳ぎ回る！\n子供から大人まで楽しめる体験型デジタル水族館です。\n自分だけの魚を巨大スクリーンに泳がせよう。色塗りだけでも大歓迎！",
         images: [
-            "/img/shops/23.webp"
+            "/img/shops/25.webp"
         ]
     },
 
@@ -195,7 +201,7 @@ export const postersData = [
         title: "綿人~わたんちゅ~",
         desc: "ふわふわで甘い、みんな大好きわたあめ！できたてのわたあめと一緒に高専祭を楽しんでください！！！1個300円！",
         images: [
-            "/img/shops/24.webp"
+            "/img/shops/26.webp"
         ]
     },
     {
@@ -203,7 +209,7 @@ export const postersData = [
         title: "VRお化け屋敷",
         desc: "本格VRで体験する没入型ホラー。音・光・演出があなたを恐怖へ誘う……\nあなたの挑戦を待ってます！",
         images: [
-            "/img/shops/26.webp"
+            "/img/shops/27.webp"
         ]
     },
     {
@@ -215,19 +221,22 @@ export const postersData = [
         title: "サクッとラリー",
         desc: "開催者も参加者もスマホだけで完結。かんたんに作れて、QRコードですぐ参加できるスタンプラリーサービスです。",
         images: [
-            "/img/shops/41.webp"
+            "/img/shops/29.webp"
         ]
     },
     {
         mapId: 30,
-        title: "海外研修・派遣発表"
+        title: "海外研修・派遣発表",
+        images: [
+            "/img/shops/30.webp"
+        ]
     },
     {
         mapId: 31,
         title: "怨魔怪屋敷2",
         desc: "あなたは、この恐怖にたえられますか？",
         images: [
-            "/img/shops/25.webp"
+            "/img/shops/31.webp"
         ]
     },
     {
@@ -235,7 +244,7 @@ export const postersData = [
         title: "上映・上演企画「星を巡って/解決！なんでも屋さん」",
         desc: "映像作品『星を巡って』＆上演作品『解決！なんでも屋さん』！笑いあり、ちょっぴり切なさあり。ぜひ気軽にお立ち寄りください！",
         images: [
-            "/img/shops/27.webp"
+            "/img/shops/32.webp"
         ]
     },
     {
@@ -243,31 +252,37 @@ export const postersData = [
         title: "高専祭ネットワーク NOCツアー",
         desc: "高専祭特設ネットワークを辿るツアーを実施します！\nフリーWi-Fiの裏側、見てみませんか？",
         images: [
-            "/img/shops/42.webp"
+            "/img/shops/33.webp"
         ]
     },
     {
         mapId: 34,
-        title: "情報・ソフトウェア系教員企画"
+        title: "情報・ソフトウェア系教員企画",
+        images: [
+            "/img/shops/34.webp"
+        ]
     },
     {
         mapId: 35,
-        title: "電気・電子系教員企画"
+        title: "電気・電子系教員企画",
+        images: [
+            "/img/shops/35.webp"
+        ]
     },
     {
         mapId: 36,
-        title: "3Mパレス",
+        title: "3Mパレス～オタカラを盗め～",
         desc: "狙うはただ一つ、教室に眠るオタカラ！レーザーをかいくぐり、制限時間内に盗み出せ！キミは無事に帰還できるか！？",
         images: [
-            "/img/shops/28.webp"
+            "/img/shops/36.webp"
         ]
     },
     {
         mapId: 37,
-        title: "エレメンタルハンター-射の精神-",
+        title: "エレメンタルハンター～射の精神～",
         desc: "「エレメンタルハンター」は元素番号がそのまま得点になる、化学×射的の新感覚ゲーム！\n高得点を狙って友達と競うもよし、遊びながら元素を覚えるもよし！\n目指せ、最強のエレメンタルハンター！",
         images: [
-            "/img/shops/29.webp"
+            "/img/shops/37.webp"
         ]
     },
     {
@@ -275,7 +290,7 @@ export const postersData = [
         title: "俱楽部⿇沙美",
         desc: "俱楽部麻沙美ではいろいろなキャストが皆様をおもてなしします！\nぜひいらしてください！！",
         images: [
-            "/img/shops/30.webp"
+            "/img/shops/38.webp"
         ]
     },
     {
@@ -283,23 +298,29 @@ export const postersData = [
         title: "休憩処ちゃぐまっちゃ",
         desc: "お近くにいらした際はぜひ来てください！！",
         images: [
-            "/img/shops/31.webp"
+            "/img/shops/39.webp"
         ]
     },
     {
         mapId: 40,
-        title: "総合科学領域教員企画"
+        title: "総合科学領域教員企画",
+        images: [
+            "/img/shops/40.webp"
+        ]
     },
     {
         mapId: 41,
-        title: "後援会"
+        title: "後援会",
+        images: [
+            "/img/shops/41.webp"
+        ]
     },
     {
         mapId: 42,
         title: "喫茶けみかる",
         desc: "食 × 化学の喫茶店！テイクアウト可！\n専攻科棟(５階建ての高い建物の)１階で出店してます！\nプチ実験の見学だけでもOK！お気軽にどうぞ！",
         images: [
-            "/img/shops/32.webp"
+            "/img/shops/42.webp"
         ]
     },
     {
@@ -307,15 +328,15 @@ export const postersData = [
         title: "化学部の展示.exe",
         desc: "今年の化学部の展示ではカフェインの結晶を展示します。結晶の形が特徴的なので是非ご覧になってください!",
         images: [
-            "/img/shops/33.webp"
+            "/img/shops/43.webp"
         ]
     },
     {
         mapId: 44,
-        title: "体験型謎解きゲーム　Error Code N.I.T",
+        title: "体験型謎解きゲーム Error Code:N.I.T",
         desc: "高専祭当日、校内に謎のマークが現れる。\n探して、解き明かして、校内を巡れ。\n広い敷地を使った、周遊型謎解き。\nあなたは全ての謎を解き明かせるか。\nその答えは自分の目で確かめろ。",
         images: [
-            "/img/shops/34.webp"
+            "/img/shops/44.webp"
         ]
     },
     {
@@ -323,27 +344,36 @@ export const postersData = [
         title: "スタ阿部ックス",
         desc: "自分の気分にあった組み合わせの飲み物を注文できます！ぜひ来て飲んでみてください！",
         images: [
-            "/img/shops/35.webp"
+            "/img/shops/45.webp"
         ]
     },
     {
         mapId: 46,
-        title:"ものづくりでまなぶサイエンスカフェ 2026"
+        title:"ものづくりでまなぶサイエンスカフェ2026 / 化学・バイオ系教員企画",
+        images: [
+            "/img/shops/46.webp"
+        ]
     },  
     {
         mapId: 47,
-        title: "進路相談コーナー"
+        title: "進路相談コーナー",
+        images: [
+            "/img/shops/47.webp"
+        ]
     },
     {
         mapId: 48,
-        title: "一関高専同窓会　ホームカミングデー"
+        title: "一関高専同窓会　ホームカミングデー",
+        images: [
+            "/img/shops/48.webp"
+        ]
     },
     {
         mapId: 49,
         title: "写真部写真展",
         desc: "専攻科棟（なんか大きくてガラス張りの建物）の４階です。\n４階での展示になってしまい　๐·°(৹˃ᗝ˂৹)°·๐　＜そんなー\n集客が望めない分、静かに食事ができます。",
         images: [
-            "/img/shops/38.webp"
+            "/img/shops/49.webp"
         ]
     },
     {
@@ -351,7 +381,7 @@ export const postersData = [
         title: "ボドゲカフェ",
         desc: "有名どころから少しマイナーなものまで、数多くのボードゲームを取り揃えております。\n簡単なものもありますので、子どもから大人まで誰でも気軽にお越しください。",
         images: [
-            "/img/shops/36.webp"
+            "/img/shops/50.webp"
         ]
     },
      
@@ -360,7 +390,7 @@ export const postersData = [
         title: "アトリエすずらん",
         desc: "みなさん、アートはお好きですか？私達美術部の自主企画では部員の作った個性豊かな作品の展示と合同誌の販売を行います！興味のある方は是非お越しください！",
         images: [
-            "/img/shops/39.webp"
+            "/img/shops/51.webp"
         ]
     },
     {
@@ -368,7 +398,7 @@ export const postersData = [
         title: "Audio cafe 33⅓",
         desc: "懐かしのレコードで暖かな音楽に包まれる特別な教室。この日のために淹れたての香ばしい珈琲をご用意しました。お祭りの合間に優雅な休息を。",
         images: [
-            "/img/shops/37.webp"
+            "/img/shops/52.webp"
         ]
     },
     {
@@ -376,7 +406,7 @@ export const postersData = [
         title: "よさこい部",
         desc: "両日とも12:15~12:45に第2体育館で演舞させていただきます！お昼のお供にぜひ！お待ちしております！",
         images: [
-            "/img/shops/43.webp"
+            "/img/shops/53.webp"
         ]
     },
     {
@@ -384,7 +414,7 @@ export const postersData = [
         title: "ROCK IN NITIC FES 2026 ",
         desc: "個性あふれるバンドが集結！迫力ある演奏で、高専祭を熱く盛り上げます。ぜひ会場で、最高の音楽を楽しんでください！",
         images: [
-            "/img/shops/44.webp"
+            "/img/shops/54.webp"
         ]
     },
     {
@@ -392,7 +422,7 @@ export const postersData = [
         title: "機械技術部",
         desc: "NHK高専ロボコンの出場ロボットが目の前で動く！展示・実演・操縦体験を行います。さらに部オリジナルのコンテストも開催します！ぜひお越しください",
         images: [
-            "/img/shops/45.webp",
+            "/img/shops/55.webp",
         ]
     },
     {
@@ -400,15 +430,15 @@ export const postersData = [
         title: "Nagia Crew",
         desc: "一関高専ダンス部Nagia Crewが魅せる、ここでしか見られないダンスステージ！圧巻のパフォーマンスと熱気を、ぜひ会場で体感してください！",
         images: [
-            "/img/shops/46.webp"
+            "/img/shops/56.webp"
         ]
     },
-      {
+    {
         mapId: 57,
         title: "吹奏楽部高専祭ステージ発表",
         desc: "今年も親しみやすくノリやすい曲を演奏予定です。精いっぱい演奏するのでぜひ第二体育館に演奏を聴きに来てください!",
         images: [
-            "/img/shops/40.webp"
+            "/img/shops/57.webp"
         ]
     },
           
