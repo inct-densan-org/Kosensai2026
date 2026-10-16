@@ -12,7 +12,7 @@ const THUMB_SRC = "/img/top/pamphlet-thumb.png";
 
 const INFO: { label: string; value: string }[] = [
   { label: "制作", value: "高専祭実行委員会 広報係" },
-  { label: "絵", value: "3年化学･バイオ系 一関太郎さん" },
+  { label: "絵", value: "3年化学･バイオ系 朝比奈佑菜さん" },
 ];
 
 const INK = "text-[#1f3a4a]";

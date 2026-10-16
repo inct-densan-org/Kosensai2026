@@ -5,6 +5,7 @@ import Card from "@/components/common/WhiteCard";
 import { formatNewsDate, getNewsArticles, type NewsArticle } from "@/lib/news";
 import { screensHeight } from "./TopSection";
 
+
 // トップページのニュース項目
 // - 白いカード（送迎バスと同じ）の大枠の上に、記事を1件ずつ ContentCard で新しい順（重要なものを先頭）に並べ、一覧ページへのリンクを置く
 // - 項目全体（見出し＋大枠）が1画面に収まるよう大枠の高さに上限を設け、あふれた分は枠の中だけスクロールする
@@ -45,7 +46,7 @@ export default async function NewsSection() {
         <ul className="m-0 min-h-0 flex-1 list-none space-y-3 overflow-y-auto overscroll-contain p-1">
           {articles.map((article) => (
             <li key={article.id}>
-              <ContentCard bodyClassName="!p-4 sm:!p-5">
+              <ContentCard bodyClassName="!px-4 !py-3 sm:!p-5">
                 <Link href={`/news/${article.id}`} className="group grid grid-cols-[1fr_auto] items-center gap-4">
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-bold tracking-[0.1em] text-[#51636d]">
@@ -59,9 +60,9 @@ export default async function NewsSection() {
                         </span>
                       )}
                     </div>
-                    <h3 className="m-0 mt-2 text-base font-bold leading-snug sm:text-lg">{article.title}</h3>
+                    <h3 className="m-0 mt-1 text-base font-bold leading-snug sm:mt-2 sm:text-lg">{article.title}</h3>
                     {article.excerpt && (
-                      <p className="m-0 mt-1.5 line-clamp-2 text-sm leading-6 text-[#51636d]">{article.excerpt}</p>
+                      <p className="m-0 mt-1 line-clamp-1 text-sm sm:mt-1.5 sm:line-clamp-2 leading-6 text-[#51636d]">{article.excerpt}</p>
                     )}
                   </div>
                   <ArrowUpRight
