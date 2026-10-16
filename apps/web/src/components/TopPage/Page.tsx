@@ -10,12 +10,9 @@ import ShopsSection from "./ShopsSection";
 import AccessSection from "./AccessSection";
 import NewsSection from "./NewsSection";
 import HelloSection from "./HelloSection";
-<<<<<<< HEAD
 import PamphletSection from "./PamphletSection";
 import SponsorsSection from "./SponsorsSection";
-=======
 import StampRally from "./StampRally";
->>>>>>> 7420510a667d80bed04236c3f517f78b67ea0d71
 
 export function TopPageClient() {
   return (
