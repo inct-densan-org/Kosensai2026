@@ -133,6 +133,7 @@ export const postersData = [
   {
     mapId: 23,
     title: "熊本地震支援バザー",
+    desc: "本や文房具、雑貨など、皆さんから集まった品物を販売します！\nお気に入りの一品を探してみませんか？\nバザーの収益は、熊本の被災地支援のために寄付します。\nぜひ第一講義室へお立ち寄りください！",
     images: ["/img/shops/23.webp"],
   },
   {
@@ -163,6 +164,7 @@ export const postersData = [
   {
     mapId: 28,
     title: "機械・知能系教員企画",
+    images: ["/img/shops/28.webp"]
   },
   {
     mapId: 29,
@@ -336,5 +338,6 @@ export const postersData = [
     title: "献血",
     pinLabel: "献血",
     desc: "近年、多発している自然災害等で大きな被害を受けた方々に対して何か貢献したいと思い、今回献血ブースを開設する運びになりました。\n土曜日のみの開催にはなりますが、たくさんのご協力お待ちしております！",
+    images: ["/img/shops/58.webp"]
   },
 ];
