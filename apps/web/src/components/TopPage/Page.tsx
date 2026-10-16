@@ -10,7 +10,7 @@ import ShopsSection from "./ShopsSection";
 import AccessSection from "./AccessSection";
 import NewsSection from "./NewsSection";
 import HelloSection from "./HelloSection";
-import VariousNoticeSection from "@/components/TopPage/VariousNoticeSection";
+import VariousNoticeSection from "./VariousNoticeSection";
 
 export function TopPageClient() {
   return (
@@ -37,10 +37,12 @@ export function TopPageClient() {
         <TopSection id="stalls" title="屋台・自主企画" screens={0}>
           <ShopsSection />
         </TopSection>
-        <TopSection id="various-notice" title="" screens={0.5} >
-            <VariousNoticeSection />
+        <TopSection id="various-notice" title="ご来場の皆様へ" screens={0}>
+          <VariousNoticeSection />
         </TopSection>
-        <TopSection id="sponsors" title="協賛" screens={0.5} />
+        {/*<TopSection id="sponsors" title="協賛" screens={0.5}>*/}
+        {/*  <SponsorsSection />*/}
+        {/*</TopSection>*/}
 
         <Footer />
       </div>
