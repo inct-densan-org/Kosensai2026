@@ -10,6 +10,7 @@ import ShopsSection from "./ShopsSection";
 import AccessSection from "./AccessSection";
 import NewsSection from "./NewsSection";
 import HelloSection from "./HelloSection";
+import StampRally from "./StampRally";
 
 export function TopPageClient() {
   return (
@@ -34,6 +35,9 @@ export function TopPageClient() {
         </TopSection>
         <TopSection id="stalls" title="屋台・自主企画" screens={0}>
           <ShopsSection />
+        </TopSection>
+        <TopSection id="stamp-rally" title="デジタルスタンプラリー" screens={0}>
+          <StampRally />
         </TopSection>
         <TopSection id="sponsors" title="協賛" screens={0.5} />
 
