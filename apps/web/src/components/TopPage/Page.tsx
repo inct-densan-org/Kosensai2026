@@ -10,6 +10,8 @@ import ShopsSection from "./ShopsSection";
 import AccessSection from "./AccessSection";
 import NewsSection from "./NewsSection";
 import HelloSection from "./HelloSection";
+import PamphletSection from "./PamphletSection";
+import SponsorsSection from "./SponsorsSection";
 
 export function TopPageClient() {
   return (
@@ -35,7 +37,12 @@ export function TopPageClient() {
         <TopSection id="stalls" title="屋台・自主企画" screens={0}>
           <ShopsSection />
         </TopSection>
-        <TopSection id="sponsors" title="協賛" screens={0.5} />
+        <TopSection id="sponsors" title="協賛" screens={1} paddingY="py-4">
+          <SponsorsSection />
+        </TopSection>
+        <TopSection id="pamphlet" title="パンフレット" screens={0}>
+          <PamphletSection />
+        </TopSection>
 
         <Footer />
       </div>

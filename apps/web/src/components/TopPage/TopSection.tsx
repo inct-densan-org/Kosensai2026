@@ -6,6 +6,7 @@ import { TOP_BAR_HEIGHT } from "@/components/common/pageLayout";
 // - 大見出し＋本文エリアで構成する
 // - screens: 確保する高さ（画面何枚分か）。1画面 = 画面の高さからトップバーを除いた高さ
 //   本文が収まらない場合は高さが伸びる（min-height で確保）
+// - paddingY: 項目の上下の余白（既定: py-16）
 
 // 画面 n 枚分の高さ（トップバーを除く）
 export function screensHeight(screens: number) {
@@ -16,17 +17,18 @@ type TopSectionProps = {
   id: string;
   title: string;
   screens: number;
+  paddingY?: string;
   children?: ReactNode;
 };
 
-export default function TopSection({ id, title, screens, children }: TopSectionProps) {
+export default function TopSection({ id, title, screens, paddingY = "py-16", children }: TopSectionProps) {
   const headingId = `${id}-heading`;
 
   return (
     <section
       id={id}
       aria-labelledby={headingId}
-      className="mx-auto flex w-[min(960px,calc(100%-32px))] flex-col py-16"
+      className={`mx-auto flex w-[min(960px,calc(100%-32px))] flex-col ${paddingY}`}
       style={{ minHeight: screensHeight(screens) }}
     >
       {/* 大見出し */}
