@@ -53,7 +53,7 @@ export default function VariousNoticeSection() {
             />
             <div className="flex flex-col items-start gap-5">
               <div>
-                <p className="m-0 mb-2 text-sm font-bold text-[#2f7f9c]">学生会コメント</p>
+                <p className="m-0 mb-2 text-sm font-bold text-[#2f7f9c]">実行委員コメント</p>
                 <p className="m-0 whitespace-pre-line">{bloodDonation.desc}</p>
               </div>
               <Link
