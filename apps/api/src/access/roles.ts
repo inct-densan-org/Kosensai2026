@@ -50,6 +50,28 @@ export const authenticated: Access = ({ req }) => Boolean(req.user)
 
 export const admins: Access = ({ req }) => readRole(req.user) === 'admin'
 
+export const ownUserOrAdmins: Access = ({ req }) => {
+  if (readRole(req.user) === 'admin') {
+    return true
+  }
+
+  if (!req.user || typeof req.user !== 'object' || !('id' in req.user)) {
+    return false
+  }
+
+  const userId = req.user.id
+
+  if (typeof userId !== 'number' && typeof userId !== 'string') {
+    return false
+  }
+
+  return {
+    id: {
+      equals: userId,
+    },
+  }
+}
+
 export const committeeOrAdmins: Access = ({ req }) => {
   const role = readRole(req.user)
   return role === 'committee' || role === 'admin'
