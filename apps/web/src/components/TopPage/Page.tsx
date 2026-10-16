@@ -12,6 +12,7 @@ import NewsSection from "./NewsSection";
 import HelloSection from "./HelloSection";
 import PamphletSection from "./PamphletSection";
 import SponsorsSection from "./SponsorsSection";
+import VariousNoticeSection from "./VariousNoticeSection";
 import StampRally from "./StampRally";
 
 export function TopPageClient() {
@@ -35,12 +36,16 @@ export function TopPageClient() {
         <TopSection id="access" title="アクセス" screens={2.5}>
           <AccessSection />
         </TopSection>
+
         <TopSection id="stalls" title="屋台・自主企画" screens={0}>
           <ShopsSection />
         </TopSection>
-        <TopSection id="sponsors" title="協賛" screens={1} paddingY="py-4">
-          <SponsorsSection />
+        <TopSection id="various-notice" title="ご来場の皆様へ" screens={0}>
+          <VariousNoticeSection />
         </TopSection>
+        {/*<TopSection id="sponsors" title="協賛" screens={0.5}>*/}
+        {/*  <SponsorsSection />*/}
+        {/*</TopSection>*/}
         <TopSection id="pamphlet" title="パンフレット" screens={0}>
           <PamphletSection />
         </TopSection>
