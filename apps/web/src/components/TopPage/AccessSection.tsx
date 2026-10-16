@@ -83,13 +83,15 @@ function Tag({ children }: { children: React.ReactNode }) {
   return <span className="inline-block border border-[#8a9aa3] bg-white px-2 text-[11px] font-bold leading-[1.6] tracking-[0.14em] text-[#1f3a4a]">{children}</span>;
 }
  
-function CardTitle({ icon, label, tag, title }: { icon: React.ReactNode; label: string; tag?: string; title: string }) {
+function CardTitle({ icon, label, tag, title }: { icon?: React.ReactNode; label?: string; tag?: string; title: React.ReactNode }) {
   return (
     <>
-      <div className="mb-1 flex items-center gap-2.5">
-        <span className="flex items-center gap-2 text-[13px] font-medium tracking-[0.1em] text-[#51636d]">{icon}{label}</span>
-        {tag && <Tag>{tag}</Tag>}
-      </div>
+      {(icon || label || tag) && (
+        <div className="mb-1 flex items-center gap-2.5">
+          <span className="flex items-center gap-2 text-[13px] font-medium tracking-[0.1em] text-[#51636d]">{icon}{label}</span>
+          {tag && <Tag>{tag}</Tag>}
+        </div>
+      )}
       <h3 className={`m-0 mb-3.5 text-xl font-bold tracking-[0.04em] ${INK}`}>{title}</h3>
     </>
   );
@@ -165,116 +167,98 @@ function MapAndInfo() {
   );
 }
  
-/* ───────── ② 無料送迎バス（イベントのタイムスケジュールと同じ見た目） ───────── */
+/* ───────── ② 無料送迎バス（縦の時間軸） ───────── */
 
-type BusDir = "go" | "back";
-const BUS_DIRS: { id: BusDir; tab: string; from: string; to: string; trips: Trip[] }[] = [
-  { id: "go", tab: "行き", from: "一ノ関駅", to: "一関高専", trips: BUS_GO },
-  { id: "back", tab: "帰り", from: "一関高専", to: "一ノ関駅", trips: BUS_BACK },
-];
+// 9:45〜17:15 を 1分 = 1.3px で配置
+const AX0 = 585;
+const PPM = 1.3;
+const yOf = (m: number) => Math.round((m - AX0) * PPM * 10) / 10;
+const AXIS_HEIGHT = (1035 - AX0) * PPM; // 585px
 
-function BusList({ dir, now }: { dir: (typeof BUS_DIRS)[number]; now: number | null }) {
+function BusColumn({ tag, goTag, from, to, trips, now }: { tag: string; goTag: boolean; from: string; to: string; trips: Trip[]; now: number | null }) {
   const live = now !== null;
-  const nextIdx = findNext(dir.trips.map((t) => toMin(t[0])), now);
-  const next = nextIdx >= 0 ? dir.trips[nextIdx] : null;
+  const nextIdx = findNext(trips.map((t) => toMin(t[0])), now);
+  const next = nextIdx >= 0 ? trips[nextIdx] : null;
+
+  // 開催日に表示したとき、次の便が見える位置まで自動でスクロールする（最初の1回だけ）
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!live || nextIdx < 0 || !scrollRef.current) return;
+    scrollRef.current.scrollTop = Math.max(0, yOf(toMin(trips[nextIdx][0])) - 60);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [live]);
 
   return (
-    <section>
-      <h2 className="mb-3 text-xl font-bold md:pl-8 md:text-2xl">
-        {dir.from} <span aria-hidden="true">→</span>
-        <span className="sr-only">から</span> {dir.to}
-      </h2>
+    <div className="min-w-0 flex-1 basis-[280px]">
+      <div className="mb-2 flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
+        <span className={`px-3.5 py-0.5 text-[13px] font-bold leading-[1.6] tracking-[0.12em] ${goTag ? "border border-[#2f7f9c] bg-[#2f7f9c] text-white" : "border border-[#2f7f9c] text-[#2f7f9c]"}`}>{tag}</span>
+        <b className="text-[15px]">{from}</b>
+        <span className="text-[#2f7f9c]" aria-hidden="true">→</span>
+        <b className="text-[15px]">{to}</b>
+      </div>
 
-      {live && (
-        <div className="md:pl-8">
-          <NextBox dep={next ? next[0] : "終了"} note={next ? `${remainText(toMin(next[0]) - now)}・${next[1]} 着` : "本日の運行は終了しました"} />
-        </div>
-      )}
+      {live && <NextBox dep={next ? next[0] : "終了"} note={next ? `${remainText(toMin(next[0]) - now)}・${next[1]} 着` : "本日の運行は終了しました"} />}
 
-      {/* 時刻の区切り線: イベントのタイムスケジュールと同じグレー（不透明度70%） */}
-      <ul className="divide-y divide-gray-400/70 border-y border-gray-400/70 text-base md:text-lg">
-        {dir.trips.map((t, i) => {
+      {/* 時刻表はこの枠の中だけスクロールする（カード全体を短くするため） */}
+      <div
+        ref={scrollRef}
+        tabIndex={0}
+        role="region"
+        aria-label={`${tag}の時刻表（上下にスクロールできます）`}
+        className={`mt-1 max-h-[320px] overflow-y-auto overscroll-contain border-y ${LINE}`}
+      >
+      <div className="relative" style={{ height: AXIS_HEIGHT }}>
+        <div className="absolute inset-y-0 left-10 w-0.5 bg-[#cfd8dc]" />
+        {[10, 11, 12, 13, 14, 15, 16, 17].map((h) => (
+          <div key={h}>
+            <div className="absolute left-10 right-0 h-0 border-t border-[#e3e9ec]" style={{ top: yOf(h * 60) }} />
+            <div className="absolute left-0 w-[34px] text-right text-[11px] font-bold leading-4 text-[#51636d]" style={{ top: yOf(h * 60) - 8 }}>{h}:00</div>
+          </div>
+        ))}
+        {trips.map((t, i) => {
           const st = statusOf(i, nextIdx, live);
-          const last = i === dir.trips.length - 1;
+          const last = i === trips.length - 1;
           return (
-            <li
+            // 時間軸上の点から線を引き、その先に時刻を示す
+            <div
               key={t[0]}
-              className={`flex md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-2 ${st === "past" ? "opacity-40" : ""} ${st === "next" ? "font-bold text-[#2f7f9c]" : ""}`}
+              className={`absolute left-[37px] right-0 flex h-10 items-center ${st === "past" ? "opacity-40" : ""}`}
+              style={{ top: yOf(toMin(t[0])) - 20 }}
             >
-              <span className="w-28 shrink-0 whitespace-nowrap px-2 py-3 tabular-nums sm:w-36 md:w-auto md:px-0 md:pl-8">{t[0]} 発</span>
-              <span className="flex-1 px-2 py-3 tabular-nums md:px-0 md:text-center">{t[1]} 着</span>
-              <span className={`${last || st === "next" ? "" : "hidden md:block"} whitespace-nowrap px-2 py-3 text-sm md:justify-self-end md:pr-8`}>
-                {st === "next" ? "NEXT" : last ? "最終" : ""}
-              </span>
-            </li>
+              <span className={`size-2 flex-none rounded-full ${st === "next" ? "bg-[#2f7f9c] ring-4 ring-[#2f7f9c]/20" : "bg-[#8a9aa3]"}`} aria-hidden="true" />
+              <span className={`w-6 flex-none ${st === "next" ? "h-0.5 bg-[#2f7f9c]" : "h-px bg-[#8a9aa3]"}`} aria-hidden="true" />
+              <span className={`ml-2.5 text-xl leading-none tracking-tight tabular-nums ${st === "next" ? "border-b-4 border-[#2f7f9c] pb-0.5 font-extrabold" : "font-bold"}`}>{t[0]}</span>
+              <span className={`ml-2.5 text-xs ${st === "next" ? "font-bold" : "text-[#51636d]"}`}>着 {t[1]}</span>
+              {last && <span className="ml-auto border border-[#8a9aa3] bg-white px-[7px] text-[11px] font-bold leading-[1.6] tracking-[0.1em]">最終</span>}
+            </div>
           );
         })}
-      </ul>
-    </section>
+        {live && now >= AX0 && now <= 1035 && (
+          <div className="pointer-events-none absolute inset-x-0 z-10 h-0 border-t-2 border-[#2f7f9c]" style={{ top: yOf(now) }}>
+            <span className="absolute -top-[22px] right-0 bg-[#2f7f9c] px-2 text-[11px] font-bold leading-[1.6] text-white">現在 {Math.floor(now / 60)}:{String(now % 60).padStart(2, "0")}</span>
+          </div>
+        )}
+      </div>
+      </div>
+    </div>
   );
 }
 
 function BusCard({ now }: { now: number | null }) {
   return (
-    <Card className="p-4 md:p-8">
+    <Card className="p-5">
       <BusScheduleContent now={now} />
     </Card>
   );
 }
 
 function BusScheduleContent({ now }: { now: number | null }) {
-  const [dirId, setDirId] = useState<BusDir>("go");
-
   return (
     <>
       <CardTitle icon={<Svg><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></Svg>} label="2026/10/24 – 25" title="無料送迎バス" />
-
-      {/* 行き・帰りの切り替え: イベントの日にち切り替えと同じ、文字だけのボタン＋選択中の下線 */}
-      <div
-        role="tablist"
-        aria-label="行き・帰りを選択"
-        className={`${notoSansJP.className} mb-5 flex justify-center gap-10 text-xl font-bold md:mb-6 md:text-2xl`}
-      >
-        {BUS_DIRS.map((d) => {
-          const isSelected = d.id === dirId;
-          return (
-            <button
-              key={d.id}
-              type="button"
-              role="tab"
-              id={`bus-tab-${d.id}`}
-              aria-selected={isSelected}
-              aria-controls={`bus-panel-${d.id}`}
-              onClick={() => setDirId(d.id)}
-              className={`rounded-none border-b-2 bg-transparent px-0 pt-0 pb-1 transition-colors ${
-                isSelected
-                  ? "border-[#1f3a4a] text-[#1f3a4a]"
-                  : "border-transparent text-[#1f3a4a]/50 hover:text-[#1f3a4a]/80"
-              }`}
-            >
-              {d.tab}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* 行き・帰りを同じグリッドセルに重ね、切り替えてもカードの高さが変わらないようにする */}
-      <div className="grid">
-        {BUS_DIRS.map((d) => {
-          const isSelected = d.id === dirId;
-          return (
-            <div
-              key={d.id}
-              id={`bus-panel-${d.id}`}
-              role="tabpanel"
-              aria-labelledby={`bus-tab-${d.id}`}
-              aria-hidden={!isSelected}
-              className={`col-start-1 row-start-1 self-start ${isSelected ? "" : "invisible"}`}
-            >
-              <BusList dir={d} now={now} />
-            </div>
-          );
-        })}
+      <div className="flex flex-wrap gap-x-6 gap-y-8">
+        <BusColumn tag="行き" goTag from="一ノ関駅" to="一関高専" trips={BUS_GO} now={now} />
+        <BusColumn tag="帰り" goTag={false} from="一関高専" to="一ノ関駅" trips={BUS_BACK} now={now} />
       </div>
     </>
   );
@@ -292,9 +276,8 @@ export function BusScheduleCard() {
  
 /* ───────── ③ 列車時刻表（路線タブ） ───────── */
  
-function TrainCard({ now }: { now: number | null }) {
-  const [lineId, setLineId] = useState<LineId>("up");
-  const line = LINES.find((l) => l.id === lineId) ?? LINES[0];
+// 1路線ぶんの一覧
+function TrainList({ line, now }: { line: (typeof LINES)[number]; now: number | null }) {
   const live = now !== null;
   const items = line.times.map((s) => {
     const [t, note = ""] = s.split("|");
@@ -302,86 +285,103 @@ function TrainCard({ now }: { now: number | null }) {
   });
   const nextIdx = findNext(items.map((i) => i.m), now);
   const next = nextIdx >= 0 ? items[nextIdx] : null;
- 
-  // 一覧はこの枠の中だけスクロール。路線を切り替えたとき・開催日に表示したときは、次の便の位置へ移動する
-  const listRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const box = listRef.current;
-    if (!box) return;
-    const target = box.querySelector<HTMLElement>('[data-next="true"]');
-    box.scrollTop = target ? Math.max(0, target.offsetTop - 8) : 0;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lineId, live]);
- 
-  // 時（hour）ごとにまとめる
-  const groups: { hour: number; chips: { idx: number; mm: string; note: string }[] }[] = [];
-  items.forEach((it, idx) => {
-    const hour = Math.floor(it.m / 60);
-    let g = groups[groups.length - 1];
-    if (!g || g.hour !== hour) {
-      g = { hour, chips: [] };
-      groups.push(g);
-    }
-    g.chips.push({ idx, mm: String(it.m % 60).padStart(2, "0"), note: it.note });
-  });
- 
+
   return (
-    <Card className="p-5">
-      <CardTitle icon={<Svg><rect x="5" y="3" width="14" height="14" rx="3" /><path d="M5 11h14M8 21l2-4M16 21l-2-4" /></Svg>} label="一ノ関駅発" tag="JR" title="列車時刻表" />
- 
-      <div role="tablist" aria-label="路線と方向" className="flex flex-wrap">
-        {LINES.map((l) => (
-          <button
-            key={l.id}
-            type="button"
-            role="tab"
-            aria-selected={l.id === lineId}
-            onClick={() => setLineId(l.id)}
-            className={`mb-2 mr-2 min-h-11 border px-[18px] text-sm font-bold tracking-[0.08em] ${l.id === lineId ? "border-[#2f7f9c] bg-[#2f7f9c] text-white" : "border-[#8a9aa3] bg-white text-[#1f3a4a] hover:border-[#2f7f9c]"}`}
-          >
-            {l.tab}
-          </button>
-        ))}
-      </div>
- 
-      <div className="mb-2.5 mt-0.5 text-sm tracking-[0.04em] text-[#51636d]"><b className={INK}>{line.title}</b>({line.sub})</div>
- 
-      {live && <NextBox dep={next ? next.t : "終了"} note={next ? `${remainText(next.m - now)}${next.note ? `・${next.note}` : ""}` : "本日の運行は終了しました"} />}
- 
+    <section aria-label={`${line.title}（${line.sub}）`}>
+      {live && (
+        <div className="md:pl-8">
+          <NextBox dep={next ? next.t : "終了"} note={next ? `${remainText(next.m - now)}${next.note ? `・${next.note}` : ""}` : "本日の運行は終了しました"} />
+        </div>
+      )}
+
+      {/* 時刻の区切り線: イベントのタイムスケジュールと同じグレー（不透明度70%） */}
+      <ul className="divide-y divide-gray-400/70 border-y border-gray-400/70 text-base md:text-lg">
+        {items.map((it, i) => {
+          const st = statusOf(i, nextIdx, live);
+          return (
+            // 左右の列を同じ幅（1fr）にし、発車時刻を中央の列に置いてカードの中央に揃える
+            <li
+              key={it.t}
+              className={`grid grid-cols-[1fr_auto_1fr] items-center gap-2 ${st === "past" ? "opacity-40" : ""} ${st === "next" ? "text-[#2f7f9c]" : ""}`}
+            >
+              <span aria-hidden="true" />
+              <span className="py-3 text-3xl font-bold leading-none tracking-tight tabular-nums md:text-4xl">
+                {it.t}
+                <span className="ml-1 text-sm font-medium tracking-normal md:text-base">発</span>
+              </span>
+              <span className="flex flex-col items-end gap-0.5 justify-self-end px-2 py-3 text-right text-xs font-bold md:pr-8 md:text-sm">
+                {st === "next" && <span>NEXT</span>}
+                {it.note && <span className={st === "next" ? "" : "text-[#51636d]"}>{it.note}</span>}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+
+      {line.footnote && <p className="m-0 mt-2 text-xs leading-[1.7] text-[#51636d] md:pl-8">{line.footnote}</p>}
+    </section>
+  );
+}
+
+function TrainCard({ now }: { now: number | null }) {
+  const [lineId, setLineId] = useState<LineId>("up");
+
+  return (
+    <Card className="p-4 md:p-8">
+      <CardTitle title={<>列車時刻表　<span className="text-[#2f7f9c]">一ノ関駅発</span></>} />
+
+      {/* 路線の切り替え: イベントの日にち切り替えと同じ、文字だけのボタン＋選択中の下線 */}
+      {/* globals.css の button 既定値（背景色・余白・角丸）を打ち消す */}
       <div
-        ref={listRef}
-        tabIndex={0}
-        role="region"
-        aria-label={`${line.title}の時刻表（上下にスクロールできます）`}
-        className={`relative max-h-[320px] overflow-y-auto overscroll-contain border-b ${LINE}`}
+        role="tablist"
+        aria-label="路線と方向"
+        className={`${notoSansJP.className} mb-5 flex flex-wrap justify-center gap-x-8 gap-y-2 text-lg font-bold md:mb-6 md:gap-x-10 md:text-xl`}
       >
-      <div className="flex flex-wrap">
-        {groups.map((g) => (
-          <div key={g.hour} className="flex w-full items-start border-t border-[#e3e9ec] pr-1.5 pt-1.5">
-            <div className="w-[58px] flex-none text-[28px] font-extrabold leading-[44px] tracking-tight">
-              {g.hour}<small className="ml-px text-xs font-medium tracking-normal text-[#51636d]">時</small>
-            </div>
-            <div className="flex flex-1 flex-wrap">
-              {g.chips.map((c) => {
-                const st = statusOf(c.idx, nextIdx, live);
-                return (
-                  <span
-                    key={c.idx}
-                    data-next={st === "next" ? "true" : undefined}
-                    className={`mb-1.5 mr-1.5 inline-flex min-h-11 items-baseline gap-1.5 px-2.5 py-1 text-[28px] leading-[1.3] tracking-tight tabular-nums ${st === "next" ? "border-b-4 border-[#2f7f9c] font-extrabold" : "font-bold"} ${st === "past" ? "opacity-40" : ""}`}
-                  >
-                    {c.mm}
-                    {c.note && <span className={`text-xs tracking-normal ${st === "next" ? "font-extrabold" : "font-bold text-[#51636d]"}`}>{c.note}</span>}
-                  </span>
-                );
-              })}
-            </div>
-          </div>
-        ))}
+        {LINES.map((l) => {
+          const isSelected = l.id === lineId;
+          return (
+            <button
+              key={l.id}
+              type="button"
+              role="tab"
+              id={`train-tab-${l.id}`}
+              aria-selected={isSelected}
+              aria-controls={`train-panel-${l.id}`}
+              onClick={() => setLineId(l.id)}
+              className={`flex flex-col items-center rounded-none border-b-2 bg-transparent px-0 pt-0 pb-1 transition-colors ${
+                isSelected
+                  ? "border-[#1f3a4a] text-[#1f3a4a]"
+                  : "border-transparent text-[#1f3a4a]/50 hover:text-[#1f3a4a]/80"
+              }`}
+            >
+              {/* 路線名と行き先（例: 東北本線 上り / 小牛田・仙台方面）を2段で表示する */}
+              <span>{l.title}</span>
+              <span className="text-xs font-medium md:text-sm">{l.sub}</span>
+            </button>
+          );
+        })}
       </div>
+
+      {/* 全路線を同じグリッドセルに重ね、切り替えてもカードの高さが変わらないようにする */}
+      <div className="grid">
+        {LINES.map((l) => {
+          const isSelected = l.id === lineId;
+          return (
+            <div
+              key={l.id}
+              id={`train-panel-${l.id}`}
+              role="tabpanel"
+              aria-labelledby={`train-tab-${l.id}`}
+              aria-hidden={!isSelected}
+              className={`col-start-1 row-start-1 self-start ${isSelected ? "" : "invisible"}`}
+            >
+              <TrainList line={l} now={now} />
+            </div>
+          );
+        })}
       </div>
- 
-      {line.footnote &&<p className="m-0 mt-1.5 text-xs leading-[1.7] text-[#51636d]">{line.footnote}</p>}
+
+      <p className="m-0 mt-3 text-xs leading-[1.7] text-[#51636d] md:pl-8">※10～17時台の列車のみを表示しています。</p>
     </Card>
   );
 }
