@@ -148,11 +148,11 @@ export function MapPage({
       >
       <TransformWrapper
         initialScale={1}
-        minScale={0.1}
+        minScale={0.8}
         maxScale={10}
         smooth
         wheel={{ step: 0.003 }}
-        pinch={{ step: 0.2 }}
+        pinch={{ step: 5 }}
         ref={transformRef}
       >
         <TransformComponent>
