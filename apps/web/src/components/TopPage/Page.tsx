@@ -10,8 +10,12 @@ import ShopsSection from "./ShopsSection";
 import AccessSection from "./AccessSection";
 import NewsSection from "./NewsSection";
 import HelloSection from "./HelloSection";
+<<<<<<< HEAD
 import PamphletSection from "./PamphletSection";
 import SponsorsSection from "./SponsorsSection";
+=======
+import StampRally from "./StampRally";
+>>>>>>> 7420510a667d80bed04236c3f517f78b67ea0d71
 
 export function TopPageClient() {
   return (
@@ -25,7 +29,7 @@ export function TopPageClient() {
         <TopBar current="HOME" />
 
         {/* 各項目（screens: 確保する高さ。画面何枚分か） */}
-        <TopSection id="greeting" title="ごあいさつ" screens={2}>
+        <TopSection id="greeting" title="ごあいさつ" screens={0}>
           <HelloSection />
         </TopSection>
         <TopSection id="news" title="ニュース" screens={1}>
@@ -42,6 +46,9 @@ export function TopPageClient() {
         </TopSection>
         <TopSection id="pamphlet" title="パンフレット" screens={0}>
           <PamphletSection />
+        </TopSection>
+        <TopSection id="stamp-rally" title="デジタルスタンプラリー" screens={0}>
+          <StampRally />
         </TopSection>
 
         <Footer />
