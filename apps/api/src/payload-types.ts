@@ -343,7 +343,7 @@ export interface ShopAnnouncement {
   publishedAt?: string | null;
   priority?: ('high' | 'medium' | 'low') | null;
   /**
-   * このお知らせを掲載する屋台です。実行委員・屋台担当者は自分の担当屋台だけ選択できます。
+   * このお知らせを掲載する屋台です。屋台担当者は自分の担当屋台だけ選択できます。
    */
   shop: number | Shop;
   tags?: (number | Tag)[] | null;

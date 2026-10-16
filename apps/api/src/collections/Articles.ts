@@ -43,10 +43,10 @@ const normalizePublicationDates: CollectionBeforeValidateHook = ({ data, origina
   return nextData
 }
 
-const restrictShopToAssignedUser: CollectionBeforeValidateHook = ({ data, req }) => {
+const restrictShopToAssignedUser: CollectionBeforeValidateHook = ({ data, operation, req }) => {
   const role = readRole(req.user)
 
-  if (role === 'admin') {
+  if (role === 'admin' || (role === 'committee' && operation === 'update')) {
     return data
   }
 
@@ -75,13 +75,13 @@ const restrictShopToAssignedUser: CollectionBeforeValidateHook = ({ data, req })
 const assignedShopFilter = ({ req }: { req: { user?: unknown } }) => {
   const role = readRole(req.user)
 
-  if (role === 'admin') {
+  if (role === 'admin' || role === 'committee') {
     return true
   }
 
   const assignedShopIds = readAssignedShopIds(req.user)
 
-  if ((role !== 'committee' && role !== 'shop_staff') || assignedShopIds.length === 0) {
+  if (role !== 'shop_staff' || assignedShopIds.length === 0) {
     return false
   }
 
@@ -222,7 +222,7 @@ export const ShopAnnouncements: CollectionConfig = {
       required: true,
       filterOptions: assignedShopFilter,
       admin: {
-        description: 'このお知らせを掲載する屋台です。実行委員・屋台担当者は自分の担当屋台だけ選択できます。',
+        description: 'このお知らせを掲載する屋台です。屋台担当者は自分の担当屋台だけ選択できます。',
       },
     },
     articleTagsField,

@@ -1,12 +1,34 @@
-import ArticleList from "@/components/common/ArticleList";
+import BlogTabs from "@/components/blog/BlogTabs";
 import Footer from "@/components/common/Footer";
 import PageBackground from "@/components/common/PageBackground";
 import { PAGE_BACKGROUND } from "@/components/common/pageLayout";
 import { shipporiMincho } from "@/components/common/fonts";
 import { getBlogArticles } from "@/lib/blog";
+import { getPublishedShopAnnouncements } from "@/lib/shops";
 
-export default async function BlogPage() {
-  const articles = await getBlogArticles();
+export default async function BlogPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ tab?: string }>
+}) {
+  const params = await searchParams;
+  const initialTab = params?.tab === "announcements" ? "announcements" : "blog";
+  const [articles, announcements] = await Promise.all([
+    getBlogArticles(),
+    getPublishedShopAnnouncements(),
+  ]);
+  const shopAnnouncements = announcements.map((announcement) => ({
+    id: announcement.id,
+    title: announcement.title,
+    body: announcement.body,
+    tags: announcement.tags,
+    sourceLabel:
+      announcement.shop && typeof announcement.shop === "object" ? announcement.shop.name : null,
+    priority: announcement.priority ?? "medium",
+    publishedAt: announcement.publishedAt,
+    createdAt: announcement.createdAt,
+  }));
+
   return (
     <div className="relative isolate min-h-screen w-full" style={{ backgroundColor: PAGE_BACKGROUND }}>
       <PageBackground />
@@ -19,10 +41,10 @@ export default async function BlogPage() {
               ブログ
             </h1>
           </header>
-          <ArticleList
+          <BlogTabs
             articles={articles}
-            contentType="blog-articles"
-            hrefPrefix="/blog"
+            shopAnnouncements={shopAnnouncements}
+            initialTab={initialTab}
           />
         </div>
       </main>

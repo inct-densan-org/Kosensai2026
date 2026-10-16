@@ -1,4 +1,5 @@
 import { apiBaseUrl } from './api'
+import type { ArticleTag } from './articles'
 import type { NewsRichText } from './news'
 
 export type ShopAnnouncementPriority = 'high' | 'medium' | 'low'
@@ -18,6 +19,7 @@ export type ShopAnnouncement = {
   body: NewsRichText
   status: 'draft' | 'scheduled' | 'published' | 'archived'
   priority?: ShopAnnouncementPriority | null
+  tags?: (number | ArticleTag)[] | null
   publishedAt?: string | null
   createdAt: string
   updatedAt: string
@@ -103,6 +105,37 @@ export async function getShopAnnouncements(shopId: string) {
 
   const data = await response.json() as ShopAnnouncementListResponse
   return sortShopAnnouncements(data.docs)
+}
+
+export async function getPublishedShopAnnouncements() {
+  const url = new URL(`${apiBaseUrl}/shop-announcements`)
+  url.searchParams.set('where[status][equals]', 'published')
+  url.searchParams.set('sort', '-publishedAt')
+  url.searchParams.set('limit', '100')
+  url.searchParams.set('depth', '1')
+
+  const response = await fetchShopData(url.toString())
+
+  if (!response.ok) {
+    throw new Error(`Shop announcement API request failed: ${response.status}`)
+  }
+
+  const data = await response.json() as ShopAnnouncementListResponse
+  return sortShopAnnouncements(data.docs)
+}
+
+export async function getShopAnnouncement(id: string) {
+  const response = await fetchShopData(
+    `${apiBaseUrl}/shop-announcements/${encodeURIComponent(id)}?depth=1`,
+  )
+
+  if (response.status === 404) return null
+
+  if (!response.ok) {
+    throw new Error(`Shop announcement API request failed: ${response.status}`)
+  }
+
+  return await response.json() as ShopAnnouncement
 }
 
 export async function getLatestShopAnnouncements() {

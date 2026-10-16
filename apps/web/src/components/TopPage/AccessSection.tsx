@@ -22,7 +22,7 @@ type Trip = readonly [dep: string, arr: string];
  
 // 無料送迎バス（17:05→17:20 の便は掲載しない）
 const BUS_GO: Trip[] = [["10:25", "10:40"], ["11:15", "11:30"], ["12:05", "12:20"], ["12:55", "13:10"], ["14:35", "14:50"], ["15:25", "15:40"], ["16:15", "16:30"]];
-const BUS_BACK: Trip[] = [["10:00", "10:15"], ["10:50", "11:05"], ["11:40", "11:55"], ["12:30", "12:45"], ["14:10", "14:25"], ["15:00", "15:15"], ["15:50", "16:05"], ["16:45", "17:00"]];
+const BUS_BACK: Trip[] = [["10:50", "11:05"], ["11:40", "11:55"], ["12:30", "12:45"], ["14:10", "14:25"], ["15:00", "15:15"], ["15:50", "16:05"], ["16:45", "17:00"]];
  
 // 列車（一ノ関駅発・土曜休日ダイヤ・10:00〜17:59発）。"時刻|備考"
 type LineId = "up" | "down" | "ofu";
@@ -83,13 +83,15 @@ function Tag({ children }: { children: React.ReactNode }) {
   return <span className="inline-block border border-[#8a9aa3] bg-white px-2 text-[11px] font-bold leading-[1.6] tracking-[0.14em] text-[#1f3a4a]">{children}</span>;
 }
  
-function CardTitle({ icon, label, tag, title }: { icon: React.ReactNode; label: string; tag?: string; title: string }) {
+function CardTitle({ icon, label, tag, title }: { icon?: React.ReactNode; label?: string; tag?: string; title: React.ReactNode }) {
   return (
     <>
-      <div className="mb-1 flex items-center gap-2.5">
-        <span className="flex items-center gap-2 text-[13px] font-medium tracking-[0.1em] text-[#51636d]">{icon}{label}</span>
-        {tag && <Tag>{tag}</Tag>}
-      </div>
+      {(icon || label || tag) && (
+        <div className="mb-1 flex items-center gap-2.5">
+          <span className="flex items-center gap-2 text-[13px] font-medium tracking-[0.1em] text-[#51636d]">{icon}{label}</span>
+          {tag && <Tag>{tag}</Tag>}
+        </div>
+      )}
       <h3 className={`m-0 mb-3.5 text-xl font-bold tracking-[0.04em] ${INK}`}>{title}</h3>
     </>
   );
@@ -166,18 +168,18 @@ function MapAndInfo() {
 }
  
 /* ───────── ② 無料送迎バス（縦の時間軸） ───────── */
- 
+
 // 9:45〜17:15 を 1分 = 1.3px で配置
 const AX0 = 585;
 const PPM = 1.3;
 const yOf = (m: number) => Math.round((m - AX0) * PPM * 10) / 10;
 const AXIS_HEIGHT = (1035 - AX0) * PPM; // 585px
- 
+
 function BusColumn({ tag, goTag, from, to, trips, now }: { tag: string; goTag: boolean; from: string; to: string; trips: Trip[]; now: number | null }) {
   const live = now !== null;
   const nextIdx = findNext(trips.map((t) => toMin(t[0])), now);
   const next = nextIdx >= 0 ? trips[nextIdx] : null;
- 
+
   // 開催日に表示したとき、次の便が見える位置まで自動でスクロールする（最初の1回だけ）
   const scrollRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -185,7 +187,7 @@ function BusColumn({ tag, goTag, from, to, trips, now }: { tag: string; goTag: b
     scrollRef.current.scrollTop = Math.max(0, yOf(toMin(trips[nextIdx][0])) - 60);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [live]);
- 
+
   return (
     <div className="min-w-0 flex-1 basis-[280px]">
       <div className="mb-2 flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
@@ -194,9 +196,9 @@ function BusColumn({ tag, goTag, from, to, trips, now }: { tag: string; goTag: b
         <span className="text-[#2f7f9c]" aria-hidden="true">→</span>
         <b className="text-[15px]">{to}</b>
       </div>
- 
+
       {live && <NextBox dep={next ? next[0] : "終了"} note={next ? `${remainText(toMin(next[0]) - now)}・${next[1]} 着` : "本日の運行は終了しました"} />}
- 
+
       {/* 時刻表はこの枠の中だけスクロールする（カード全体を短くするため） */}
       <div
         ref={scrollRef}
@@ -241,7 +243,7 @@ function BusColumn({ tag, goTag, from, to, trips, now }: { tag: string; goTag: b
     </div>
   );
 }
- 
+
 function BusCard({ now }: { now: number | null }) {
   return (
     <Card className="p-5">
@@ -262,16 +264,20 @@ function BusScheduleContent({ now }: { now: number | null }) {
   );
 }
 
+// マップページのモーダル用（トップページの BusCard とは別のカードで表示する）
 export function BusScheduleCard() {
   const now = useNowMinutes();
-  return <BusCard now={now} />;
+  return (
+    <ContentCard className={`${notoSansJP.className} ${INK}`} bodyClassName="!p-5">
+      <BusScheduleContent now={now} />
+    </ContentCard>
+  );
 }
  
 /* ───────── ③ 列車時刻表（路線タブ） ───────── */
  
-function TrainCard({ now }: { now: number | null }) {
-  const [lineId, setLineId] = useState<LineId>("up");
-  const line = LINES.find((l) => l.id === lineId) ?? LINES[0];
+// 1路線ぶんの一覧
+function TrainList({ line, now }: { line: (typeof LINES)[number]; now: number | null }) {
   const live = now !== null;
   const items = line.times.map((s) => {
     const [t, note = ""] = s.split("|");
@@ -279,87 +285,104 @@ function TrainCard({ now }: { now: number | null }) {
   });
   const nextIdx = findNext(items.map((i) => i.m), now);
   const next = nextIdx >= 0 ? items[nextIdx] : null;
- 
-  // 一覧はこの枠の中だけスクロール。路線を切り替えたとき・開催日に表示したときは、次の便の位置へ移動する
-  const listRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const box = listRef.current;
-    if (!box) return;
-    const target = box.querySelector<HTMLElement>('[data-next="true"]');
-    box.scrollTop = target ? Math.max(0, target.offsetTop - 8) : 0;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lineId, live]);
- 
-  // 時（hour）ごとにまとめる
-  const groups: { hour: number; chips: { idx: number; mm: string; note: string }[] }[] = [];
-  items.forEach((it, idx) => {
-    const hour = Math.floor(it.m / 60);
-    let g = groups[groups.length - 1];
-    if (!g || g.hour !== hour) {
-      g = { hour, chips: [] };
-      groups.push(g);
-    }
-    g.chips.push({ idx, mm: String(it.m % 60).padStart(2, "0"), note: it.note });
-  });
- 
+
   return (
-    <ContentCard bodyClassName="!p-5">
-      <CardTitle icon={<Svg><rect x="5" y="3" width="14" height="14" rx="3" /><path d="M5 11h14M8 21l2-4M16 21l-2-4" /></Svg>} label="一ノ関駅発" tag="JR" title="列車時刻表" />
- 
-      <div role="tablist" aria-label="路線と方向" className="flex flex-wrap">
-        {LINES.map((l) => (
-          <button
-            key={l.id}
-            type="button"
-            role="tab"
-            aria-selected={l.id === lineId}
-            onClick={() => setLineId(l.id)}
-            className={`mb-2 mr-2 min-h-11 border px-[18px] text-sm font-bold tracking-[0.08em] ${l.id === lineId ? "border-[#2f7f9c] bg-[#2f7f9c] text-white" : "border-[#8a9aa3] bg-white text-[#1f3a4a] hover:border-[#2f7f9c]"}`}
-          >
-            {l.tab}
-          </button>
-        ))}
-      </div>
- 
-      <div className="mb-2.5 mt-0.5 text-sm tracking-[0.04em] text-[#51636d]"><b className={INK}>{line.title}</b>({line.sub})</div>
- 
-      {live && <NextBox dep={next ? next.t : "終了"} note={next ? `${remainText(next.m - now)}${next.note ? `・${next.note}` : ""}` : "本日の運行は終了しました"} />}
- 
+    <section aria-label={`${line.title}（${line.sub}）`}>
+      {live && (
+        <div className="md:pl-8">
+          <NextBox dep={next ? next.t : "終了"} note={next ? `${remainText(next.m - now)}${next.note ? `・${next.note}` : ""}` : "本日の運行は終了しました"} />
+        </div>
+      )}
+
+      {/* 時刻の区切り線: イベントのタイムスケジュールと同じグレー（不透明度70%） */}
+      <ul className="divide-y divide-gray-400/70 border-y border-gray-400/70 text-base md:text-lg">
+        {items.map((it, i) => {
+          const st = statusOf(i, nextIdx, live);
+          return (
+            // 左右の列を同じ幅（1fr）にし、発車時刻を中央の列に置いてカードの中央に揃える
+            <li
+              key={it.t}
+              className={`grid grid-cols-[1fr_auto_1fr] items-center gap-2 ${st === "past" ? "opacity-40" : ""} ${st === "next" ? "text-[#2f7f9c]" : ""}`}
+            >
+              <span aria-hidden="true" />
+              <span className="py-3 text-3xl font-bold leading-none tracking-tight tabular-nums md:text-4xl">
+                {it.t}
+                <span className="ml-1 text-sm font-medium tracking-normal md:text-base">発</span>
+              </span>
+              <span className="flex flex-col items-end gap-0.5 justify-self-end px-2 py-3 text-right text-xs font-bold md:pr-8 md:text-sm">
+                {st === "next" && <span>NEXT</span>}
+                {it.note && <span className={st === "next" ? "" : "text-[#51636d]"}>{it.note}</span>}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+
+      {line.footnote && <p className="m-0 mt-2 text-xs leading-[1.7] text-[#51636d] md:pl-8">{line.footnote}</p>}
+    </section>
+  );
+}
+
+function TrainCard({ now }: { now: number | null }) {
+  const [lineId, setLineId] = useState<LineId>("up");
+
+  return (
+    <Card className="p-4 md:p-8">
+      <CardTitle title={<>列車時刻表　<span className="text-[#2f7f9c]">一ノ関駅発</span></>} />
+
+      {/* 路線の切り替え: イベントの日にち切り替えと同じ、文字だけのボタン＋選択中の下線 */}
+      {/* globals.css の button 既定値（背景色・余白・角丸）を打ち消す */}
       <div
-        ref={listRef}
-        tabIndex={0}
-        role="region"
-        aria-label={`${line.title}の時刻表（上下にスクロールできます）`}
-        className={`relative max-h-[320px] overflow-y-auto overscroll-contain border-b ${LINE}`}
+        role="tablist"
+        aria-label="路線と方向"
+        className={`${notoSansJP.className} mb-5 flex flex-wrap justify-center gap-x-8 gap-y-2 text-lg font-bold md:mb-6 md:gap-x-10 md:text-xl`}
       >
-      <div className="flex flex-wrap">
-        {groups.map((g) => (
-          <div key={g.hour} className="flex w-full items-start border-t border-[#e3e9ec] pr-1.5 pt-1.5">
-            <div className="w-[58px] flex-none text-[28px] font-extrabold leading-[44px] tracking-tight">
-              {g.hour}<small className="ml-px text-xs font-medium tracking-normal text-[#51636d]">時</small>
-            </div>
-            <div className="flex flex-1 flex-wrap">
-              {g.chips.map((c) => {
-                const st = statusOf(c.idx, nextIdx, live);
-                return (
-                  <span
-                    key={c.idx}
-                    data-next={st === "next" ? "true" : undefined}
-                    className={`mb-1.5 mr-1.5 inline-flex min-h-11 items-baseline gap-1.5 px-2.5 py-1 text-[28px] leading-[1.3] tracking-tight tabular-nums ${st === "next" ? "border-b-4 border-[#2f7f9c] font-extrabold" : "font-bold"} ${st === "past" ? "opacity-40" : ""}`}
-                  >
-                    {c.mm}
-                    {c.note && <span className={`text-xs tracking-normal ${st === "next" ? "font-extrabold" : "font-bold text-[#51636d]"}`}>{c.note}</span>}
-                  </span>
-                );
-              })}
-            </div>
-          </div>
-        ))}
+        {LINES.map((l) => {
+          const isSelected = l.id === lineId;
+          return (
+            <button
+              key={l.id}
+              type="button"
+              role="tab"
+              id={`train-tab-${l.id}`}
+              aria-selected={isSelected}
+              aria-controls={`train-panel-${l.id}`}
+              onClick={() => setLineId(l.id)}
+              className={`flex flex-col items-center rounded-none border-b-2 bg-transparent px-0 pt-0 pb-1 transition-colors ${
+                isSelected
+                  ? "border-[#1f3a4a] text-[#1f3a4a]"
+                  : "border-transparent text-[#1f3a4a]/50 hover:text-[#1f3a4a]/80"
+              }`}
+            >
+              {/* 路線名と行き先（例: 東北本線 上り / 小牛田・仙台方面）を2段で表示する */}
+              <span>{l.title}</span>
+              <span className="text-xs font-medium md:text-sm">{l.sub}</span>
+            </button>
+          );
+        })}
       </div>
+
+      {/* 全路線を同じグリッドセルに重ね、切り替えてもカードの高さが変わらないようにする */}
+      <div className="grid">
+        {LINES.map((l) => {
+          const isSelected = l.id === lineId;
+          return (
+            <div
+              key={l.id}
+              id={`train-panel-${l.id}`}
+              role="tabpanel"
+              aria-labelledby={`train-tab-${l.id}`}
+              aria-hidden={!isSelected}
+              className={`col-start-1 row-start-1 self-start ${isSelected ? "" : "invisible"}`}
+            >
+              <TrainList line={l} now={now} />
+            </div>
+          );
+        })}
       </div>
- 
-      {line.footnote &&<p className="m-0 mt-1.5 text-xs leading-[1.7] text-[#51636d]">{line.footnote}</p>}
-    </ContentCard>
+
+      <p className="m-0 mt-3 text-xs leading-[1.7] text-[#51636d] md:pl-8">※10～17時台の列車のみを表示しています。</p>
+    </Card>
   );
 }
  
