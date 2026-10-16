@@ -70,13 +70,13 @@ export const canCreateShopScopedContent: Access = ({ req }) => {
 export const canManageShopScopedContent: Access = ({ req }) => {
   const role = readRole(req.user)
 
-  if (role === 'admin') {
+  if (role === 'admin' || role === 'committee') {
     return true
   }
 
   const assignedShopIds = readAssignedShopIds(req.user)
 
-  if ((role !== 'committee' && role !== 'shop_staff') || assignedShopIds.length === 0) {
+  if (role !== 'shop_staff' || assignedShopIds.length === 0) {
     return false
   }
 
