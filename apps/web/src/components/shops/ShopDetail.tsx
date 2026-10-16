@@ -58,7 +58,7 @@ export default function ShopDetail({ shop, announcements, posterIndex }: ShopDet
           <section className="mt-10" aria-labelledby="shop-announcements-heading">
             <div className="flex items-end justify-between gap-4 px-1">
               <h2 id="shop-announcements-heading" className="text-xl font-bold text-slate-900">
-                屋台からのお知らせ
+                お知らせ
               </h2>
               {announcements.length > 0 && (
                 <span className="text-xs font-bold tracking-[0.12em] text-slate-500">
