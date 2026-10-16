@@ -1,5 +1,5 @@
-import { ScheduleTable } from "@/components/events/page";
+import { EventsPage } from "@/components/events/page"
 
 export default function Page() {
-  return <ScheduleTable />;
+  return <EventsPage />;
 }

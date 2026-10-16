@@ -44,7 +44,7 @@ export default function BlogTabs({ articles, shopAnnouncements, initialTab }: Bl
           onClick={() => selectTab("announcements")}
           className={`flex-1 rounded-none border-b-2 bg-transparent px-4 py-3 text-sm font-bold transition-colors ${isAnnouncements ? "border-[#287c95] text-[#1f3a4a]" : "border-transparent text-[#51636d] hover:text-[#1f3a4a]"}`}
         >
-          屋台からのお知らせ
+          屋台・企画からのお知らせ
         </button>
       </div>
 

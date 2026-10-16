@@ -23,13 +23,13 @@ export function TopPageClient() {
         <TopBar current="HOME" />
 
         {/* 各項目（screens: 確保する高さ。画面何枚分か） */}
-        <TopSection id="greeting" title="ごあいさつ" screens={1}>
+        <TopSection id="greeting" title="ごあいさつ" screens={2}>
           <HelloSection />
         </TopSection>
-        <TopSection id="news" title="ニュース" screens={0}>
+        <TopSection id="news" title="ニュース" screens={1}>
           <NewsSection />
         </TopSection>
-        <TopSection id="access" title="アクセス" screens={0}>
+        <TopSection id="access" title="アクセス" screens={2.5}>
           <AccessSection />
         </TopSection>
         <TopSection id="stalls" title="屋台・自主企画" screens={0}>

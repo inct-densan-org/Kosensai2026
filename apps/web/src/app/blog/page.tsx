@@ -23,7 +23,7 @@ export default async function BlogPage({
     body: announcement.body,
     tags: announcement.tags,
     sourceLabel:
-      typeof announcement.shop === "object" ? announcement.shop.name : null,
+      announcement.shop && typeof announcement.shop === "object" ? announcement.shop.name : null,
     priority: announcement.priority ?? "medium",
     publishedAt: announcement.publishedAt,
     createdAt: announcement.createdAt,
