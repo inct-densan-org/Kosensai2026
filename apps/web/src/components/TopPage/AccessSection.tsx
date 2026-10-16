@@ -165,98 +165,116 @@ function MapAndInfo() {
   );
 }
  
-/* ───────── ② 無料送迎バス（縦の時間軸） ───────── */
- 
-// 9:45〜17:15 を 1分 = 1.3px で配置
-const AX0 = 585;
-const PPM = 1.3;
-const yOf = (m: number) => Math.round((m - AX0) * PPM * 10) / 10;
-const AXIS_HEIGHT = (1035 - AX0) * PPM; // 585px
- 
-function BusColumn({ tag, goTag, from, to, trips, now }: { tag: string; goTag: boolean; from: string; to: string; trips: Trip[]; now: number | null }) {
+/* ───────── ② 無料送迎バス（イベントのタイムスケジュールと同じ見た目） ───────── */
+
+type BusDir = "go" | "back";
+const BUS_DIRS: { id: BusDir; tab: string; from: string; to: string; trips: Trip[] }[] = [
+  { id: "go", tab: "行き", from: "一ノ関駅", to: "一関高専", trips: BUS_GO },
+  { id: "back", tab: "帰り", from: "一関高専", to: "一ノ関駅", trips: BUS_BACK },
+];
+
+function BusList({ dir, now }: { dir: (typeof BUS_DIRS)[number]; now: number | null }) {
   const live = now !== null;
-  const nextIdx = findNext(trips.map((t) => toMin(t[0])), now);
-  const next = nextIdx >= 0 ? trips[nextIdx] : null;
- 
-  // 開催日に表示したとき、次の便が見える位置まで自動でスクロールする（最初の1回だけ）
-  const scrollRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!live || nextIdx < 0 || !scrollRef.current) return;
-    scrollRef.current.scrollTop = Math.max(0, yOf(toMin(trips[nextIdx][0])) - 60);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [live]);
- 
+  const nextIdx = findNext(dir.trips.map((t) => toMin(t[0])), now);
+  const next = nextIdx >= 0 ? dir.trips[nextIdx] : null;
+
   return (
-    <div className="min-w-0 flex-1 basis-[280px]">
-      <div className="mb-2 flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
-        <span className={`px-3.5 py-0.5 text-[13px] font-bold leading-[1.6] tracking-[0.12em] ${goTag ? "border border-[#2f7f9c] bg-[#2f7f9c] text-white" : "border border-[#2f7f9c] text-[#2f7f9c]"}`}>{tag}</span>
-        <b className="text-[15px]">{from}</b>
-        <span className="text-[#2f7f9c]" aria-hidden="true">→</span>
-        <b className="text-[15px]">{to}</b>
-      </div>
- 
-      {live && <NextBox dep={next ? next[0] : "終了"} note={next ? `${remainText(toMin(next[0]) - now)}・${next[1]} 着` : "本日の運行は終了しました"} />}
- 
-      {/* 時刻表はこの枠の中だけスクロールする（カード全体を短くするため） */}
-      <div
-        ref={scrollRef}
-        tabIndex={0}
-        role="region"
-        aria-label={`${tag}の時刻表（上下にスクロールできます）`}
-        className={`mt-1 max-h-[320px] overflow-y-auto overscroll-contain border-y ${LINE}`}
-      >
-      <div className="relative" style={{ height: AXIS_HEIGHT }}>
-        <div className="absolute inset-y-0 left-10 w-0.5 bg-[#cfd8dc]" />
-        {[10, 11, 12, 13, 14, 15, 16, 17].map((h) => (
-          <div key={h}>
-            <div className="absolute left-10 right-0 h-0 border-t border-[#e3e9ec]" style={{ top: yOf(h * 60) }} />
-            <div className="absolute left-0 w-[34px] text-right text-[11px] font-bold leading-4 text-[#51636d]" style={{ top: yOf(h * 60) - 8 }}>{h}:00</div>
-          </div>
-        ))}
-        {trips.map((t, i) => {
+    <section>
+      <h2 className="mb-3 text-xl font-bold md:pl-8 md:text-2xl">
+        {dir.from} <span aria-hidden="true">→</span>
+        <span className="sr-only">から</span> {dir.to}
+      </h2>
+
+      {live && (
+        <div className="md:pl-8">
+          <NextBox dep={next ? next[0] : "終了"} note={next ? `${remainText(toMin(next[0]) - now)}・${next[1]} 着` : "本日の運行は終了しました"} />
+        </div>
+      )}
+
+      {/* 時刻の区切り線: イベントのタイムスケジュールと同じグレー（不透明度70%） */}
+      <ul className="divide-y divide-gray-400/70 border-y border-gray-400/70 text-base md:text-lg">
+        {dir.trips.map((t, i) => {
           const st = statusOf(i, nextIdx, live);
-          const last = i === trips.length - 1;
+          const last = i === dir.trips.length - 1;
           return (
-            // 時間軸上の点から線を引き、その先に時刻を示す
-            <div
+            <li
               key={t[0]}
-              className={`absolute left-[37px] right-0 flex h-10 items-center ${st === "past" ? "opacity-40" : ""}`}
-              style={{ top: yOf(toMin(t[0])) - 20 }}
+              className={`flex md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-2 ${st === "past" ? "opacity-40" : ""} ${st === "next" ? "font-bold text-[#2f7f9c]" : ""}`}
             >
-              <span className={`size-2 flex-none rounded-full ${st === "next" ? "bg-[#2f7f9c] ring-4 ring-[#2f7f9c]/20" : "bg-[#8a9aa3]"}`} aria-hidden="true" />
-              <span className={`w-6 flex-none ${st === "next" ? "h-0.5 bg-[#2f7f9c]" : "h-px bg-[#8a9aa3]"}`} aria-hidden="true" />
-              <span className={`ml-2.5 text-xl leading-none tracking-tight tabular-nums ${st === "next" ? "border-b-4 border-[#2f7f9c] pb-0.5 font-extrabold" : "font-bold"}`}>{t[0]}</span>
-              <span className={`ml-2.5 text-xs ${st === "next" ? "font-bold" : "text-[#51636d]"}`}>着 {t[1]}</span>
-              {last && <span className="ml-auto border border-[#8a9aa3] bg-white px-[7px] text-[11px] font-bold leading-[1.6] tracking-[0.1em]">最終</span>}
-            </div>
+              <span className="w-28 shrink-0 whitespace-nowrap px-2 py-3 tabular-nums sm:w-36 md:w-auto md:px-0 md:pl-8">{t[0]} 発</span>
+              <span className="flex-1 px-2 py-3 tabular-nums md:px-0 md:text-center">{t[1]} 着</span>
+              <span className={`${last || st === "next" ? "" : "hidden md:block"} whitespace-nowrap px-2 py-3 text-sm md:justify-self-end md:pr-8`}>
+                {st === "next" ? "NEXT" : last ? "最終" : ""}
+              </span>
+            </li>
           );
         })}
-        {live && now >= AX0 && now <= 1035 && (
-          <div className="pointer-events-none absolute inset-x-0 z-10 h-0 border-t-2 border-[#2f7f9c]" style={{ top: yOf(now) }}>
-            <span className="absolute -top-[22px] right-0 bg-[#2f7f9c] px-2 text-[11px] font-bold leading-[1.6] text-white">現在 {Math.floor(now / 60)}:{String(now % 60).padStart(2, "0")}</span>
-          </div>
-        )}
-      </div>
-      </div>
-    </div>
+      </ul>
+    </section>
   );
 }
- 
+
 function BusCard({ now }: { now: number | null }) {
   return (
-    <Card className="p-5">
+    <Card className="p-4 md:p-8">
       <BusScheduleContent now={now} />
     </Card>
   );
 }
 
 function BusScheduleContent({ now }: { now: number | null }) {
+  const [dirId, setDirId] = useState<BusDir>("go");
+
   return (
     <>
       <CardTitle icon={<Svg><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></Svg>} label="2026/10/24 – 25" title="無料送迎バス" />
-      <div className="flex flex-wrap gap-x-6 gap-y-8">
-        <BusColumn tag="行き" goTag from="一ノ関駅" to="一関高専" trips={BUS_GO} now={now} />
-        <BusColumn tag="帰り" goTag={false} from="一関高専" to="一ノ関駅" trips={BUS_BACK} now={now} />
+
+      {/* 行き・帰りの切り替え: イベントの日にち切り替えと同じ、文字だけのボタン＋選択中の下線 */}
+      <div
+        role="tablist"
+        aria-label="行き・帰りを選択"
+        className={`${notoSansJP.className} mb-5 flex justify-center gap-10 text-xl font-bold md:mb-6 md:text-2xl`}
+      >
+        {BUS_DIRS.map((d) => {
+          const isSelected = d.id === dirId;
+          return (
+            <button
+              key={d.id}
+              type="button"
+              role="tab"
+              id={`bus-tab-${d.id}`}
+              aria-selected={isSelected}
+              aria-controls={`bus-panel-${d.id}`}
+              onClick={() => setDirId(d.id)}
+              className={`rounded-none border-b-2 bg-transparent px-0 pt-0 pb-1 transition-colors ${
+                isSelected
+                  ? "border-[#1f3a4a] text-[#1f3a4a]"
+                  : "border-transparent text-[#1f3a4a]/50 hover:text-[#1f3a4a]/80"
+              }`}
+            >
+              {d.tab}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* 行き・帰りを同じグリッドセルに重ね、切り替えてもカードの高さが変わらないようにする */}
+      <div className="grid">
+        {BUS_DIRS.map((d) => {
+          const isSelected = d.id === dirId;
+          return (
+            <div
+              key={d.id}
+              id={`bus-panel-${d.id}`}
+              role="tabpanel"
+              aria-labelledby={`bus-tab-${d.id}`}
+              aria-hidden={!isSelected}
+              className={`col-start-1 row-start-1 self-start ${isSelected ? "" : "invisible"}`}
+            >
+              <BusList dir={d} now={now} />
+            </div>
+          );
+        })}
       </div>
     </>
   );
