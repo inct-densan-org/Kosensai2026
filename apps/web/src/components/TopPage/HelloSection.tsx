@@ -7,7 +7,7 @@ export default function HelloSection() {
       <ContentCard as="section" bodyClassName={notoSansJP.className}>
         <div className="mb-6">
           <span className="mb-3 inline-block rounded bg-sky-100/80 px-2.5 py-1 text-xs font-bold tracking-wider text-sky-800 uppercase">
-            WELCOME!! 校長挨拶
+            校長挨拶
           </span>
 
           <div className="flex items-center gap-4 md:gap-6">
@@ -46,7 +46,7 @@ export default function HelloSection() {
       <ContentCard as="section" bodyClassName={notoSansJP.className}>
         <div className="mb-6">
           <span className="mb-3 inline-block rounded bg-sky-100/80 px-2.5 py-1 text-xs font-bold tracking-wider text-sky-800 uppercase">
-            MESSAGE 代表挨拶
+            代表挨拶
           </span>
 
           <div className="grid grid-cols-[5rem_minmax(0,1fr)] items-center gap-x-4 gap-y-3 md:grid-cols-[6rem_minmax(0,1fr)] md:grid-rows-2 md:gap-x-6 md:gap-y-1">

@@ -33,6 +33,8 @@ type ArticleListProps = {
   // - "plain": 記事ごとに枠線付きの行で並べる
   // - "card": トップページのニュースと同じく、白いカードの大枠の中に記事を1件ずつ ContentCard で並べる
   variant?: "plain" | "card";
+  // "card" のときの白いカードの高さの上限（CSS の長さ）。あふれた記事一覧はカードの中だけスクロールする
+  maxHeight?: string;
 };
 
 const tagStyle = (tag: ArticleTag) => ({
@@ -47,6 +49,7 @@ export default function ArticleList({
   filterHrefPrefix,
   prioritizePriority = true,
   variant = "plain",
+  maxHeight,
 }: ArticleListProps) {
   const isCard = variant === "card";
   const router = useRouter();
@@ -133,7 +136,7 @@ export default function ArticleList({
 
   const content = (
     <>
-      <div className="mb-8 border-y border-[#9AC7D6]/70 bg-[#f7fcfd]/60 px-4 py-4 sm:px-5">
+      <div className="mb-8 flex-none border-y border-[#9AC7D6]/70 bg-[#f7fcfd]/60 px-4 py-4 sm:px-5">
         <div className="relative">
           <Search
             className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 text-[#287c95]"
@@ -253,7 +256,7 @@ export default function ArticleList({
           </p>
         </div>
       ) : (
-        <ul className={`m-0 list-none p-0 ${isCard ? "space-y-3" : "space-y-4"}`}>
+        <ul className={`m-0 list-none ${isCard ? "space-y-3" : "space-y-4"} ${maxHeight ? "min-h-0 flex-1 overflow-y-auto overscroll-contain p-1" : "p-0"}`}>
           {filteredArticles.map((article) => {
             const articleTags = getArticleTags(article);
             const link = (
@@ -283,16 +286,16 @@ export default function ArticleList({
                       </span>
                     )}
                   </div>
-                  <h2 className="m-0 mt-2 text-base font-bold leading-snug sm:text-lg">
+                  <h2 className="m-0 mt-1 text-base font-bold leading-snug sm:mt-2 sm:text-lg">
                     {article.title}
                   </h2>
                   {article.excerpt && (
-                    <p className={`m-0 line-clamp-2 text-sm leading-6 ${isCard ? "mt-1.5 text-[#51636d]" : "mt-2 text-black/60"}`}>
+                    <p className={`m-0 text-sm leading-6 ${isCard ? "mt-1 line-clamp-1 text-[#51636d] sm:mt-1.5 sm:line-clamp-2" : "mt-2 line-clamp-2 text-black/60"}`}>
                       {article.excerpt}
                     </p>
                   )}
                   {articleTags.length > 0 && (
-                    <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1.5">
+                    <div className={`flex flex-wrap gap-x-3 gap-y-1.5 ${isCard ? "mt-2 sm:mt-3" : "mt-3"}`}>
                       {articleTags.map((tag) => {
                         const isSelected = selectedTags.includes(tag.id);
                         return (
@@ -317,7 +320,7 @@ export default function ArticleList({
                       })}
                     </div>
                   )}
-                  <div className="mt-4">
+                  <div className={isCard ? "mt-2 sm:mt-4" : "mt-4"}>
                     <ReactionSummary
                       contentType={contentType}
                       contentId={article.id}
@@ -333,7 +336,7 @@ export default function ArticleList({
             );
             return (
               <li key={article.id}>
-                {isCard ? <ContentCard bodyClassName="!p-4 sm:!p-5">{link}</ContentCard> : link}
+                {isCard ? <ContentCard bodyClassName="!px-4 !py-3 sm:!p-5">{link}</ContentCard> : link}
               </li>
             );
           })}
@@ -343,7 +346,7 @@ export default function ArticleList({
   );
 
   return isCard ? (
-    <WhiteCard className="p-4 sm:p-5">{content}</WhiteCard>
+    <WhiteCard className="flex w-full min-h-0 flex-col p-4 sm:p-5" style={maxHeight ? { maxHeight } : undefined}>{content}</WhiteCard>
   ) : (
     <div className={notoSansJP.className}>{content}</div>
   );
