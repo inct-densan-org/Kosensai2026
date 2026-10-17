@@ -6,8 +6,8 @@ import { shipporiMincho } from "@/components/common/fonts";
 // - TopSection の children として使う: <TopSection id="pamphlet" title="パンフレット" screens={0}><PamphletSection /></TopSection>
 // - サムネイルは PDF の 1ページ目を画像にしたもの（public/img/top/pamphlet-thumb.png）
 
+const PDF_SRC = "/img/top/R8_kosensai.pdf";
 const PDF_FILE_NAME = "R8高専祭パンフレット.pdf";
-const PDF_SRC = `/img/top/${encodeURIComponent(PDF_FILE_NAME)}`;
 const THUMB_SRC = "/img/top/pamphlet-thumb.png";
 
 const INFO: { label: string; value: string }[] = [
