@@ -1,5 +1,8 @@
 import { apiBaseUrl } from '@/lib/api'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 const forwardRequest = async (request: Request) => {
   const requestUrl = new URL(request.url)
   const targetUrl = `${apiBaseUrl}/reactions${requestUrl.search}`
@@ -25,6 +28,9 @@ const forwardRequest = async (request: Request) => {
     status: response.status,
     headers: {
       'content-type': response.headers.get('content-type') ?? 'application/json',
+      'cache-control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      pragma: 'no-cache',
+      expires: '0',
     },
   })
 }
