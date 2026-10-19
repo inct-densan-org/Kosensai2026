@@ -51,7 +51,7 @@ export default function HelloSection() {
 
           <div className="grid grid-cols-[5rem_minmax(0,1fr)] items-center gap-x-4 gap-y-3 md:grid-cols-[6rem_minmax(0,1fr)] md:grid-rows-2 md:gap-x-6 md:gap-y-1">
             <img
-              src="/img/top/Image.png"
+              src="/img/top/Image.webp"
               alt="実行委員長写真"
               className="col-start-1 row-start-2 aspect-square h-20 w-20 shrink-0 rounded-full border-2 border-white object-cover shadow-sm md:row-span-2 md:row-start-1 md:h-24 md:w-24"
             />
