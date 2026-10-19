@@ -131,7 +131,7 @@ const MAP_SRC: string =
 const INFO: { label: string; value: string }[] = [
   { label: "住所", value: "〒021-8511 岩手県一関市萩荘字高梨" },
   { label: "電車", value: "一ノ関駅（JR東北新幹線、JR東北本線、JR大船渡線）" },
-  { label: "自動車", value: "一関インターチェンジより10分" },
+  { label: "自動車", value: "東北自動車道 一関インターチェンジより車で約10分" },
   { label: "バス", value: "高専祭用無料送迎バスが運行中。下記時刻表を参照" },
 ];
  

@@ -280,7 +280,7 @@ export const postersData = [
   },
   {
     mapId: 49,
-    title: "写真部写真展",
+    title: "写真部　写真展　兼　食事スペース",
     desc: "専攻科棟（なんか大きくてガラス張りの建物）の４階です。\n４階での展示になってしまい　๐·°(৹˃ᗝ˂৹)°·๐　＜そんなー\n集客が望めない分、静かに食事ができます。",
     images: ["/img/shops/49.webp"],
   },
@@ -323,7 +323,7 @@ export const postersData = [
   },
   {
     mapId: 56,
-    title: "Nagia Crew",
+    title: "Nagia Crew～一関高専ダンス部～",
     desc: "一関高専ダンス部Nagia Crewが魅せる、ここでしか見られないダンスステージ！圧巻のパフォーマンスと熱気を、ぜひ会場で体感してください！",
     images: ["/img/shops/56.webp"],
   },

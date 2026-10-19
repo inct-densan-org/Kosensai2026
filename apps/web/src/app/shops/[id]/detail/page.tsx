@@ -23,5 +23,5 @@ export default async function ShopDetailPage({ params }: ShopDetailPageProps) {
     ? await getShopAnnouncements(String(shop.id))
     : []
 
-  return <ShopDetail shop={shop} announcements={announcements} posterIndex={posterIndex} />
+  return <ShopDetail announcements={announcements} posterIndex={posterIndex} />
 }

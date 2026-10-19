@@ -5,15 +5,14 @@ import ContentCard from '@/components/common/ContentCard'
 import WhiteCard from '@/components/common/WhiteCard'
 import RichText from '@/components/common/RichText'
 import { postersData } from '@/posters.data'
-import type { Shop, ShopAnnouncement } from '@/lib/shops'
+import type { ShopAnnouncement } from '@/lib/shops'
 
 type ShopDetailProps = {
-  shop: Shop | null
   announcements: ShopAnnouncement[]
   posterIndex: number
 }
 
-export default function ShopDetail({ shop, announcements, posterIndex }: ShopDetailProps) {
+export default function ShopDetail({ announcements, posterIndex }: ShopDetailProps) {
   const poster = postersData[posterIndex]
 
   return (
@@ -26,7 +25,7 @@ export default function ShopDetail({ shop, announcements, posterIndex }: ShopDet
             </p>
 
           )}
-          <h2 className="mt-2 text-3xl font-bold">{shop?.name ?? poster.title}</h2>
+          <h2 className="mt-2 text-3xl font-bold">{poster.title}</h2>
 
           {poster?.images && poster.images.length > 0 && (
             <div className="mt-12 flex flex-wrap justify-center gap-4">
@@ -37,7 +36,7 @@ export default function ShopDetail({ shop, announcements, posterIndex }: ShopDet
                 >
                   <Image
                     src={image}
-                    alt={`${shop?.name ?? poster.title}のポスター ${imageIndex + 1}`}
+                    alt={`${poster.title}のポスター ${imageIndex + 1}`}
                     fill
                     sizes="(max-width: 768px) 100vw, 384px"
                     className="object-contain"

@@ -49,7 +49,7 @@ export function TopPageClient() {
         <TopSection id="pamphlet" title="パンフレット" screens={0}>
           <PamphletSection />
         </TopSection>
-        <TopSection id="stamp-rally" title="デジタルスタンプラリー" screens={0}>
+        <TopSection id="stamp-rally" title="スタンプラリー" screens={0}>
           <StampRally />
         </TopSection>
 
