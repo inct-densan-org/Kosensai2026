@@ -1,17 +1,18 @@
 import type { CollectionConfig } from 'payload'
-import { anyone, committeeOrAdmins } from '@/access/roles'
+import { admins, anyone } from '@/access/roles'
 
 export const EventStatusOverrides: CollectionConfig = {
   slug: 'event-status-overrides',
   admin: {
     useAsTitle: 'eventCode',
     defaultColumns: ['eventCode', 'status', 'updatedAt'],
+    hidden: ({ user }) => user?.role !== 'admin',
   },
   access: {
-    create: committeeOrAdmins,
+    create: admins,
     read: anyone,
-    update: committeeOrAdmins,
-    delete: committeeOrAdmins,
+    update: admins,
+    delete: admins,
   },
   fields: [
     {

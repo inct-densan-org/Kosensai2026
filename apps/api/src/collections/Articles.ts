@@ -8,7 +8,6 @@ import {
   publishedOrAuthenticated,
   readAssignedShopIds,
   readRole,
-  shopStaffOrAbove,
 } from '@/access/roles'
 
 const articleStatusOptions = [
@@ -138,6 +137,7 @@ export const NewsArticles: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'priority', 'status', 'publishedAt'],
+    hidden: ({ user }) => user?.role === 'shop_staff',
   },
   access: {
     create: committeeOrAdmins,
@@ -170,11 +170,12 @@ export const BlogArticles: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'status', 'publishedAt'],
+    hidden: ({ user }) => user?.role === 'shop_staff',
   },
   access: {
-    create: shopStaffOrAbove,
+    create: committeeOrAdmins,
     read: publishedOrAuthenticated,
-    update: shopStaffOrAbove,
+    update: committeeOrAdmins,
     delete: admins,
   },
   hooks: {
