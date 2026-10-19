@@ -11,8 +11,8 @@ const PDF_FILE_NAME = "R8高専祭パンフレット.pdf";
 const THUMB_SRC = "/img/top/pamphlet-thumb.png";
 
 const INFO: { label: string; value: string }[] = [
-  { label: "制作", value: "高専祭実行委員会 広報係" },
-  { label: "表紙イラスト", value: "3年化学･バイオ系 朝比奈佑菜さん" },
+  { label: "制作", value: "高専祭実行委員会 \n4年情報・ソフトウェア系 佐々木蒼彩さん" },
+  { label: "表紙", value: "3年化学･バイオ系 朝比奈佑菜さん" },
 ];
 
 const INK = "text-[#1f3a4a]";
@@ -48,7 +48,7 @@ export default function PamphletSection() {
         {INFO.map((r) => (
           <div key={r.label} className="flex gap-4">
             <dt className="w-[3.2em] flex-none text-justify [text-align-last:justify]">{r.label}</dt>
-            <dd className="m-0 min-w-0">{r.value}</dd>
+            <dd className="m-0 min-w-0 whitespace-pre-line">{r.value}</dd>
           </div>
         ))}
       </dl>
