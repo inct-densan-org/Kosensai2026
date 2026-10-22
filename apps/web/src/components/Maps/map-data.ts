@@ -52,7 +52,7 @@ export const map1: Data = {
     { name: "メディアセンター", x: 37, y: 65 },
     { name: "管理・教育棟", x: 75, y: 65 },
     { name: "専攻科・教育棟", x: 82, y: 83.5 },
-    { name: "萩友会館", x: 37, y: 39 },
+    { name: "萩友会館", x: 37, y: 41 },
     { name: "総合情報センター", x: 68, y: 50 },
     { name: "一号棟", x: 80, y: 39 },
   ],
@@ -68,7 +68,7 @@ export const map1: Data = {
     { id: "ごみ箱", x: 39.2, y: 28, color: "green" },
     { id: "ごみ箱", x: 18, y: 31.5, color: "green" },
     { id: "バス", x: 65, y: 92, color: "blue", timeTable: true },
-    { id: "保健室", x: 35, y: 50, color: "blue" },
+    { id: "保健室", x: 37, y: 37, color: "blue" },
     
   ],
 };
