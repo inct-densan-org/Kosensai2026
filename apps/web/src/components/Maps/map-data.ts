@@ -100,6 +100,7 @@ export const map3: Data = {
     { idx: 27, x: 38.5, y: 20 },
     { idx: 33, x: 86, y: 53 },
     { idx: 34, x: 60, y: 77 },
+    { idx: 58, x: 45, y: 24 },
   ],
   labels: [{ name: "管理・教育棟 2F", x: 10, y: 20 }],
   statics: [{ id: "ごみ箱", x: 42.5, y: 49, color: "green" }],

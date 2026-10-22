@@ -23,6 +23,7 @@ export const NumberedPin: React.FC<NumberedPinProps> = ({
   force = false,
   size,
 }) => {
+  const isNumericLabel = typeof number === "number" || /^\d+$/.test(number);
   const colorCode = force
     ? "#df8500"
     : color === "blue"
@@ -63,7 +64,7 @@ export const NumberedPin: React.FC<NumberedPinProps> = ({
         dominantBaseline="central"
         fill={colorCode}
         fontSize={
-          typeof number == "number"
+          isNumericLabel
             ? "110%"
             : number.length == 2
               ? "80%"
