@@ -3,7 +3,7 @@ import PageBackground from '@/components/common/PageBackground'
 import { PAGE_BACKGROUND } from '@/components/common/pageLayout'
 import { shipporiMincho } from '@/components/common/fonts'
 import { getNewsArticles } from '@/lib/news'
-
+export const dynamic = 'force-dynamic'
 export default async function NewsPage() {
   const articles = await getNewsArticles()
 
