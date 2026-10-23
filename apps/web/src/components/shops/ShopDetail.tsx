@@ -27,6 +27,12 @@ export default function ShopDetail({ announcements, posterIndex }: ShopDetailPro
           )}
           <h2 className="mt-2 text-3xl font-bold">{poster.title}</h2>
 
+          {poster?.cancellationNotice && (
+            <p className="mt-8 rounded-xl border-2 border-black px-5 py-6 text-center text-2xl font-extrabold text-red-700">
+              {poster.cancellationNotice}
+            </p>
+          )}
+
           {poster?.images && poster.images.length > 0 && (
             <div className="mt-12 flex flex-wrap justify-center gap-4">
               {poster.images.map((image, imageIndex) => (
