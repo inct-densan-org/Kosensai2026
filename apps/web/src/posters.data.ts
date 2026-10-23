@@ -158,8 +158,7 @@ export const postersData = [
   {
     mapId: 27,
     title: "VRお化け屋敷",
-    desc: "本格VRで体験する没入型ホラー。音・光・演出があなたを恐怖へ誘う……\nあなたの挑戦を待ってます！",
-    images: ["/img/shops/27.webp"],
+    cancellationNotice: "本企画は中止となりました",
   },
   {
     mapId: 28,

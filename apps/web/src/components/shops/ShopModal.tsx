@@ -195,6 +195,12 @@ export default function ShopModal({ index, onClose, latestAnnouncement }: ShopMo
             {poster.title}
           </h3>
 
+          {poster.cancellationNotice && (
+            <p className="mb-5 rounded-xl border-2 border-black px-4 py-5 text-center text-xl font-extrabold text-red-700">
+              {poster.cancellationNotice}
+            </p>
+          )}
+
           {(poster.images ?? []).map((image, imageIndex) => (
             <div
               key={`${image}-${imageIndex}`}
@@ -211,9 +217,11 @@ export default function ShopModal({ index, onClose, latestAnnouncement }: ShopMo
             </div>
           ))}
 
-          <p className="whitespace-pre-wrap leading-7 text-slate-700">
-            {poster.desc}
-          </p>
+          {poster.desc && (
+            <p className="whitespace-pre-wrap leading-7 text-slate-700">
+              {poster.desc}
+            </p>
+          )}
 
           <Link
             href={`/shops/${poster.mapId}/detail`}
