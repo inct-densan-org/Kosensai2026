@@ -180,7 +180,11 @@ export default function ShopsSection() {
 
             <ContentCard className="pointer-events-none relative z-20 h-full rounded-3xl" bodyClassName="flex h-full flex-col p-0 md:p-0">
               <div className="relative aspect-[3/4] shrink-0 overflow-hidden bg-[#dcecf0]">
-                {shop.images?.[0] ? (
+                {shop.cancellationNotice ? (
+                  <div className="flex h-full items-center justify-center bg-white px-6 text-center text-xl font-extrabold leading-relaxed text-red-700">
+                    {shop.cancellationNotice}
+                  </div>
+                ) : shop.images?.[0] ? (
                   <Image
                     src={shop.images[0]}
                     alt={`${shop.title}のポスター`}
@@ -203,6 +207,11 @@ export default function ShopsSection() {
                 <h3 className="line-clamp-2 text-lg font-bold leading-snug text-[#1f3a4a]">
                   {shop.title}
                 </h3>
+                {shop.cancellationNotice && (
+                  <p className="mt-3 text-sm font-extrabold text-red-700">
+                    {shop.cancellationNotice}
+                  </p>
+                )}
                 <Link
                   href={`/map?mapId=${shop.mapId}&t=true`}
                   tabIndex={setIndex === 1 ? undefined : -1}
